@@ -2,165 +2,730 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Rohit Shidid – Portfolio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Rohit Shidid — Software Engineer building Agentic AI & LLM systems. MS Computer Engineering @ NYU, ex-Citi. ML pipelines, distributed systems, embedded AI." />
+  <meta name="author" content="Rohit Shidid" />
+  <title>Rohit Shidid — Software Engineer · Agentic AI & ML Systems</title>
+
+  <meta property="og:title" content="Rohit Shidid — Software Engineer · Agentic AI & ML Systems" />
+  <meta property="og:description" content="MS Computer Engineering @ NYU · Ex-Citi SWE · ML pipelines, distributed systems, embedded AI." />
+  <meta property="og:type" content="website" />
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>" />
+
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Space Grotesk', 'sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
+
   <style>
-    body {
-      font-family: 'Inter', sans-serif;
+    :root {
+      --accent-1: #4f46e5; /* indigo-600 */
+      --accent-2: #c026d3; /* fuchsia-600 */
+      --accent-3: #0891b2; /* cyan-600 */
+    }
+
+    html { scroll-behavior: smooth; }
+    body { background: #ffffff; }
+
+    ::selection { background: rgba(79,70,229,0.15); color: #1e1b4b; }
+
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #f1f5f9; }
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(var(--accent-1), var(--accent-3));
+      border-radius: 99px;
+    }
+
+    /* Soft blobs in top-right and bottom-left */
+    .mesh {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      overflow: hidden;
+      background: #ffffff;
+    }
+    .mesh::before, .mesh::after {
+      content: "";
+      position: absolute;
+      width: 50vw;
+      height: 50vw;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: 0.18;
+      animation: drift 20s ease-in-out infinite alternate;
+    }
+    .mesh::before {
+      background: radial-gradient(circle, #6366f1, transparent 70%);
+      top: -10%;
+      right: -10%;
+    }
+    .mesh::after {
+      background: radial-gradient(circle, #e879f9, transparent 70%);
+      bottom: -10%;
+      left: -10%;
+      animation-delay: -8s;
+    }
+    @keyframes drift {
+      0%   { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(5%, 5%) scale(1.12); }
+    }
+
+    .gradient-text {
+      background: linear-gradient(110deg, var(--accent-1), var(--accent-2) 45%, var(--accent-3));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    /* Light glass */
+    .glass {
+      background: rgba(255, 255, 255, 0.75);
+      border: 1px solid rgba(0, 0, 0, 0.07);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+
+    .card {
+      background: #ffffff;
+      border: 1px solid rgba(0, 0, 0, 0.07);
+      transition: transform 0.35s cubic-bezier(.2,.7,.2,1), border-color 0.35s, box-shadow 0.35s;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(99, 102, 241, 0.35);
+      box-shadow: 0 20px 50px -20px rgba(99, 102, 241, 0.2);
+    }
+
+    .pill {
+      background: rgba(99,102,241,0.06);
+      border: 1px solid rgba(99,102,241,0.15);
+      color: #3730a3;
+      transition: all 0.2s;
+    }
+    .pill:hover {
+      background: rgba(99,102,241,0.12);
+      border-color: rgba(99,102,241,0.4);
+      transform: translateY(-2px);
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.65s ease, transform 0.65s cubic-bezier(.2,.7,.2,1);
+    }
+    .reveal.in { opacity: 1; transform: none; }
+
+    .photo-ring {
+      box-shadow: 0 0 0 4px #fff,
+                  0 0 0 6px rgba(99,102,241,0.3),
+                  0 8px 30px -8px rgba(99,102,241,0.25);
+    }
+
+    .nav-link { position: relative; color: #475569; }
+    .nav-link::after {
+      content: "";
+      position: absolute;
+      left: 0; bottom: -4px;
+      width: 0; height: 2px;
+      background: linear-gradient(90deg, var(--accent-1), var(--accent-3));
+      transition: width 0.3s;
+    }
+    .nav-link:hover { color: #1e293b; }
+    .nav-link:hover::after { width: 100%; }
+
+    .live-dot { animation: pulse 2s ease-in-out infinite; }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(34,197,94,0.5); }
+      50%       { box-shadow: 0 0 0 5px rgba(34,197,94,0); }
+    }
+
+    .section-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #6366f1;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 600;
+    }
+
+    .timeline-dot {
+      background: linear-gradient(135deg, #6366f1, #22d3ee);
+    }
+
+    .stat-card {
+      background: linear-gradient(135deg, #f8f7ff 0%, #f0f9ff 100%);
+      border: 1px solid rgba(99,102,241,0.12);
+    }
+
+    .skill-group {
+      background: #fafafa;
+      border: 1px solid rgba(0,0,0,0.06);
     }
   </style>
 </head>
 
-<body class="bg-gray-50 text-gray-900">
-  <div class="max-w-6xl mx-auto px-6 py-10">
-    <!-- Header -->
-    <div class="text-center">
-        <div class="flex justify-center items-center space-x-8 mb-4">
-            <img src="./Professional Photo square.jpg" alt="Rohit Shidid" class="w-40 h-40 rounded-full shadow">
-            <img src="./nyu_img.png" alt="NYU Logo" class="w-40 h-32 object-contain">
-          </div>
-      <h1 class="text-4xl font-bold">Rohit Shidid</h1>
-      <p class="text-lg">New York, US · <a href="mailto:rrs6770@nyu.edu" class="text-blue-600">rrs6770@nyu.edu</a></p>
-      <a href="https://www.linkedin.com/in/rohit-shidid/" target="_blank" class="inline-block mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">LinkedIn</a>
-    </div>
+<body class="font-sans text-slate-700 antialiased">
+  <div class="mesh"></div>
 
-    <!-- Education -->
-    <section class="mt-12">
-      <h2 class="text-2xl font-semibold border-b pb-2 mb-4">Education</h2>
-      <ul class="space-y-3">
-        <li>
-          <strong>New York University (NYU)</strong><br>
-          Master’s in Computer Engineering · May 2027
-        </li>
-        <li>
-          <strong>College of Engineering Pune (COEP)</strong><br>
-          B.Tech in Computer Engineering · May 2024
-        </li>
-      </ul>
+  <!-- Nav -->
+  <header class="fixed top-0 inset-x-0 z-50">
+    <nav class="glass mx-auto mt-4 max-w-5xl rounded-2xl px-5 py-3 flex items-center justify-between shadow-sm">
+      <a href="#top" class="font-display font-bold text-slate-900 tracking-tight text-lg">
+        Rohit<span class="gradient-text">.</span>
+      </a>
+      <div class="hidden md:flex items-center gap-7 text-sm">
+        <a href="#about" class="nav-link">About</a>
+        <a href="#experience" class="nav-link">Experience</a>
+        <a href="#projects" class="nav-link">Projects</a>
+        <a href="#skills" class="nav-link">Skills</a>
+        <a href="#writing" class="nav-link">Writing</a>
+      </div>
+      <a href="mailto:rohitshidid1@gmail.com"
+         class="text-sm font-medium text-white px-4 py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-cyan-600 hover:opacity-90 transition shadow-sm">
+        Get in touch
+      </a>
+    </nav>
+  </header>
+
+  <main id="top" class="max-w-5xl mx-auto px-6">
+
+    <!-- Hero -->
+    <section class="min-h-screen flex flex-col justify-center pt-28 pb-20">
+      <div class="flex flex-col md:flex-row items-center gap-12">
+        <div class="relative shrink-0">
+          <div class="absolute -inset-4 rounded-full bg-gradient-to-tr from-indigo-200 via-fuchsia-100 to-cyan-200 blur-2xl opacity-70"></div>
+          <img src="./Professional Photo square.jpg" alt="Rohit Shidid"
+               class="relative w-44 h-44 md:w-52 md:h-52 rounded-full object-cover photo-ring" />
+        </div>
+        <div class="text-center md:text-left">
+          <div class="inline-flex items-center gap-2 glass rounded-full px-3 py-1 text-xs text-slate-600 mb-5 shadow-sm">
+            <span class="live-dot w-2 h-2 rounded-full bg-green-400 inline-block"></span>
+            Open to SWE · ML · Data Science · Security roles &amp; 2026 internships
+          </div>
+          <h1 class="font-display text-5xl md:text-6xl font-bold text-slate-900 leading-[1.05] tracking-tight">
+            Rohit Shidid
+          </h1>
+          <p class="mt-4 text-xl md:text-2xl font-display">
+            <span class="gradient-text">Agentic AI &amp; ML Systems</span>
+            <span class="text-slate-300"> · </span>
+            <span class="text-slate-600">Software Engineer</span>
+          </p>
+          <p class="mt-5 max-w-xl text-slate-500 leading-relaxed">
+            MS Computer Engineering @ NYU · Ex-Citi SWE. I build production ML pipelines,
+            distributed systems, and embedded AI — and live in the messy middle where the
+            prototype meets production.
+          </p>
+          <div class="mt-7 flex flex-wrap justify-center md:justify-start items-center gap-3">
+            <a href="https://www.linkedin.com/in/rohit-shidid/" target="_blank" rel="noopener"
+               class="group flex items-center gap-2 card rounded-xl px-4 py-2.5 text-sm font-medium text-slate-700 hover:text-indigo-600 transition">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+              LinkedIn
+            </a>
+            <a href="https://github.com/rohitshidid" target="_blank" rel="noopener"
+               class="group flex items-center gap-2 card rounded-xl px-4 py-2.5 text-sm font-medium text-slate-700 hover:text-indigo-600 transition">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+              GitHub
+            </a>
+            <a href="mailto:rohitshidid1@gmail.com"
+               class="group flex items-center gap-2 card rounded-xl px-4 py-2.5 text-sm font-medium text-slate-700 hover:text-indigo-600 transition">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M0 3v18h24v-18h-24zm21.518 2l-9.518 7.713-9.518-7.713h19.036zm-19.518 14v-11.817l10 8.104 10-8.104v11.817h-20z"/></svg>
+              Email
+            </a>
+          </div>
+          <p class="mt-5 text-sm text-slate-400">
+            📍 New York City · open to relocating across the US
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- About -->
+    <section id="about" class="py-20 reveal">
+      <p class="section-label mb-3">About</p>
+      <h2 class="font-display text-3xl md:text-4xl font-bold text-slate-900 mb-8">
+        Systems rigor for ML. ML judgment for systems.
+      </h2>
+      <div class="grid md:grid-cols-5 gap-8 items-start">
+        <div class="md:col-span-3 space-y-4 text-slate-500 leading-relaxed">
+          <p>
+            I'm a Computer Engineer wrapping up my MS at <span class="text-slate-800 font-medium">NYU Tandon</span>.
+            My last five years have been a deliberate mix of production software, applied machine
+            learning, and security fundamentals — because the most interesting problems sit where
+            those three overlap.
+          </p>
+          <p>
+            At <span class="text-slate-800 font-medium">Citi</span> I worked on <span class="text-slate-800 font-medium">OneTouch</span>,
+            the internal equities trading UI traders rely on every market open, writing React &amp;
+            TypeScript against high-throughput REST APIs. In trading systems, milliseconds aren't
+            a metric — they're trust.
+          </p>
+          <p>
+            Lately I own production ML: <span class="text-slate-800 font-medium">1M+ row training runs</span>,
+            distributed Spark ETL, audit-logged model promotion gates, and feedback loops that make
+            recommendations visibly improve with new data.
+          </p>
+        </div>
+        <div class="md:col-span-2 grid grid-cols-2 gap-4">
+          <div class="stat-card rounded-2xl p-5">
+            <div class="font-display text-3xl font-bold gradient-text">1M+</div>
+            <div class="text-xs text-slate-400 mt-1">training rows / run</div>
+          </div>
+          <div class="stat-card rounded-2xl p-5">
+            <div class="font-display text-3xl font-bold gradient-text">92%</div>
+            <div class="text-xs text-slate-400 mt-1">F1 on event classification</div>
+          </div>
+          <div class="stat-card rounded-2xl p-5">
+            <div class="font-display text-3xl font-bold gradient-text">30%</div>
+            <div class="text-xs text-slate-400 mt-1">Citi platform efficiency lift</div>
+          </div>
+          <div class="stat-card rounded-2xl p-5">
+            <div class="font-display text-3xl font-bold gradient-text">4</div>
+            <div class="text-xs text-slate-400 mt-1">grad courses TA'd @ NYU</div>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- Experience -->
-    <section class="mt-12">
-      <h2 class="text-2xl font-semibold border-b pb-2 mb-4">Work Experience</h2>
-      <div class="grid md:grid-cols-2 gap-6">
-        <div class="bg-white p-4 rounded-xl shadow">
-            <img src="./citigroup-logo.png" alt="CITI Bank" class="w-full h-40 object-contain rounded mb-3 bg-white p-2">
-          <h3 class="font-semibold text-lg">Technology Analyst – CITI Bank</h3>
-          <p class="text-sm text-gray-600">Jul 2024 – Aug 2025</p>
-          <p>Developed features like bulk file uploads and basket-level column updates, improving trade execution speed by 40%. Implemented supervisory bypasses reducing manual intervention by 90%, and contributed to UI logic, unit testing, and CI/CD workflows in an agile team.</p>
+    <section id="experience" class="py-20 reveal">
+      <p class="section-label mb-3">Experience</p>
+      <h2 class="font-display text-3xl md:text-4xl font-bold text-slate-900 mb-12">Where I've shipped</h2>
+
+      <div class="relative border-l-2 border-slate-100 ml-3 space-y-10">
+        <!-- NYU -->
+        <div class="relative pl-8">
+          <span class="absolute -left-[7px] top-1.5 w-3.5 h-3.5 rounded-full timeline-dot"></span>
+          <div class="card rounded-2xl p-6 shadow-sm">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <h3 class="font-display text-lg font-semibold text-slate-900">Graduate Teaching Assistant — New York University</h3>
+              <span class="text-xs text-slate-400 whitespace-nowrap bg-slate-50 px-3 py-1 rounded-full border border-slate-100">Sep 2025 – Present</span>
+            </div>
+            <p class="text-sm text-indigo-600 mt-1 font-medium">Operating Systems · Cyber Risk Management / AI Governance</p>
+            <p class="mt-3 text-slate-500 text-sm leading-relaxed">
+              Run office hours on the xv6 kernel — processes, scheduling, virtual memory, synchronization,
+              file systems — and guide grad students through enterprise risk frameworks, threat modeling,
+              and governance controls. Cut assignment turnaround 40% and lifted comprehension scores 30%
+              across four graduate courses.
+            </p>
+          </div>
         </div>
-        <div class="bg-white p-4 rounded-xl shadow">
-          <img src="./FinIQ.jpeg" alt="FinIQ" class="w-full h-40 object-contain rounded mb-3 bg-white p-2">
-          <h3 class="font-semibold text-lg">Software Developer Intern – FinIQ</h3>
-          <p class="text-sm text-gray-600">Summer 2023</p>
-          <p>Led improvements to Volsurf algorithm and optimized model parameters, boosting strategy execution efficiency by 15%. Enhanced backend performance using Redgate ANTS and developed clean, object-oriented C# modules for financial data analysis and risk modeling.</p>
+
+        <!-- Citi -->
+        <div class="relative pl-8">
+          <span class="absolute -left-[7px] top-1.5 w-3.5 h-3.5 rounded-full timeline-dot"></span>
+          <div class="card rounded-2xl p-6 shadow-sm">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <h3 class="font-display text-lg font-semibold text-slate-900">Software Engineer — Citi</h3>
+              <span class="text-xs text-slate-400 whitespace-nowrap bg-slate-50 px-3 py-1 rounded-full border border-slate-100">Jul 2024 – Aug 2025</span>
+            </div>
+            <p class="text-sm text-indigo-600 mt-1 font-medium">OneTouch — global equities trading platform · Pune, India</p>
+            <p class="mt-3 text-slate-500 text-sm leading-relaxed">
+              Engineered React &amp; TypeScript features for OneTouch, lifting platform efficiency 30% for
+              traders on global desks. Built REST integrations across a React/Angular hybrid stack and
+              shipped 10+ production releases with zero rollback incidents alongside 15+ engineers — while
+              automating ETL pipelines that improved trader execution latency 40%.
+            </p>
+          </div>
+        </div>
+
+        <!-- Elespa -->
+        <div class="relative pl-8">
+          <span class="absolute -left-[7px] top-1.5 w-3.5 h-3.5 rounded-full timeline-dot"></span>
+          <div class="card rounded-2xl p-6 shadow-sm">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <h3 class="font-display text-lg font-semibold text-slate-900">Machine Learning Engineer — Elespa HEV</h3>
+              <span class="text-xs text-slate-400 whitespace-nowrap bg-slate-50 px-3 py-1 rounded-full border border-slate-100">2021 – 2024</span>
+            </div>
+            <p class="text-sm text-indigo-600 mt-1 font-medium">Hybrid electric vehicle systems · Pune, India</p>
+            <p class="mt-3 text-slate-500 text-sm leading-relaxed">
+              Co-founded and led a hybrid electric vehicle kit delivering 120–140 km range on a single
+              charge. Directed 8+ engineers across hardware, BLDC motor integration, and LiFePO₄ battery
+              systems, and built Python automation that cut manual sensor-data entry 35%.
+            </p>
+          </div>
+        </div>
+
+        <!-- FinIQ -->
+        <div class="relative pl-8">
+          <span class="absolute -left-[7px] top-1.5 w-3.5 h-3.5 rounded-full timeline-dot"></span>
+          <div class="card rounded-2xl p-6 shadow-sm">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <h3 class="font-display text-lg font-semibold text-slate-900">Software / Data Engineer Intern — FinIQ Consulting</h3>
+              <span class="text-xs text-slate-400 whitespace-nowrap bg-slate-50 px-3 py-1 rounded-full border border-slate-100">May 2023 – Jul 2023</span>
+            </div>
+            <p class="text-sm text-indigo-600 mt-1 font-medium">Financial analysis tooling · Pune, India</p>
+            <p class="mt-3 text-slate-500 text-sm leading-relaxed">
+              Built Angular UI and C# backend services across 3 client engagements, and optimized SQL and
+              code paths with Redgate ANTS to cut response times ~25%. Instituted a root-cause protocol on
+              ingestion logs that dropped downstream reporting errors ~50% — delivered 2 weeks early.
+            </p>
+          </div>
         </div>
       </div>
     </section>
 
     <!-- Projects -->
-    <section class="mt-12">
-      <h2 class="text-2xl font-semibold border-b pb-2 mb-4">Projects</h2>
+    <section id="projects" class="py-20 reveal">
+      <p class="section-label mb-3">Projects</p>
+      <h2 class="font-display text-3xl md:text-4xl font-bold text-slate-900 mb-12">Selected work</h2>
+
       <div class="grid md:grid-cols-2 gap-6">
-        <div class="bg-white p-4 rounded-xl shadow">
-          <img src="./Quantum Computing.jpeg" class="w-full h-40 object-cover rounded mb-3">
-          <h3 class="font-semibold text-lg">Quantum Computing – Qiskit Metal</h3>
-          <p>Designed hybrid quantum-classical models for classification and optimization using Qiskit Metal. Built quantum circuits and evaluated noise impact for scalable quantum applications.</p>
+
+        <!-- GemSpot -->
+        <article class="card rounded-2xl overflow-hidden flex flex-col shadow-sm">
+          <div class="h-1.5 bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-cyan-400"></div>
+          <div class="p-6 flex flex-col flex-1">
+            <h3 class="font-display text-lg font-semibold text-slate-900">GemSpot — ML Training Subsystem &amp; Model Registry</h3>
+            <p class="mt-2 text-sm text-slate-500 leading-relaxed flex-1">
+              Champion–challenger promotion with a quality-gate layer that blocks registry promotion unless
+              ROC-AUC ≥ 0.55, recall ≥ 0.30, and margin-over-baseline all clear — zero silent regressions
+              across 12 cycles. Ray Tune + ASHA early-stopping gave 1.4× faster convergence on 1M+ Google
+              Maps review rows, with a full PostgreSQL → Kafka → feature-store feedback loop.
+            </p>
+            <div class="mt-4 flex flex-wrap gap-1.5">
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">scikit-learn</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">XGBoost</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">MLflow</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Ray Tune</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Redpanda</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">MinIO</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- GDELT -->
+        <article class="card rounded-2xl overflow-hidden flex flex-col shadow-sm">
+          <div class="h-1.5 bg-gradient-to-r from-cyan-400 via-indigo-500 to-fuchsia-500"></div>
+          <div class="p-6 flex flex-col flex-1">
+            <h3 class="font-display text-lg font-semibold text-slate-900">GDELT Real-Time News Intelligence Pipeline</h3>
+            <p class="mt-2 text-sm text-slate-500 leading-relaxed flex-1">
+              92% F1 on event conflict classification across 7 tracked models over 500K+ GDELT 2.0 events
+              per run, ingested via parallel download and PySpark ETL into a Hive-style Parquet warehouse.
+              A PyTorch network predicts 0–100 event severity at MAE 0.73.
+            </p>
+            <div class="mt-4 flex flex-wrap gap-1.5">
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">PySpark 4.0</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Spark MLlib</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">PyTorch</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Plotly Dash</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Parquet</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Parkinson's -->
+        <article class="card rounded-2xl overflow-hidden flex flex-col shadow-sm">
+          <div class="h-1.5 bg-gradient-to-r from-fuchsia-500 via-cyan-400 to-indigo-500"></div>
+          <div class="p-6 flex flex-col flex-1">
+            <h3 class="font-display text-lg font-semibold text-slate-900">Parkinson's Motor Symptom Classifier — Embedded AI</h3>
+            <p class="mt-2 text-sm text-slate-500 leading-relaxed flex-1">
+              Four-class real-time motor-symptom classification fully on-device: 6-axis IMU at 52 Hz,
+              Hamming windowing + 256-point FFT via ARM CMSIS-DSP, classifying tremor / dyskinesia /
+              freeze-of-gait / normal walking — no cloud. Sub-second BLE streaming over a custom GATT
+              service on STM32 with drift suppression.
+            </p>
+            <div class="mt-4 flex flex-wrap gap-1.5">
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">C++</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">ARM Cortex-M4</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">CMSIS-DSP</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">STM32</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">BLE</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- portmap -->
+        <article class="card rounded-2xl overflow-hidden flex flex-col shadow-sm">
+          <div class="h-1.5 bg-gradient-to-r from-indigo-500 to-cyan-400"></div>
+          <div class="p-6 flex flex-col flex-1">
+            <h3 class="font-display text-lg font-semibold text-slate-900">portmap — Published Go CLI (Homebrew)</h3>
+            <p class="mt-2 text-sm text-slate-500 leading-relaxed flex-1">
+              A lightweight Go CLI on Homebrew replacing 5 separate diagnostic commands (lsof, ss,
+              netstat, docker ps, /etc/services) — surfacing listening ports, owning processes, Docker
+              container mappings, and known service labels in one clean table or JSON output.
+            </p>
+            <div class="mt-4 flex items-center justify-between">
+              <div class="flex flex-wrap gap-1.5">
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md">Go</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md">Homebrew</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md">CLI</span>
+              </div>
+              <a href="https://github.com/rohitshidid" target="_blank" rel="noopener"
+                 class="text-xs text-indigo-600 hover:text-indigo-800 font-medium whitespace-nowrap">GitHub ↗</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Search Term -->
+        <article class="card rounded-2xl overflow-hidden flex flex-col shadow-sm">
+          <img src="./Search Term.png" alt="Search Term Analyzer" class="h-40 w-full object-cover" />
+          <div class="p-6 flex flex-col flex-1">
+            <h3 class="font-display text-lg font-semibold text-slate-900">Search Term Analyzer</h3>
+            <p class="mt-2 text-sm text-slate-500 leading-relaxed flex-1">
+              Full data-science pipeline analyzing temporal trends in search terms with SciPy clustering,
+              NLP, and statistical modeling to surface actionable insights.
+            </p>
+            <div class="mt-4 flex items-center gap-3">
+              <a href="https://colab.research.google.com/drive/1ebFNH9YruX_SWZDwLui6aUZbwxbubSrJ?usp=sharing" target="_blank" rel="noopener" class="text-xs text-indigo-600 hover:text-indigo-800 font-medium">Notebook ↗</a>
+              <a href="https://colab.research.google.com/drive/1ybtLJEChPdolMdMlAJsqHw8nLEBu3AVe?usp=sharing" target="_blank" rel="noopener" class="text-xs text-indigo-600 hover:text-indigo-800 font-medium">Notebook 2 ↗</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- EEG -->
+        <article class="card rounded-2xl overflow-hidden flex flex-col shadow-sm">
+          <div class="h-1.5 bg-gradient-to-r from-fuchsia-500 to-indigo-500"></div>
+          <div class="p-6 flex flex-col flex-1">
+            <h3 class="font-display text-lg font-semibold text-slate-900">EEG Independent Component Classification</h3>
+            <p class="mt-2 text-sm text-slate-500 leading-relaxed flex-1">
+              Ensemble ML for EEG independent-component analysis, improving brain-signal classification
+              accuracy for cognitive research. Peer-reviewed and published.
+            </p>
+            <div class="mt-4 flex items-center justify-between">
+              <div class="flex flex-wrap gap-1.5">
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md">scikit-learn</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md">Signal Processing</span>
+              </div>
+              <a href="https://doi.org/10.5281/zenodo.13909560" target="_blank" rel="noopener"
+                 class="text-xs text-indigo-600 hover:text-indigo-800 font-medium whitespace-nowrap">Paper ↗</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- AR -->
+        <article class="card rounded-2xl overflow-hidden flex flex-col shadow-sm">
+          <img src="./AR.jpeg" alt="The Pic Story AR app" class="h-40 w-full object-cover" />
+          <div class="p-6 flex flex-col flex-1">
+            <h3 class="font-display text-lg font-semibold text-slate-900">The Pic Story — AR Android App</h3>
+            <p class="mt-2 text-sm text-slate-500 leading-relaxed flex-1">
+              AR app that plays media when recognizing predefined images, built with Vuforia and OpenCV
+              in Kotlin + Unity for creative multimedia storytelling.
+            </p>
+            <a href="https://drive.google.com/file/d/16OQBopPtuIxUrHngfcY7Ox9hbcUT2YR3/view" target="_blank" rel="noopener" class="mt-4 text-xs text-indigo-600 hover:text-indigo-800 font-medium">Demo ↗</a>
+          </div>
+        </article>
+
+        <!-- Encryp -->
+        <article class="card rounded-2xl overflow-hidden flex flex-col shadow-sm">
+          <img src="./Encryption.jpeg" alt="Encryp" class="h-40 w-full object-cover" />
+          <div class="p-6 flex flex-col flex-1">
+            <h3 class="font-display text-lg font-semibold text-slate-900">Encryp — Cryptography Tool</h3>
+            <p class="mt-2 text-sm text-slate-500 leading-relaxed flex-1">
+              Secure communication platform with custom PHP-based encryption and database-integrated
+              encrypted storage and chat — privacy by design.
+            </p>
+            <a href="https://github.com/rohitshidid/Encryp" target="_blank" rel="noopener" class="mt-4 text-xs text-indigo-600 hover:text-indigo-800 font-medium">GitHub ↗</a>
+          </div>
+        </article>
+
+      </div>
+
+      <!-- Secondary projects -->
+      <div class="grid sm:grid-cols-3 gap-4 mt-6">
+        <div class="card rounded-xl p-5 shadow-sm">
+          <h4 class="font-display font-semibold text-slate-800 text-sm">Quantum Computing — Qiskit Metal</h4>
+          <p class="mt-2 text-xs text-slate-500">Hybrid quantum-classical models for classification &amp; optimization; circuit design and noise analysis.</p>
         </div>
-        <div class="bg-white p-4 rounded-xl shadow">
-          <img src="./Linux.jpeg" class="w-full h-40 object-cover rounded mb-3">
-          <h3 class="font-semibold text-lg">Userland Threading – OS Project</h3>
-          <p>Implemented multithreaded merge sort using userland thread scheduler. Focused on stack memory handling, scheduling policies, and real-time performance insights in C.</p>
+        <div class="card rounded-xl p-5 shadow-sm">
+          <h4 class="font-display font-semibold text-slate-800 text-sm">SaveNotes</h4>
+          <p class="mt-2 text-xs text-slate-500">Co-founded a peer-to-peer study platform with 1,000+ students and a vendor-redeemable rewards engine.</p>
         </div>
-        <div class="bg-white p-4 rounded-xl shadow">
-          <img src="./Search Term.png" class="w-full h-40 object-cover rounded mb-3">
-          <h3 class="font-semibold text-lg">Search Term Analyzer</h3>
-          <p>Built a full data science pipeline analyzing temporal trends in search terms using SciPy clustering, NLP techniques, and statistical modeling to derive actionable insights.</p>
-          <a href="https://colab.research.google.com/drive/1ebFNH9YruX_SWZDwLui6aUZbwxbubSrJ?usp=sharing" target="_blank" class="inline-block mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Link</a>
-          <a href="https://colab.research.google.com/drive/1ybtLJEChPdolMdMlAJsqHw8nLEBu3AVe?usp=sharing" target="_blank" class="inline-block mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Link 2</a>
-        </div>
-        <div class="bg-white p-4 rounded-xl shadow">
-          <img src="./Linux.jpeg" class="w-full h-40 object-cover rounded mb-3">
-          <h3 class="font-semibold text-lg">MFQS Algorithm – CPU Scheduling</h3>
-          <p>Simulated a dynamic priority-based multi-level feedback queue scheduler in C. Improved average turnaround and response time for diverse OS workloads.</p>
-          <a href="https://github.com/rohitshidid/MFQS_Algo" target="_blank" class="inline-block mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Link</a>
-        </div>
-        <div class="bg-white p-4 rounded-xl shadow">
-          <img src="./AR.jpeg" class="w-full h-40 object-cover rounded mb-3">
-          <h3 class="font-semibold text-lg">The Pic Story – AR Android App</h3>
-          <p>Developed an AR application that plays media when recognizing predefined images using Vuforia and OpenCV in Kotlin and Unity. Enabled creative multimedia storytelling.</p>
-          <a href="https://drive.google.com/file/d/16OQBopPtuIxUrHngfcY7Ox9hbcUT2YR3/view" target="_blank" class="inline-block mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Link</a>
-        </div>
-        <div class="bg-white p-4 rounded-xl shadow">
-          <img src="./Encryption.jpeg" class="w-full h-40 object-cover rounded mb-3">
-          <h3 class="font-semibold text-lg">Encryp – Cryptography Tool</h3>
-          <p>Engineered a secure communication platform using custom PHP-based encryption. Emphasized user privacy with database-integrated encrypted storage and chat features.</p>
-          <a href="https://github.com/rohitshidid/Encryp" target="_blank" class="inline-block mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Link</a>
-        </div>
-        <div class="bg-white p-4 rounded-xl shadow">
-          <h3 class="font-semibold text-lg">Post-Ideas</h3>
-          <p>Founded the world's first platform for monetizing ideas. Led full-stack development and business design to connect creators with investors and innovators.</p>
-        </div>
-        <div class="bg-white p-4 rounded-xl shadow">
-          <h3 class="font-semibold text-lg">The Base</h3>
-          <p>Developed a comprehensive academic system with book lending, student dashboard, and attendance tracking using QR codes and web integration.</p>
+        <div class="card rounded-xl p-5 shadow-sm">
+          <h4 class="font-display font-semibold text-slate-800 text-sm">MFQS Scheduler</h4>
+          <p class="mt-2 text-xs text-slate-500">Multi-level feedback queue CPU scheduler in C; improved turnaround and response across OS workloads.
+            <a href="https://github.com/rohitshidid/MFQS_Algo" target="_blank" rel="noopener" class="text-indigo-600 font-medium"> ↗</a>
+          </p>
         </div>
       </div>
-    </section>
-
-    <!-- Publications & Patent -->
-    <section class="mt-12">
-      <h2 class="text-2xl font-semibold border-b pb-2 mb-4">Publications & Patent</h2>
-      <ul class="list-disc pl-6 space-y-2">
-        <li><a href="https://doi.org/10.5281/zenodo.13909560" target="_blank" class="text-blue-600 underline">EEG Classification using CNN Ensemble</a></li>
-        <li><a href="https://doi.org/10.5281/zenodo.11437598" target="_blank" class="text-blue-600 underline">U-Net ResNet for Satellite Image Segmentation</a></li>
-        <li><a href="https://doi.org/10.5281/zenodo.10548139" target="_blank" class="text-blue-600 underline">Battery Management System for EVs</a></li>
-        <li><strong>Patent:</strong> IoT-based Emergency Vehicle Clearance System (India Patent App No: 2305001IN-PS)</li>
-      </ul>
     </section>
 
     <!-- Skills -->
-    <section class="mt-12">
-      <h2 class="text-2xl font-semibold border-b pb-2 mb-4">Skills</h2>
-      <div class="flex flex-wrap gap-2 text-sm">
-        <span class="bg-gray-200 px-3 py-1 rounded">Python</span>
-        <span class="bg-gray-200 px-3 py-1 rounded">C/C++</span>
-        <span class="bg-gray-200 px-3 py-1 rounded">Angular</span>
-        <span class="bg-gray-200 px-3 py-1 rounded">React.js</span>
-        <span class="bg-gray-200 px-3 py-1 rounded">TensorFlow</span>
-        <span class="bg-gray-200 px-3 py-1 rounded">Keras</span>
-        <span class="bg-gray-200 px-3 py-1 rounded">Qiskit</span>
-        <span class="bg-gray-200 px-3 py-1 rounded">Git/GitHub</span>
-        <span class="bg-gray-200 px-3 py-1 rounded">Android Studio</span>
-        <span class="bg-gray-200 px-3 py-1 rounded">Redgate ANTS</span>
-        <span class="bg-gray-200 px-3 py-1 rounded">MySQL</span>
-        <span class="bg-gray-200 px-3 py-1 rounded">PHP</span>
+    <section id="skills" class="py-20 reveal">
+      <p class="section-label mb-3">Stack</p>
+      <h2 class="font-display text-3xl md:text-4xl font-bold text-slate-900 mb-12">Tools I reach for</h2>
+
+      <div class="grid md:grid-cols-2 gap-6">
+        <div class="skill-group rounded-2xl p-6">
+          <h3 class="font-display text-slate-800 font-semibold mb-4">ML &amp; MLOps</h3>
+          <div class="flex flex-wrap gap-2">
+            <span class="pill text-xs px-3 py-1.5 rounded-lg">Python</span>
+            <span class="pill text-xs px-3 py-1.5 rounded-lg">PyTorch</span>
+            <span class="pill text-xs px-3 py-1.5 rounded-lg">scikit-learn</span>
+            <span class="pill text-xs px-3 py-1.5 rounded-lg">XGBoost</span>
+            <span class="pill text-xs px-3 py-1.5 rounded-lg">Spark MLlib</span>
+            <span class="pill text-xs px-3 py-1.5 rounded-lg">HuggingFace</span>
+            <span class="pill text-xs px-3 py-1.5 rounded-lg">MLflow</span>
+            <span class="pill text-xs px-3 py-1.5 rounded-lg">Ray Tune</span>
+          </div>
+        </div>
+        <div class="skill-group rounded-2xl p-6">
+          <h3 class="font-display text-slate-800 font-semibold mb-4">Data &amp; Pipelines</h3>
+          <div class="flex flex-wrap gap-2">
+            <span class="pill text-xs px-3 py-1.5 rounded-lg">PySpark</span>
+            <span class="pill text-xs px-3 py-1.5 rounded-lg">Apache Kafka</span>
+            <span class="pill text-xs px-3 py-1.5 rounded-lg">Redpanda</span>
+            <span class="pill text-xs px-3 py-1.5 rounded-lg">Parquet</span>
+            <span class="pill text-xs px-3 py-1.5 rounded-lg">Hive</span>
+            <span class="pill text-xs px-3 py-1.5 rounded-lg">pandas</span>
+            <span class="pill text-xs px-3 py-1.5 rounded-lg">PostgreSQL</span>
+            <span class="pill text-xs px-3 py-1.5 rounded-lg">MinIO</span>
+          </div>
+        </div>
+        <div class="skill-group rounded-2xl p-6">
+          <h3 class="font-display text-slate-800 font-semibold mb-4">LLMs &amp; Agentic AI</h3>
+          <div class="flex flex-wrap gap-2">
+            <span class="pill text-xs px-3 py-1.5 rounded-lg">LangChain</span>
+            <span class="pill text-xs px-3 py-1.5 rounded-lg">RAG</span>
+            <span class="pill text-xs px-3 py-1.5 rounded-lg">Prompt Engineering</span>
+            <span class="pill text-xs px-3 py-1.5 rounded-lg">Fine-tuning</span>
+            <span class="pill text-xs px-3 py-1.5 rounded-lg">Claude API</span>
+            <span class="pill text-xs px-3 py-1.5 rounded-lg">OpenAI API</span>
+          </div>
+        </div>
+        <div class="skill-group rounded-2xl p-6">
+          <h3 class="font-display text-slate-800 font-semibold mb-4">Systems &amp; Embedded</h3>
+          <div class="flex flex-wrap gap-2">
+            <span class="pill text-xs px-3 py-1.5 rounded-lg">C++</span>
+            <span class="pill text-xs px-3 py-1.5 rounded-lg">Go</span>
+            <span class="pill text-xs px-3 py-1.5 rounded-lg">C</span>
+            <span class="pill text-xs px-3 py-1.5 rounded-lg">ARM Cortex-M4</span>
+            <span class="pill text-xs px-3 py-1.5 rounded-lg">CMSIS-DSP</span>
+            <span class="pill text-xs px-3 py-1.5 rounded-lg">STM32 / BLE</span>
+          </div>
+        </div>
+        <div class="skill-group rounded-2xl p-6">
+          <h3 class="font-display text-slate-800 font-semibold mb-4">Infrastructure</h3>
+          <div class="flex flex-wrap gap-2">
+            <span class="pill text-xs px-3 py-1.5 rounded-lg">Docker</span>
+            <span class="pill text-xs px-3 py-1.5 rounded-lg">Kubernetes</span>
+            <span class="pill text-xs px-3 py-1.5 rounded-lg">AWS (S3 · Lambda · SageMaker)</span>
+            <span class="pill text-xs px-3 py-1.5 rounded-lg">GitHub Actions</span>
+            <span class="pill text-xs px-3 py-1.5 rounded-lg">FastAPI</span>
+            <span class="pill text-xs px-3 py-1.5 rounded-lg">Redis</span>
+          </div>
+        </div>
+        <div class="skill-group rounded-2xl p-6">
+          <h3 class="font-display text-slate-800 font-semibold mb-4">Web &amp; UI</h3>
+          <div class="flex flex-wrap gap-2">
+            <span class="pill text-xs px-3 py-1.5 rounded-lg">React.js</span>
+            <span class="pill text-xs px-3 py-1.5 rounded-lg">TypeScript</span>
+            <span class="pill text-xs px-3 py-1.5 rounded-lg">Angular</span>
+            <span class="pill text-xs px-3 py-1.5 rounded-lg">Node</span>
+            <span class="pill text-xs px-3 py-1.5 rounded-lg">MySQL</span>
+            <span class="pill text-xs px-3 py-1.5 rounded-lg">PHP</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Education -->
+      <div class="grid md:grid-cols-2 gap-6 mt-6">
+        <div class="card rounded-2xl p-6 flex items-center gap-5 shadow-sm">
+          <img src="./nyu_img.png" alt="NYU" class="w-16 h-16 object-contain" />
+          <div>
+            <h3 class="font-display text-slate-900 font-semibold">New York University</h3>
+            <p class="text-sm text-slate-400 mt-0.5">MS, Computer Engineering · Expected May 2027</p>
+          </div>
+        </div>
+        <div class="card rounded-2xl p-6 flex items-center gap-5 shadow-sm">
+          <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-indigo-100 to-cyan-100 flex items-center justify-center font-display font-bold text-indigo-700 text-lg shrink-0 border border-indigo-100">COEP</div>
+          <div>
+            <h3 class="font-display text-slate-900 font-semibold">College of Engineering Pune</h3>
+            <p class="text-sm text-slate-400 mt-0.5">B.Tech, Computer Engineering · May 2024</p>
+          </div>
+        </div>
       </div>
     </section>
 
-    <!-- Extra Curricular -->
-    <section class="mt-12">
-      <h2 class="text-2xl font-semibold border-b pb-2 mb-4">Extra-Curricular</h2>
-      <ul class="list-disc pl-6 space-y-2">
-        <li><strong>ELESPAHEV:</strong> Co-founded a startup converting petrol vehicles into hybrid electric vehicles with a portable battery system.</li>
-        <li><strong>Author:</strong> Published <em>The One Sided Mind</em> – exploring predeterminism and causality. [Available on Amazon]</li>
-        <li><strong>Interview Series:</strong> Conducted interviews with entrepreneurs to explore startup journeys and insights.</li>
-      </ul>
+    <!-- Writing / Publications -->
+    <section id="writing" class="py-20 reveal">
+      <p class="section-label mb-3">Research &amp; beyond</p>
+      <h2 class="font-display text-3xl md:text-4xl font-bold text-slate-900 mb-12">Publications, patent &amp; the rest</h2>
+
+      <div class="grid md:grid-cols-2 gap-6">
+        <div class="card rounded-2xl p-6 shadow-sm">
+          <h3 class="font-display text-slate-900 font-semibold mb-4">Publications &amp; Patent</h3>
+          <ul class="space-y-3 text-sm">
+            <li><a href="https://doi.org/10.5281/zenodo.13909560" target="_blank" rel="noopener" class="text-indigo-600 hover:text-indigo-800 font-medium">EEG Classification using CNN Ensemble ↗</a></li>
+            <li><a href="https://doi.org/10.5281/zenodo.11437598" target="_blank" rel="noopener" class="text-indigo-600 hover:text-indigo-800 font-medium">U-Net ResNet for Satellite Image Segmentation ↗</a></li>
+            <li><a href="https://doi.org/10.5281/zenodo.10548139" target="_blank" rel="noopener" class="text-indigo-600 hover:text-indigo-800 font-medium">Battery Management System for EVs ↗</a></li>
+            <li class="text-slate-500"><span class="text-fuchsia-600 font-medium">Patent:</span> IoT-based Emergency Vehicle Clearance System (India App No. 2305001IN-PS)</li>
+          </ul>
+        </div>
+        <div class="card rounded-2xl p-6 shadow-sm">
+          <h3 class="font-display text-slate-900 font-semibold mb-4">Leadership &amp; side quests</h3>
+          <ul class="space-y-3 text-sm text-slate-500">
+            <li><span class="text-slate-700 font-medium">Author</span> — <em>The One Sided Mind</em>, on predeterminism &amp; causality (Amazon)</li>
+            <li><span class="text-slate-700 font-medium">Co-founder, ELESPA HEV</span> — petrol-to-hybrid EV conversion with a portable battery system</li>
+            <li><span class="text-slate-700 font-medium">Placement Coordinator</span> &amp; <span class="text-slate-700 font-medium">Secretary, Aerial Robotics</span> @ COEP</li>
+            <li><span class="text-slate-700 font-medium">DigiEduHack 2021</span> — won the Agrofood category for digital-agriculture education</li>
+          </ul>
+        </div>
+      </div>
     </section>
 
-    <!-- Leadership Roles -->
-    <section class="mt-12">
-      <h2 class="text-2xl font-semibold border-b pb-2 mb-4">Positions of Responsibility</h2>
-      <ul class="list-disc pl-6 space-y-2">
-        <li><strong>Rotary Rotaract Relationship Officer – Rotaract Club of Pune Startup</strong> (Jun 2023 – 2024)</li>
-        <li><strong>Placement Coordinator – COEP</strong> (Jun 2022 – 2024)</li>
-        <li><strong>Secretary – Aerial Robotics Study Circle</strong> (Jan 2022 – 2023)</li>
-        <li><strong>DigiEduHack 2021:</strong> Won the Agrofood category with a solution for digital agriculture education.</li>
-        <li><strong>DigiEduHack 2020:</strong> Participated in “Professor Green”, a sustainable e-learning platform.</li>
-      </ul>
+    <!-- Contact -->
+    <section class="py-20 reveal">
+      <div class="relative rounded-3xl p-10 md:p-14 text-center overflow-hidden bg-gradient-to-br from-indigo-50 via-white to-cyan-50 border border-indigo-100">
+        <div class="absolute -top-16 -right-16 w-52 h-52 rounded-full bg-fuchsia-100 blur-3xl opacity-60"></div>
+        <div class="absolute -bottom-16 -left-16 w-52 h-52 rounded-full bg-cyan-100 blur-3xl opacity-60"></div>
+        <div class="relative">
+          <h2 class="font-display text-3xl md:text-4xl font-bold text-slate-900">Let's build something</h2>
+          <p class="mt-4 text-slate-500 max-w-lg mx-auto">
+            Open to SWE, ML, Data Science &amp; Security roles and Fall/Spring 2026 internships.
+            Fastest way to reach me is a LinkedIn DM or email.
+          </p>
+          <div class="mt-8 flex flex-wrap justify-center gap-3">
+            <a href="mailto:rohitshidid1@gmail.com"
+               class="px-6 py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-cyan-600 text-white font-medium hover:opacity-90 transition shadow-md">
+              rohitshidid1@gmail.com
+            </a>
+            <a href="https://www.linkedin.com/in/rohit-shidid/" target="_blank" rel="noopener"
+               class="px-6 py-3 rounded-xl card text-slate-700 font-medium hover:text-indigo-600 transition shadow-sm">
+              LinkedIn
+            </a>
+            <a href="tel:+13472477638"
+               class="px-6 py-3 rounded-xl card text-slate-700 font-medium hover:text-indigo-600 transition shadow-sm">
+              +1 (347) 247-7638
+            </a>
+          </div>
+        </div>
+      </div>
     </section>
-  </div>
+
+  </main>
+
+  <footer class="max-w-5xl mx-auto px-6 py-10 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-slate-400">
+    <p>© <span id="year"></span> Rohit Shidid · New York City</p>
+    <div class="flex items-center gap-5">
+      <a href="https://www.linkedin.com/in/rohit-shidid/" target="_blank" rel="noopener" class="hover:text-slate-700 transition">LinkedIn</a>
+      <a href="https://github.com/rohitshidid" target="_blank" rel="noopener" class="hover:text-slate-700 transition">GitHub</a>
+      <a href="mailto:rohitshidid1@gmail.com" class="hover:text-slate-700 transition">Email</a>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+  </script>
 </body>
 </html>

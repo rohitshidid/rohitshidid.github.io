@@ -1,0 +1,5 @@
+# PDFs (resumes / profiles — keep out of repo)
+*.pdf
+
+# macOS
+.DS_Store
