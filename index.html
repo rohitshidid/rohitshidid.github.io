@@ -21,7 +21,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Press+Start+2P&display=swap"
     rel="stylesheet" />
 
   <script>
@@ -40,11 +40,8 @@
   <style>
     :root {
       --accent-1: #4f46e5;
-      /* indigo-600 */
       --accent-2: #c026d3;
-      /* fuchsia-600 */
       --accent-3: #0891b2;
-      /* cyan-600 */
     }
 
     html {
@@ -52,7 +49,8 @@
     }
 
     body {
-      background: #ffffff;
+      background: #f6f7fb;
+      overflow-x: hidden;
     }
 
     ::selection {
@@ -73,48 +71,82 @@
       border-radius: 99px;
     }
 
-    /* Soft blobs in top-right and bottom-left */
+    /* ====== Scroll-reactive tech background ====== */
+    #bg-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      display: block;
+    }
+
     .mesh {
       position: fixed;
       inset: 0;
-      z-index: -1;
+      z-index: -3;
       overflow: hidden;
-      background: #ffffff;
+      background: linear-gradient(180deg, #f8f9ff 0%, #f3f6ff 50%, #f6f3ff 100%);
     }
 
-    .mesh::before,
-    .mesh::after {
-      content: "";
+    .blob {
       position: absolute;
-      width: 50vw;
-      height: 50vw;
       border-radius: 50%;
-      filter: blur(100px);
-      opacity: 0.18;
-      animation: drift 20s ease-in-out infinite alternate;
+      filter: blur(110px);
+      opacity: 0.35;
+      will-change: transform;
     }
 
-    .mesh::before {
-      background: radial-gradient(circle, #6366f1, transparent 70%);
-      top: -10%;
-      right: -10%;
+    .blob-1 {
+      width: 48vw;
+      height: 48vw;
+      background: radial-gradient(circle, #818cf8, transparent 70%);
+      top: -12%;
+      right: -8%;
     }
 
-    .mesh::after {
-      background: radial-gradient(circle, #e879f9, transparent 70%);
-      bottom: -10%;
-      left: -10%;
-      animation-delay: -8s;
+    .blob-2 {
+      width: 44vw;
+      height: 44vw;
+      background: radial-gradient(circle, #f0abfc, transparent 70%);
+      top: 60%;
+      left: -12%;
     }
 
-    @keyframes drift {
-      0% {
-        transform: translate(0, 0) scale(1);
-      }
+    .blob-3 {
+      width: 36vw;
+      height: 36vw;
+      background: radial-gradient(circle, #67e8f9, transparent 70%);
+      top: 130%;
+      right: 5%;
+    }
 
-      100% {
-        transform: translate(5%, 5%) scale(1.12);
-      }
+    /* ====== Liquid glass ====== */
+    .glass {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.45));
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.95),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.3),
+        0 8px 32px -8px rgba(80, 70, 230, 0.12);
+      backdrop-filter: blur(22px) saturate(160%);
+      -webkit-backdrop-filter: blur(22px) saturate(160%);
+    }
+
+    .card {
+      background: linear-gradient(150deg, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.55));
+      border: 1px solid rgba(255, 255, 255, 0.95);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 1),
+        0 10px 36px -14px rgba(80, 70, 230, 0.16);
+      backdrop-filter: blur(18px) saturate(150%);
+      -webkit-backdrop-filter: blur(18px) saturate(150%);
+      transition: transform 0.35s cubic-bezier(.2, .7, .2, 1), box-shadow 0.35s;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 1),
+        0 24px 60px -18px rgba(80, 70, 230, 0.3);
     }
 
     .gradient-text {
@@ -124,43 +156,35 @@
       color: transparent;
     }
 
-    /* Light glass */
-    .glass {
-      background: rgba(255, 255, 255, 0.75);
-      border: 1px solid rgba(0, 0, 0, 0.07);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-    }
-
-    .card {
-      background: #ffffff;
-      border: 1px solid rgba(0, 0, 0, 0.07);
-      transition: transform 0.35s cubic-bezier(.2, .7, .2, 1), border-color 0.35s, box-shadow 0.35s;
-    }
-
-    .card:hover {
-      transform: translateY(-5px);
-      border-color: rgba(99, 102, 241, 0.35);
-      box-shadow: 0 20px 50px -20px rgba(99, 102, 241, 0.2);
-    }
-
     .pill {
-      background: rgba(99, 102, 241, 0.06);
-      border: 1px solid rgba(99, 102, 241, 0.15);
+      background: rgba(99, 102, 241, 0.07);
+      border: 1px solid rgba(99, 102, 241, 0.18);
       color: #3730a3;
       transition: all 0.2s;
     }
 
     .pill:hover {
-      background: rgba(99, 102, 241, 0.12);
-      border-color: rgba(99, 102, 241, 0.4);
+      background: rgba(99, 102, 241, 0.14);
       transform: translateY(-2px);
+    }
+
+    /* ====== Scroll animations ====== */
+    #scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      width: 0%;
+      z-index: 60;
+      background: linear-gradient(90deg, var(--accent-1), var(--accent-2), var(--accent-3));
+      border-radius: 0 99px 99px 0;
+      transition: width 0.1s linear;
     }
 
     .reveal {
       opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 0.65s ease, transform 0.65s cubic-bezier(.2, .7, .2, 1);
+      transform: translateY(36px);
+      transition: opacity 0.7s ease, transform 0.7s cubic-bezier(.2, .7, .2, 1);
     }
 
     .reveal.in {
@@ -168,10 +192,41 @@
       transform: none;
     }
 
+    .reveal-left {
+      opacity: 0;
+      transform: translateX(-40px);
+      transition: opacity 0.7s ease, transform 0.7s cubic-bezier(.2, .7, .2, 1);
+    }
+
+    .reveal-left.in {
+      opacity: 1;
+      transform: none;
+    }
+
+    .stagger>* {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s cubic-bezier(.2, .7, .2, 1);
+    }
+
+    .stagger.in>* {
+      opacity: 1;
+      transform: none;
+    }
+
+    .stagger.in>*:nth-child(1) { transition-delay: 0.05s; }
+    .stagger.in>*:nth-child(2) { transition-delay: 0.12s; }
+    .stagger.in>*:nth-child(3) { transition-delay: 0.19s; }
+    .stagger.in>*:nth-child(4) { transition-delay: 0.26s; }
+    .stagger.in>*:nth-child(5) { transition-delay: 0.33s; }
+    .stagger.in>*:nth-child(6) { transition-delay: 0.4s; }
+    .stagger.in>*:nth-child(7) { transition-delay: 0.47s; }
+    .stagger.in>*:nth-child(8) { transition-delay: 0.54s; }
+
     .photo-ring {
-      box-shadow: 0 0 0 4px #fff,
-        0 0 0 6px rgba(99, 102, 241, 0.3),
-        0 8px 30px -8px rgba(99, 102, 241, 0.25);
+      box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.9),
+        0 0 0 6px rgba(99, 102, 241, 0.35),
+        0 12px 40px -8px rgba(99, 102, 241, 0.35);
     }
 
     .nav-link {
@@ -225,26 +280,143 @@
 
     .timeline-dot {
       background: linear-gradient(135deg, #6366f1, #22d3ee);
+      box-shadow: 0 0 12px rgba(99, 102, 241, 0.5);
     }
 
     .stat-card {
-      background: linear-gradient(135deg, #f8f7ff 0%, #f0f9ff 100%);
-      border: 1px solid rgba(99, 102, 241, 0.12);
+      background: linear-gradient(135deg, rgba(248, 247, 255, 0.85), rgba(240, 249, 255, 0.85));
+      border: 1px solid rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 1), 0 8px 28px -12px rgba(80, 70, 230, 0.15);
     }
 
-    .skill-group {
-      background: #fafafa;
-      border: 1px solid rgba(0, 0, 0, 0.06);
+    /* ====== Game mode ====== */
+    #game-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: none;
+      background: #0b1020;
+    }
+
+    body.game-on #game-layer {
+      display: block;
+    }
+
+    body.game-on {
+      overflow: hidden;
+    }
+
+    #game-canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .game-font {
+      font-family: 'Press Start 2P', monospace;
+    }
+
+    #game-hud {
+      position: absolute;
+      top: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 110;
+      text-align: center;
+      pointer-events: none;
+    }
+
+    #game-panel {
+      position: absolute;
+      left: 50%;
+      bottom: 26px;
+      transform: translateX(-50%) translateY(20px);
+      width: min(620px, calc(100vw - 32px));
+      z-index: 115;
+      background: rgba(15, 22, 44, 0.82);
+      border: 1px solid rgba(129, 140, 248, 0.5);
+      box-shadow: 0 0 40px rgba(99, 102, 241, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-radius: 16px;
+      padding: 20px 22px;
+      color: #dbe3ff;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s, transform 0.25s;
+    }
+
+    #game-panel.open {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .game-btn {
+      background: linear-gradient(135deg, #6366f1, #0891b2);
+      color: #fff;
+      border-radius: 10px;
+      padding: 8px 14px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    /* touch d-pad */
+    #dpad {
+      position: absolute;
+      bottom: 24px;
+      left: 24px;
+      z-index: 112;
+      display: none;
+      grid-template-columns: repeat(3, 52px);
+      grid-template-rows: repeat(3, 52px);
+      gap: 4px;
+    }
+
+    @media (pointer: coarse) {
+      #dpad {
+        display: grid;
+      }
+    }
+
+    .dpad-btn {
+      background: rgba(99, 102, 241, 0.25);
+      border: 1px solid rgba(129, 140, 248, 0.5);
+      border-radius: 12px;
+      color: #c7d2fe;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: none;
+    }
+
+    .dpad-btn:active {
+      background: rgba(99, 102, 241, 0.55);
+    }
+
+    #game-toggle-fab {
+      box-shadow: 0 8px 30px -8px rgba(99, 102, 241, 0.6);
     }
   </style>
 </head>
 
 <body class="font-sans text-slate-700 antialiased">
-  <div class="mesh"></div>
+  <div class="mesh">
+    <div class="blob blob-1" data-speed="0.18"></div>
+    <div class="blob blob-2" data-speed="-0.12"></div>
+    <div class="blob blob-3" data-speed="0.25"></div>
+  </div>
+  <canvas id="bg-canvas"></canvas>
+  <div id="scroll-progress"></div>
 
   <!-- Nav -->
   <header class="fixed top-0 inset-x-0 z-50">
-    <nav class="glass mx-auto mt-4 max-w-5xl rounded-2xl px-5 py-3 flex items-center justify-between shadow-sm">
+    <nav class="glass mx-auto mt-4 max-w-5xl rounded-2xl px-5 py-3 flex items-center justify-between">
       <a href="#top" class="font-display font-bold text-slate-900 tracking-tight text-lg">
         Rohit<span class="gradient-text">.</span>
       </a>
@@ -255,10 +427,16 @@
         <a href="#skills" class="nav-link">Skills</a>
         <a href="#writing" class="nav-link">Writing</a>
       </div>
-      <a href="mailto:rrs6770@nyu.edu"
-        class="text-sm font-medium text-white px-4 py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-cyan-600 hover:opacity-90 transition shadow-sm">
-        Get in touch
-      </a>
+      <div class="flex items-center gap-2">
+        <button id="game-toggle" title="Explore as a game"
+          class="text-sm font-medium px-3 py-2 rounded-xl border border-indigo-200 text-indigo-700 bg-white/60 hover:bg-indigo-50 transition">
+          🎮 <span class="hidden sm:inline">Game mode</span>
+        </button>
+        <a href="mailto:rrs6770@nyu.edu"
+          class="text-sm font-medium text-white px-4 py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-cyan-600 hover:opacity-90 transition shadow-sm">
+          Get in touch
+        </a>
+      </div>
     </nav>
   </header>
 
@@ -267,16 +445,15 @@
     <!-- Hero -->
     <section class="min-h-screen flex flex-col justify-center pt-28 pb-20">
       <div class="flex flex-col md:flex-row items-center gap-12">
-        <div class="relative shrink-0">
+        <div class="relative shrink-0" data-parallax="0.06">
           <div
-            class="absolute -inset-4 rounded-full bg-gradient-to-tr from-indigo-200 via-fuchsia-100 to-cyan-200 blur-2xl opacity-70">
+            class="absolute -inset-4 rounded-full bg-gradient-to-tr from-indigo-300 via-fuchsia-200 to-cyan-200 blur-2xl opacity-80">
           </div>
           <img src="./Professional Photo square.jpg" alt="Rohit Shidid"
             class="relative w-44 h-44 md:w-52 md:h-52 rounded-full object-cover photo-ring" />
         </div>
         <div class="text-center md:text-left">
-          <div
-            class="inline-flex items-center gap-2 glass rounded-full px-3 py-1 text-xs text-slate-600 mb-5 shadow-sm">
+          <div class="inline-flex items-center gap-2 glass rounded-full px-3 py-1 text-xs text-slate-600 mb-5">
             <span class="live-dot w-2 h-2 rounded-full bg-green-400 inline-block"></span>
             Open to SWE · ML · Data Science · Security roles &amp; 2026 internships
           </div>
@@ -295,7 +472,7 @@
           </p>
           <div class="mt-7 flex flex-wrap justify-center md:justify-start items-center gap-3">
             <a href="https://www.linkedin.com/in/rohit-shidid/" target="_blank" rel="noopener"
-              class="group flex items-center gap-2 card rounded-xl px-4 py-2.5 text-sm font-medium text-slate-700 hover:text-indigo-600 transition">
+              class="group flex items-center gap-2 card rounded-xl px-4 py-2.5 text-sm font-medium text-slate-700 hover:text-indigo-600">
               <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                 <path
                   d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
@@ -303,7 +480,7 @@
               LinkedIn
             </a>
             <a href="https://github.com/rohitshidid" target="_blank" rel="noopener"
-              class="group flex items-center gap-2 card rounded-xl px-4 py-2.5 text-sm font-medium text-slate-700 hover:text-indigo-600 transition">
+              class="group flex items-center gap-2 card rounded-xl px-4 py-2.5 text-sm font-medium text-slate-700 hover:text-indigo-600">
               <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                 <path
                   d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
@@ -311,7 +488,7 @@
               GitHub
             </a>
             <a href="mailto:rrs6770@nyu.edu"
-              class="group flex items-center gap-2 card rounded-xl px-4 py-2.5 text-sm font-medium text-slate-700 hover:text-indigo-600 transition">
+              class="group flex items-center gap-2 card rounded-xl px-4 py-2.5 text-sm font-medium text-slate-700 hover:text-indigo-600">
               <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                 <path
                   d="M0 3v18h24v-18h-24zm21.518 2l-9.518 7.713-9.518-7.713h19.036zm-19.518 14v-11.817l10 8.104 10-8.104v11.817h-20z" />
@@ -320,9 +497,14 @@
             </a>
           </div>
           <p class="mt-5 text-sm text-slate-400">
-            📍 United States
+            📍 New York City · open to relocating across the US
           </p>
         </div>
+      </div>
+      <div class="mt-16 flex justify-center md:justify-start">
+        <a href="#about" class="text-slate-400 text-sm flex items-center gap-2 animate-bounce">
+          scroll to explore <span>↓</span>
+        </a>
       </div>
     </section>
 
@@ -353,7 +535,7 @@
             recommendations visibly improve with new data.
           </p>
         </div>
-        <div class="md:col-span-2 grid grid-cols-2 gap-4">
+        <div class="md:col-span-2 grid grid-cols-2 gap-4 stagger reveal">
           <div class="stat-card rounded-2xl p-5">
             <div class="font-display text-3xl font-bold gradient-text">1M+</div>
             <div class="text-xs text-slate-400 mt-1">training rows / run</div>
@@ -379,16 +561,15 @@
       <p class="section-label mb-3">Experience</p>
       <h2 class="font-display text-3xl md:text-4xl font-bold text-slate-900 mb-12">Where I've shipped</h2>
 
-      <div class="relative border-l-2 border-slate-100 ml-3 space-y-10">
-        <!-- NYU -->
-        <div class="relative pl-8">
-          <span class="absolute -left-[7px] top-1.5 w-3.5 h-3.5 rounded-full timeline-dot"></span>
-          <div class="card rounded-2xl p-6 shadow-sm">
+      <div class="relative border-l-2 border-indigo-100 ml-3 space-y-10">
+        <div class="relative pl-8 reveal-left">
+          <span class="absolute -left-[8px] top-1.5 w-3.5 h-3.5 rounded-full timeline-dot"></span>
+          <div class="card rounded-2xl p-6">
             <div class="flex flex-wrap items-center justify-between gap-2">
               <h3 class="font-display text-lg font-semibold text-slate-900">Graduate Teaching Assistant — New York
                 University</h3>
               <span
-                class="text-xs text-slate-400 whitespace-nowrap bg-slate-50 px-3 py-1 rounded-full border border-slate-100">Sep
+                class="text-xs text-slate-400 whitespace-nowrap bg-white/70 px-3 py-1 rounded-full border border-slate-100">Sep
                 2025 – Present</span>
             </div>
             <p class="text-sm text-indigo-600 mt-1 font-medium">Operating Systems · Cyber Risk Management / AI
@@ -402,14 +583,13 @@
           </div>
         </div>
 
-        <!-- Citi -->
-        <div class="relative pl-8">
-          <span class="absolute -left-[7px] top-1.5 w-3.5 h-3.5 rounded-full timeline-dot"></span>
-          <div class="card rounded-2xl p-6 shadow-sm">
+        <div class="relative pl-8 reveal-left">
+          <span class="absolute -left-[8px] top-1.5 w-3.5 h-3.5 rounded-full timeline-dot"></span>
+          <div class="card rounded-2xl p-6">
             <div class="flex flex-wrap items-center justify-between gap-2">
               <h3 class="font-display text-lg font-semibold text-slate-900">Software Engineer — Citi</h3>
               <span
-                class="text-xs text-slate-400 whitespace-nowrap bg-slate-50 px-3 py-1 rounded-full border border-slate-100">Jul
+                class="text-xs text-slate-400 whitespace-nowrap bg-white/70 px-3 py-1 rounded-full border border-slate-100">Jul
                 2024 – Aug 2025</span>
             </div>
             <p class="text-sm text-indigo-600 mt-1 font-medium">OneTouch — global equities trading platform · Pune,
@@ -423,14 +603,13 @@
           </div>
         </div>
 
-        <!-- Elespa -->
-        <div class="relative pl-8">
-          <span class="absolute -left-[7px] top-1.5 w-3.5 h-3.5 rounded-full timeline-dot"></span>
-          <div class="card rounded-2xl p-6 shadow-sm">
+        <div class="relative pl-8 reveal-left">
+          <span class="absolute -left-[8px] top-1.5 w-3.5 h-3.5 rounded-full timeline-dot"></span>
+          <div class="card rounded-2xl p-6">
             <div class="flex flex-wrap items-center justify-between gap-2">
               <h3 class="font-display text-lg font-semibold text-slate-900">Machine Learning Engineer — Elespa HEV</h3>
               <span
-                class="text-xs text-slate-400 whitespace-nowrap bg-slate-50 px-3 py-1 rounded-full border border-slate-100">2021
+                class="text-xs text-slate-400 whitespace-nowrap bg-white/70 px-3 py-1 rounded-full border border-slate-100">2021
                 – 2024</span>
             </div>
             <p class="text-sm text-indigo-600 mt-1 font-medium">Hybrid electric vehicle systems · Pune, India</p>
@@ -442,15 +621,14 @@
           </div>
         </div>
 
-        <!-- FinIQ -->
-        <div class="relative pl-8">
-          <span class="absolute -left-[7px] top-1.5 w-3.5 h-3.5 rounded-full timeline-dot"></span>
-          <div class="card rounded-2xl p-6 shadow-sm">
+        <div class="relative pl-8 reveal-left">
+          <span class="absolute -left-[8px] top-1.5 w-3.5 h-3.5 rounded-full timeline-dot"></span>
+          <div class="card rounded-2xl p-6">
             <div class="flex flex-wrap items-center justify-between gap-2">
               <h3 class="font-display text-lg font-semibold text-slate-900">Software / Data Engineer Intern — FinIQ
                 Consulting</h3>
               <span
-                class="text-xs text-slate-400 whitespace-nowrap bg-slate-50 px-3 py-1 rounded-full border border-slate-100">May
+                class="text-xs text-slate-400 whitespace-nowrap bg-white/70 px-3 py-1 rounded-full border border-slate-100">May
                 2023 – Jul 2023</span>
             </div>
             <p class="text-sm text-indigo-600 mt-1 font-medium">Financial analysis tooling · Pune, India</p>
@@ -469,10 +647,9 @@
       <p class="section-label mb-3">Projects</p>
       <h2 class="font-display text-3xl md:text-4xl font-bold text-slate-900 mb-12">Selected work</h2>
 
-      <div class="grid md:grid-cols-2 gap-6">
+      <div class="grid md:grid-cols-2 gap-6 stagger reveal">
 
-        <!-- GemSpot -->
-        <article class="card rounded-2xl overflow-hidden flex flex-col shadow-sm">
+        <article class="card rounded-2xl overflow-hidden flex flex-col">
           <div class="h-1.5 bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-cyan-400"></div>
           <div class="p-6 flex flex-col flex-1">
             <h3 class="font-display text-lg font-semibold text-slate-900">GemSpot — ML Training Subsystem &amp; Model
@@ -494,8 +671,7 @@
           </div>
         </article>
 
-        <!-- GDELT -->
-        <article class="card rounded-2xl overflow-hidden flex flex-col shadow-sm">
+        <article class="card rounded-2xl overflow-hidden flex flex-col">
           <div class="h-1.5 bg-gradient-to-r from-cyan-400 via-indigo-500 to-fuchsia-500"></div>
           <div class="p-6 flex flex-col flex-1">
             <h3 class="font-display text-lg font-semibold text-slate-900">GDELT Real-Time News Intelligence Pipeline
@@ -515,8 +691,7 @@
           </div>
         </article>
 
-        <!-- Parkinson's -->
-        <article class="card rounded-2xl overflow-hidden flex flex-col shadow-sm">
+        <article class="card rounded-2xl overflow-hidden flex flex-col">
           <div class="h-1.5 bg-gradient-to-r from-fuchsia-500 via-cyan-400 to-indigo-500"></div>
           <div class="p-6 flex flex-col flex-1">
             <h3 class="font-display text-lg font-semibold text-slate-900">Parkinson's Motor Symptom Classifier —
@@ -537,8 +712,7 @@
           </div>
         </article>
 
-        <!-- portmap -->
-        <article class="card rounded-2xl overflow-hidden flex flex-col shadow-sm">
+        <article class="card rounded-2xl overflow-hidden flex flex-col">
           <div class="h-1.5 bg-gradient-to-r from-indigo-500 to-cyan-400"></div>
           <div class="p-6 flex flex-col flex-1">
             <h3 class="font-display text-lg font-semibold text-slate-900">portmap — Published Go CLI (Homebrew)</h3>
@@ -559,8 +733,7 @@
           </div>
         </article>
 
-        <!-- Search Term -->
-        <article class="card rounded-2xl overflow-hidden flex flex-col shadow-sm">
+        <article class="card rounded-2xl overflow-hidden flex flex-col">
           <img src="./Search Term.png" alt="Search Term Analyzer" class="h-40 w-full object-cover" />
           <div class="p-6 flex flex-col flex-1">
             <h3 class="font-display text-lg font-semibold text-slate-900">Search Term Analyzer</h3>
@@ -570,17 +743,16 @@
             </p>
             <div class="mt-4 flex items-center gap-3">
               <a href="https://colab.research.google.com/drive/1ebFNH9YruX_SWZDwLui6aUZbwxbubSrJ?usp=sharing"
-                target="_blank" rel="noopener"
-                class="text-xs text-indigo-600 hover:text-indigo-800 font-medium">Notebook ↗</a>
+                target="_blank" rel="noopener" class="text-xs text-indigo-600 hover:text-indigo-800 font-medium">Notebook
+                ↗</a>
               <a href="https://colab.research.google.com/drive/1ybtLJEChPdolMdMlAJsqHw8nLEBu3AVe?usp=sharing"
-                target="_blank" rel="noopener"
-                class="text-xs text-indigo-600 hover:text-indigo-800 font-medium">Notebook 2 ↗</a>
+                target="_blank" rel="noopener" class="text-xs text-indigo-600 hover:text-indigo-800 font-medium">Notebook
+                2 ↗</a>
             </div>
           </div>
         </article>
 
-        <!-- EEG -->
-        <article class="card rounded-2xl overflow-hidden flex flex-col shadow-sm">
+        <article class="card rounded-2xl overflow-hidden flex flex-col">
           <div class="h-1.5 bg-gradient-to-r from-fuchsia-500 to-indigo-500"></div>
           <div class="p-6 flex flex-col flex-1">
             <h3 class="font-display text-lg font-semibold text-slate-900">EEG Independent Component Classification</h3>
@@ -599,8 +771,7 @@
           </div>
         </article>
 
-        <!-- AR -->
-        <article class="card rounded-2xl overflow-hidden flex flex-col shadow-sm">
+        <article class="card rounded-2xl overflow-hidden flex flex-col">
           <img src="./AR.jpeg" alt="The Pic Story AR app" class="h-40 w-full object-cover" />
           <div class="p-6 flex flex-col flex-1">
             <h3 class="font-display text-lg font-semibold text-slate-900">The Pic Story — AR Android App</h3>
@@ -613,8 +784,7 @@
           </div>
         </article>
 
-        <!-- Encryp -->
-        <article class="card rounded-2xl overflow-hidden flex flex-col shadow-sm">
+        <article class="card rounded-2xl overflow-hidden flex flex-col">
           <img src="./Encryption.jpeg" alt="Encryp" class="h-40 w-full object-cover" />
           <div class="p-6 flex flex-col flex-1">
             <h3 class="font-display text-lg font-semibold text-slate-900">Encryp — Cryptography Tool</h3>
@@ -629,19 +799,18 @@
 
       </div>
 
-      <!-- Secondary projects -->
-      <div class="grid sm:grid-cols-3 gap-4 mt-6">
-        <div class="card rounded-xl p-5 shadow-sm">
+      <div class="grid sm:grid-cols-3 gap-4 mt-6 stagger reveal">
+        <div class="card rounded-xl p-5">
           <h4 class="font-display font-semibold text-slate-800 text-sm">Quantum Computing — Qiskit Metal</h4>
           <p class="mt-2 text-xs text-slate-500">Hybrid quantum-classical models for classification &amp; optimization;
             circuit design and noise analysis.</p>
         </div>
-        <div class="card rounded-xl p-5 shadow-sm">
+        <div class="card rounded-xl p-5">
           <h4 class="font-display font-semibold text-slate-800 text-sm">SaveNotes</h4>
           <p class="mt-2 text-xs text-slate-500">Co-founded a peer-to-peer study platform with 1,000+ students and a
             vendor-redeemable rewards engine.</p>
         </div>
-        <div class="card rounded-xl p-5 shadow-sm">
+        <div class="card rounded-xl p-5">
           <h4 class="font-display font-semibold text-slate-800 text-sm">MFQS Scheduler</h4>
           <p class="mt-2 text-xs text-slate-500">Multi-level feedback queue CPU scheduler in C; improved turnaround and
             response across OS workloads.
@@ -657,8 +826,8 @@
       <p class="section-label mb-3">Stack</p>
       <h2 class="font-display text-3xl md:text-4xl font-bold text-slate-900 mb-12">Tools I reach for</h2>
 
-      <div class="grid md:grid-cols-2 gap-6">
-        <div class="skill-group rounded-2xl p-6">
+      <div class="grid md:grid-cols-2 gap-6 stagger reveal">
+        <div class="card rounded-2xl p-6">
           <h3 class="font-display text-slate-800 font-semibold mb-4">ML &amp; MLOps</h3>
           <div class="flex flex-wrap gap-2">
             <span class="pill text-xs px-3 py-1.5 rounded-lg">Python</span>
@@ -671,7 +840,7 @@
             <span class="pill text-xs px-3 py-1.5 rounded-lg">Ray Tune</span>
           </div>
         </div>
-        <div class="skill-group rounded-2xl p-6">
+        <div class="card rounded-2xl p-6">
           <h3 class="font-display text-slate-800 font-semibold mb-4">Data &amp; Pipelines</h3>
           <div class="flex flex-wrap gap-2">
             <span class="pill text-xs px-3 py-1.5 rounded-lg">PySpark</span>
@@ -684,7 +853,7 @@
             <span class="pill text-xs px-3 py-1.5 rounded-lg">MinIO</span>
           </div>
         </div>
-        <div class="skill-group rounded-2xl p-6">
+        <div class="card rounded-2xl p-6">
           <h3 class="font-display text-slate-800 font-semibold mb-4">LLMs &amp; Agentic AI</h3>
           <div class="flex flex-wrap gap-2">
             <span class="pill text-xs px-3 py-1.5 rounded-lg">LangChain</span>
@@ -695,7 +864,7 @@
             <span class="pill text-xs px-3 py-1.5 rounded-lg">OpenAI API</span>
           </div>
         </div>
-        <div class="skill-group rounded-2xl p-6">
+        <div class="card rounded-2xl p-6">
           <h3 class="font-display text-slate-800 font-semibold mb-4">Systems &amp; Embedded</h3>
           <div class="flex flex-wrap gap-2">
             <span class="pill text-xs px-3 py-1.5 rounded-lg">C++</span>
@@ -706,7 +875,7 @@
             <span class="pill text-xs px-3 py-1.5 rounded-lg">STM32 / BLE</span>
           </div>
         </div>
-        <div class="skill-group rounded-2xl p-6">
+        <div class="card rounded-2xl p-6">
           <h3 class="font-display text-slate-800 font-semibold mb-4">Infrastructure</h3>
           <div class="flex flex-wrap gap-2">
             <span class="pill text-xs px-3 py-1.5 rounded-lg">Docker</span>
@@ -717,7 +886,7 @@
             <span class="pill text-xs px-3 py-1.5 rounded-lg">Redis</span>
           </div>
         </div>
-        <div class="skill-group rounded-2xl p-6">
+        <div class="card rounded-2xl p-6">
           <h3 class="font-display text-slate-800 font-semibold mb-4">Web &amp; UI</h3>
           <div class="flex flex-wrap gap-2">
             <span class="pill text-xs px-3 py-1.5 rounded-lg">React.js</span>
@@ -730,16 +899,15 @@
         </div>
       </div>
 
-      <!-- Education -->
       <div class="grid md:grid-cols-2 gap-6 mt-6">
-        <div class="card rounded-2xl p-6 flex items-center gap-5 shadow-sm">
+        <div class="card rounded-2xl p-6 flex items-center gap-5">
           <img src="./nyu_img.png" alt="NYU" class="w-16 h-16 object-contain" />
           <div>
             <h3 class="font-display text-slate-900 font-semibold">New York University</h3>
             <p class="text-sm text-slate-400 mt-0.5">MS, Computer Engineering · Expected May 2027</p>
           </div>
         </div>
-        <div class="card rounded-2xl p-6 flex items-center gap-5 shadow-sm">
+        <div class="card rounded-2xl p-6 flex items-center gap-5">
           <div
             class="w-16 h-16 rounded-xl bg-gradient-to-br from-indigo-100 to-cyan-100 flex items-center justify-center font-display font-bold text-indigo-700 text-lg shrink-0 border border-indigo-100">
             COEP</div>
@@ -757,8 +925,8 @@
       <h2 class="font-display text-3xl md:text-4xl font-bold text-slate-900 mb-12">Publications, patent &amp; the rest
       </h2>
 
-      <div class="grid md:grid-cols-2 gap-6">
-        <div class="card rounded-2xl p-6 shadow-sm">
+      <div class="grid md:grid-cols-2 gap-6 stagger reveal">
+        <div class="card rounded-2xl p-6">
           <h3 class="font-display text-slate-900 font-semibold mb-4">Publications &amp; Patent</h3>
           <ul class="space-y-3 text-sm">
             <li><a href="https://doi.org/10.5281/zenodo.13909560" target="_blank" rel="noopener"
@@ -773,11 +941,13 @@
               Vehicle Clearance System (India App No. 2305001IN-PS)</li>
           </ul>
         </div>
-        <div class="card rounded-2xl p-6 shadow-sm">
+        <div class="card rounded-2xl p-6">
           <h3 class="font-display text-slate-900 font-semibold mb-4">Leadership &amp; side quests</h3>
           <ul class="space-y-3 text-sm text-slate-500">
             <li><span class="text-slate-700 font-medium">Author</span> — <em>The One Sided Mind</em>, on predeterminism
               &amp; causality (Amazon)</li>
+            <li><span class="text-slate-700 font-medium">Co-founder, ELESPA HEV</span> — petrol-to-hybrid EV conversion
+              with a portable battery system</li>
             <li><span class="text-slate-700 font-medium">Placement Coordinator</span> &amp; <span
                 class="text-slate-700 font-medium">Secretary, Aerial Robotics</span> @ COEP</li>
             <li><span class="text-slate-700 font-medium">DigiEduHack 2021</span> — won the Agrofood category for
@@ -789,10 +959,9 @@
 
     <!-- Contact -->
     <section class="py-20 reveal">
-      <div
-        class="relative rounded-3xl p-10 md:p-14 text-center overflow-hidden bg-gradient-to-br from-indigo-50 via-white to-cyan-50 border border-indigo-100">
-        <div class="absolute -top-16 -right-16 w-52 h-52 rounded-full bg-fuchsia-100 blur-3xl opacity-60"></div>
-        <div class="absolute -bottom-16 -left-16 w-52 h-52 rounded-full bg-cyan-100 blur-3xl opacity-60"></div>
+      <div class="glass relative rounded-3xl p-10 md:p-14 text-center overflow-hidden">
+        <div class="absolute -top-16 -right-16 w-52 h-52 rounded-full bg-fuchsia-200 blur-3xl opacity-60"></div>
+        <div class="absolute -bottom-16 -left-16 w-52 h-52 rounded-full bg-cyan-200 blur-3xl opacity-60"></div>
         <div class="relative">
           <h2 class="font-display text-3xl md:text-4xl font-bold text-slate-900">Let's build something</h2>
           <p class="mt-4 text-slate-500 max-w-lg mx-auto">
@@ -805,11 +974,10 @@
               rrs6770@nyu.edu
             </a>
             <a href="https://www.linkedin.com/in/rohit-shidid/" target="_blank" rel="noopener"
-              class="px-6 py-3 rounded-xl card text-slate-700 font-medium hover:text-indigo-600 transition shadow-sm">
+              class="px-6 py-3 rounded-xl card text-slate-700 font-medium hover:text-indigo-600">
               LinkedIn
             </a>
-            <a href="tel:+13472477638"
-              class="px-6 py-3 rounded-xl card text-slate-700 font-medium hover:text-indigo-600 transition shadow-sm">
+            <a href="tel:+13472477638" class="px-6 py-3 rounded-xl card text-slate-700 font-medium hover:text-indigo-600">
               +1 (347) 247-7638
             </a>
           </div>
@@ -820,7 +988,7 @@
   </main>
 
   <footer
-    class="max-w-5xl mx-auto px-6 py-10 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-slate-400">
+    class="max-w-5xl mx-auto px-6 py-10 border-t border-slate-200/60 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-slate-400">
     <p>© <span id="year"></span> Rohit Shidid · New York City</p>
     <div class="flex items-center gap-5">
       <a href="https://www.linkedin.com/in/rohit-shidid/" target="_blank" rel="noopener"
@@ -831,15 +999,374 @@
     </div>
   </footer>
 
+  <!-- ====== GAME MODE ====== -->
+  <div id="game-layer">
+    <canvas id="game-canvas"></canvas>
+
+    <div id="game-hud">
+      <p class="game-font text-[10px] md:text-xs text-indigo-300 tracking-wider">ROHIT.EXE — PORTFOLIO QUEST</p>
+      <p class="mt-2 text-[11px] text-slate-400">WASD / arrows to move · walk into a node to open it</p>
+    </div>
+
+    <button id="game-exit"
+      class="game-font absolute top-4 right-4 z-[120] text-[9px] md:text-[10px] text-cyan-200 border border-cyan-400/50 bg-cyan-500/10 hover:bg-cyan-500/25 rounded-lg px-4 py-3 transition">
+      ⏏ EXIT GAME
+    </button>
+
+    <div id="game-panel">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <p id="panel-title" class="game-font text-[11px] text-cyan-300"></p>
+          <p id="panel-body" class="mt-3 text-sm leading-relaxed text-slate-300"></p>
+        </div>
+        <button id="panel-close" class="text-slate-400 hover:text-white text-lg leading-none">✕</button>
+      </div>
+      <div class="mt-4 flex gap-3">
+        <button id="panel-goto" class="game-btn">Open full section →</button>
+      </div>
+    </div>
+
+    <div id="dpad">
+      <div></div>
+      <div class="dpad-btn" data-dir="up">▲</div>
+      <div></div>
+      <div class="dpad-btn" data-dir="left">◀</div>
+      <div></div>
+      <div class="dpad-btn" data-dir="right">▶</div>
+      <div></div>
+      <div class="dpad-btn" data-dir="down">▼</div>
+      <div></div>
+    </div>
+  </div>
+
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
 
+    /* ---------- Scroll reveal ---------- */
     const io = new IntersectionObserver((entries) => {
       entries.forEach((e) => {
         if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
       });
     }, { threshold: 0.12 });
-    document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+    document.querySelectorAll('.reveal, .reveal-left').forEach((el) => io.observe(el));
+
+    /* ---------- Scroll progress + parallax blobs ---------- */
+    const progress = document.getElementById('scroll-progress');
+    const blobs = document.querySelectorAll('.blob');
+    const parallaxEls = document.querySelectorAll('[data-parallax]');
+    let scrollY = 0;
+
+    function onScroll() {
+      scrollY = window.scrollY;
+      const max = document.documentElement.scrollHeight - innerHeight;
+      progress.style.width = (max > 0 ? (scrollY / max) * 100 : 0) + '%';
+      blobs.forEach((b) => {
+        b.style.transform = `translateY(${ -scrollY * parseFloat(b.dataset.speed) }px)`;
+      });
+      parallaxEls.forEach((el) => {
+        el.style.transform = `translateY(${ scrollY * parseFloat(el.dataset.parallax) }px)`;
+      });
+    }
+    addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    /* ---------- Neural-network background (scroll-reactive) ---------- */
+    const bg = document.getElementById('bg-canvas');
+    const bctx = bg.getContext('2d');
+    let W, H, nodes = [];
+    const NODE_COUNT = innerWidth < 768 ? 40 : 70;
+    const LINK_DIST = innerWidth < 768 ? 130 : 170;
+
+    function resizeBg() {
+      W = bg.width = innerWidth * devicePixelRatio;
+      H = bg.height = innerHeight * devicePixelRatio;
+      bg.style.width = innerWidth + 'px';
+      bg.style.height = innerHeight + 'px';
+      bctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+    }
+    addEventListener('resize', resizeBg);
+    resizeBg();
+
+    for (let i = 0; i < NODE_COUNT; i++) {
+      nodes.push({
+        x: Math.random() * innerWidth,
+        y: Math.random() * innerHeight,
+        vx: (Math.random() - 0.5) * 0.35,
+        vy: (Math.random() - 0.5) * 0.35,
+        r: 1.5 + Math.random() * 2,
+        depth: 0.3 + Math.random() * 0.7, // parallax depth per node
+      });
+    }
+
+    let pulseT = 0;
+    function drawBg() {
+      bctx.clearRect(0, 0, innerWidth, innerHeight);
+      pulseT += 0.012;
+      // hue shifts slightly with scroll → background "innovates" as you move
+      const hue = 235 + (scrollY * 0.02) % 60;
+
+      for (const n of nodes) {
+        n.x += n.vx;
+        n.y += n.vy;
+        if (n.x < -20) n.x = innerWidth + 20;
+        if (n.x > innerWidth + 20) n.x = -20;
+        if (n.y < -20) n.y = innerHeight + 20;
+        if (n.y > innerHeight + 20) n.y = -20;
+      }
+
+      // parallax offset: deeper nodes drift more with scroll
+      const off = (n) => ((scrollY * 0.12 * n.depth) % (innerHeight + 40));
+      const py = (n) => {
+        let y = n.y - off(n);
+        if (y < -20) y += innerHeight + 40;
+        return y;
+      };
+
+      // links
+      for (let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < nodes.length; j++) {
+          const a = nodes[i], b = nodes[j];
+          const ay = py(a), by = py(b);
+          const dx = a.x - b.x, dy = ay - by;
+          const d = Math.hypot(dx, dy);
+          if (d < LINK_DIST) {
+            const alpha = (1 - d / LINK_DIST) * 0.35;
+            bctx.strokeStyle = `hsla(${hue}, 75%, 60%, ${alpha})`;
+            bctx.lineWidth = 1;
+            bctx.beginPath();
+            bctx.moveTo(a.x, ay);
+            bctx.lineTo(b.x, by);
+            bctx.stroke();
+          }
+        }
+      }
+
+      // nodes with a soft pulse
+      for (const n of nodes) {
+        const y = py(n);
+        const r = n.r + Math.sin(pulseT + n.x * 0.01) * 0.6;
+        bctx.fillStyle = `hsla(${hue + 30 * n.depth}, 80%, 58%, ${0.35 + 0.3 * n.depth})`;
+        bctx.beginPath();
+        bctx.arc(n.x, y, Math.max(r, 0.5), 0, Math.PI * 2);
+        bctx.fill();
+      }
+
+      requestAnimationFrame(drawBg);
+    }
+    drawBg();
+
+    /* ====================================================== */
+    /* ==================== GAME MODE ======================= */
+    /* ====================================================== */
+    const gameLayer = document.getElementById('game-layer');
+    const gc = document.getElementById('game-canvas');
+    const gctx = gc.getContext('2d');
+    const panel = document.getElementById('game-panel');
+    const panelTitle = document.getElementById('panel-title');
+    const panelBody = document.getElementById('panel-body');
+    const panelGoto = document.getElementById('panel-goto');
+
+    const STATIONS = [
+      { id: 'about', icon: '🧠', label: 'ABOUT', color: '#818cf8', body: "MS Computer Engineering @ NYU Tandon, ex-Citi SWE. Five years mixing production software, applied ML, and security — systems rigor for ML, ML judgment for systems." },
+      { id: 'experience', icon: '🏦', label: 'EXPERIENCE', color: '#22d3ee', body: "Citi (OneTouch trading UI — React/TS, 30% efficiency lift), NYU TA across 4 grad courses, Elespa HEV co-founder, FinIQ intern. Zero-rollback production shipping." },
+      { id: 'projects', icon: '🚀', label: 'PROJECTS', color: '#e879f9', body: "GemSpot ML registry with quality gates · GDELT news pipeline (92% F1, 500K+ events/run) · Parkinson's embedded classifier on STM32 · portmap Go CLI on Homebrew." },
+      { id: 'skills', icon: '🛠️', label: 'SKILLS', color: '#34d399', body: "PyTorch, PySpark, Kafka, MLflow, Ray Tune · C++/Go on ARM Cortex-M4 · LangChain & RAG · Docker, Kubernetes, AWS · React & TypeScript." },
+      { id: 'writing', icon: '📜', label: 'RESEARCH', color: '#fbbf24', body: "3 published papers (EEG CNN ensemble, U-Net satellite segmentation, EV battery management) + an IoT emergency-vehicle patent + a book on Amazon." },
+      { id: 'top', icon: '📬', label: 'CONTACT', color: '#fb7185', body: "rrs6770@nyu.edu · linkedin.com/in/rohit-shidid · github.com/rohitshidid · NYC, open to relocation. Open to SWE/ML/DS/Security roles & 2026 internships." },
+    ];
+
+    let gameOn = false, raf;
+    const player = { x: 0, y: 0, vx: 0, vy: 0, size: 14, trail: [] };
+    const keys = {};
+    let stationPts = [];
+    let activeStation = null;
+    let gw = 0, gh = 0;
+
+    function resizeGame() {
+      gw = gc.width = innerWidth * devicePixelRatio;
+      gh = gc.height = innerHeight * devicePixelRatio;
+      gc.style.width = innerWidth + 'px';
+      gc.style.height = innerHeight + 'px';
+      gctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+      layoutStations();
+    }
+
+    function layoutStations() {
+      // ring layout around center
+      const cx = innerWidth / 2, cy = innerHeight / 2;
+      const rad = Math.min(innerWidth, innerHeight) * 0.33;
+      stationPts = STATIONS.map((s, i) => {
+        const ang = (i / STATIONS.length) * Math.PI * 2 - Math.PI / 2;
+        return { ...s, x: cx + Math.cos(ang) * rad, y: cy + Math.sin(ang) * rad };
+      });
+    }
+
+    addEventListener('resize', () => { if (gameOn) resizeGame(); });
+
+    addEventListener('keydown', (e) => {
+      if (!gameOn) return;
+      keys[e.key.toLowerCase()] = true;
+      if (['arrowup', 'arrowdown', 'arrowleft', 'arrowright', ' '].includes(e.key.toLowerCase())) e.preventDefault();
+      if (e.key === 'Escape') exitGame();
+    });
+    addEventListener('keyup', (e) => { keys[e.key.toLowerCase()] = false; });
+
+    // touch d-pad
+    document.querySelectorAll('.dpad-btn').forEach((btn) => {
+      const dir = btn.dataset.dir;
+      const map = { up: 'w', down: 's', left: 'a', right: 'd' };
+      btn.addEventListener('touchstart', (e) => { e.preventDefault(); keys[map[dir]] = true; }, { passive: false });
+      btn.addEventListener('touchend', () => { keys[map[dir]] = false; });
+    });
+
+    let gt = 0;
+    function gameLoop() {
+      gt += 0.016;
+      const ACC = 0.55, FRICTION = 0.88, MAX = 6;
+
+      if (keys['w'] || keys['arrowup']) player.vy -= ACC;
+      if (keys['s'] || keys['arrowdown']) player.vy += ACC;
+      if (keys['a'] || keys['arrowleft']) player.vx -= ACC;
+      if (keys['d'] || keys['arrowright']) player.vx += ACC;
+      player.vx = Math.max(-MAX, Math.min(MAX, player.vx)) * FRICTION;
+      player.vy = Math.max(-MAX, Math.min(MAX, player.vy)) * FRICTION;
+      player.x = Math.max(20, Math.min(innerWidth - 20, player.x + player.vx));
+      player.y = Math.max(20, Math.min(innerHeight - 20, player.y + player.vy));
+
+      player.trail.push({ x: player.x, y: player.y });
+      if (player.trail.length > 18) player.trail.shift();
+
+      // station proximity
+      let near = null;
+      for (const s of stationPts) {
+        if (Math.hypot(player.x - s.x, player.y - s.y) < 56) { near = s; break; }
+      }
+      if (near && activeStation !== near.id) openPanel(near);
+      if (!near && activeStation) closePanel();
+
+      drawGame();
+      raf = requestAnimationFrame(gameLoop);
+    }
+
+    function drawGame() {
+      gctx.clearRect(0, 0, innerWidth, innerHeight);
+
+      // grid floor
+      gctx.strokeStyle = 'rgba(99,102,241,0.12)';
+      gctx.lineWidth = 1;
+      const grid = 48;
+      for (let x = 0; x < innerWidth; x += grid) {
+        gctx.beginPath(); gctx.moveTo(x, 0); gctx.lineTo(x, innerHeight); gctx.stroke();
+      }
+      for (let y = 0; y < innerHeight; y += grid) {
+        gctx.beginPath(); gctx.moveTo(0, y); gctx.lineTo(innerWidth, y); gctx.stroke();
+      }
+
+      // center core
+      const cx = innerWidth / 2, cy = innerHeight / 2;
+      gctx.fillStyle = 'rgba(129,140,248,0.9)';
+      gctx.font = '28px sans-serif';
+      gctx.textAlign = 'center';
+      gctx.fillText('⚡', cx, cy + 10);
+      gctx.strokeStyle = 'rgba(129,140,248,0.35)';
+      gctx.beginPath();
+      gctx.arc(cx, cy, 34 + Math.sin(gt * 2) * 4, 0, Math.PI * 2);
+      gctx.stroke();
+
+      // connections center→stations
+      for (const s of stationPts) {
+        gctx.strokeStyle = s.color + '44';
+        gctx.setLineDash([6, 8]);
+        gctx.lineDashOffset = -gt * 30;
+        gctx.beginPath();
+        gctx.moveTo(cx, cy);
+        gctx.lineTo(s.x, s.y);
+        gctx.stroke();
+        gctx.setLineDash([]);
+      }
+
+      // stations
+      for (const s of stationPts) {
+        const pulse = 26 + Math.sin(gt * 3 + s.x) * 3;
+        gctx.fillStyle = s.color + '22';
+        gctx.beginPath(); gctx.arc(s.x, s.y, pulse + 14, 0, Math.PI * 2); gctx.fill();
+        gctx.fillStyle = s.color + '55';
+        gctx.beginPath(); gctx.arc(s.x, s.y, pulse, 0, Math.PI * 2); gctx.fill();
+        gctx.strokeStyle = s.color;
+        gctx.lineWidth = 2;
+        gctx.beginPath(); gctx.arc(s.x, s.y, pulse, 0, Math.PI * 2); gctx.stroke();
+        gctx.font = '22px sans-serif';
+        gctx.fillText(s.icon, s.x, s.y + 8);
+        gctx.fillStyle = '#c7d2fe';
+        gctx.font = '9px "Press Start 2P", monospace';
+        gctx.fillText(s.label, s.x, s.y + pulse + 22);
+      }
+
+      // player trail
+      for (let i = 0; i < player.trail.length; i++) {
+        const t = player.trail[i];
+        const a = i / player.trail.length;
+        gctx.fillStyle = `rgba(34,211,238,${a * 0.35})`;
+        gctx.beginPath();
+        gctx.arc(t.x, t.y, player.size * a * 0.7, 0, Math.PI * 2);
+        gctx.fill();
+      }
+
+      // player (little bot)
+      gctx.save();
+      gctx.translate(player.x, player.y);
+      gctx.shadowColor = '#22d3ee';
+      gctx.shadowBlur = 18;
+      gctx.fillStyle = '#0ea5e9';
+      gctx.fillRect(-player.size / 2, -player.size / 2, player.size, player.size);
+      gctx.shadowBlur = 0;
+      gctx.fillStyle = '#e0f2fe';
+      gctx.fillRect(-4, -3, 3, 3);
+      gctx.fillRect(1, -3, 3, 3);
+      gctx.restore();
+    }
+
+    function openPanel(s) {
+      activeStation = s.id;
+      panelTitle.textContent = s.icon + '  ' + s.label;
+      panelBody.textContent = s.body;
+      panelGoto.dataset.target = s.id;
+      panel.classList.add('open');
+    }
+
+    function closePanel() {
+      activeStation = null;
+      panel.classList.remove('open');
+    }
+
+    function enterGame() {
+      gameOn = true;
+      document.body.classList.add('game-on');
+      resizeGame();
+      player.x = innerWidth / 2;
+      player.y = innerHeight / 2 + 90;
+      player.vx = player.vy = 0;
+      player.trail = [];
+      closePanel();
+      cancelAnimationFrame(raf);
+      gameLoop();
+    }
+
+    function exitGame(targetId) {
+      gameOn = false;
+      cancelAnimationFrame(raf);
+      document.body.classList.remove('game-on');
+      closePanel();
+      if (targetId) {
+        const el = document.getElementById(targetId);
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    document.getElementById('game-toggle').addEventListener('click', enterGame);
+    document.getElementById('game-exit').addEventListener('click', () => exitGame());
+    document.getElementById('panel-close').addEventListener('click', closePanel);
+    panelGoto.addEventListener('click', () => exitGame(panelGoto.dataset.target));
   </script>
 </body>
 
