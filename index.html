@@ -361,6 +361,87 @@
       text-underline-offset: 3px;
     }
 
+    /* ====== Card action buttons ====== */
+    .btn-primary,
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.4rem 0.8rem;
+      border-radius: 0.6rem;
+      white-space: nowrap;
+      transition: background .2s, color .2s, border-color .2s, transform .2s, box-shadow .2s;
+    }
+
+    .btn-primary {
+      color: #fff;
+      background: linear-gradient(110deg, var(--accent-1), var(--accent-3));
+      box-shadow: 0 5px 14px -6px rgba(79, 70, 229, 0.6);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 20px -6px rgba(79, 70, 229, 0.7);
+    }
+
+    .btn-ghost {
+      color: #4f46e5;
+      background: rgba(99, 102, 241, 0.07);
+      border: 1px solid rgba(99, 102, 241, 0.18);
+    }
+
+    .btn-ghost:hover {
+      background: rgba(99, 102, 241, 0.14);
+      transform: translateY(-1px);
+    }
+
+    /* ====== Collapsible details ====== */
+    .details-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      color: #64748b;
+      padding: 0.35rem 0.5rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: color .2s, background .2s;
+    }
+
+    .details-toggle:hover {
+      color: #4f46e5;
+      background: rgba(99, 102, 241, 0.08);
+    }
+
+    .dt-chevron {
+      width: 0.85rem;
+      height: 0.85rem;
+      transition: transform .25s cubic-bezier(.2, .7, .2, 1);
+    }
+
+    .details-toggle[aria-expanded="true"] .dt-chevron {
+      transform: rotate(180deg);
+    }
+
+    .proj-details {
+      overflow: hidden;
+      animation: reveal-details .3s cubic-bezier(.2, .7, .2, 1);
+    }
+
+    @keyframes reveal-details {
+      from { opacity: 0; transform: translateY(-6px); }
+      to   { opacity: 1; transform: none; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .proj-details { animation: none; }
+      .dt-chevron { transition: none; }
+    }
+
     /* ====== Status badges ====== */
     .badge-live,
     .badge-video,
@@ -967,566 +1048,781 @@
       <p class="section-label mb-3">Projects</p>
       <h2 class="font-display text-3xl md:text-4xl font-bold text-slate-900 mb-4">Selected work</h2>
       <p class="text-slate-500 max-w-2xl mb-8 leading-relaxed">
-        Nineteen things I&rsquo;ve built and shipped &mdash; live web apps, published CLIs, ML pipelines and research.
-        Most of them you can open and use right now.
+        Nineteen things I&rsquo;ve built and shipped, agentic AI and LLM systems first &mdash;
+        then the ML pipelines, developer tools and web apps. Most of them you can open and use right now.
       </p>
 
-      <div id="project-filters" class="flex flex-wrap gap-2 mb-8" role="tablist" aria-label="Filter projects">
+      <div id="project-filters" class="flex flex-wrap gap-2 mb-6" role="tablist" aria-label="Filter projects">
         <button class="filter-pill is-active" data-filter="all" role="tab" aria-selected="true">All<span class="filter-count">19</span></button>
+        <button class="filter-pill" data-filter="llm" role="tab" aria-selected="false">Agentic AI &amp; LLM<span class="filter-count">5</span></button>
+        <button class="filter-pill" data-filter="ai" role="tab" aria-selected="false">AI &amp; ML<span class="filter-count">13</span></button>
         <button class="filter-pill" data-filter="live" role="tab" aria-selected="false">Live demos<span class="filter-count">12</span></button>
-        <button class="filter-pill" data-filter="ai" role="tab" aria-selected="false">AI &amp; ML<span class="filter-count">11</span></button>
         <button class="filter-pill" data-filter="tools" role="tab" aria-selected="false">Dev tools<span class="filter-count">5</span></button>
         <button class="filter-pill" data-filter="research" role="tab" aria-selected="false">Research<span class="filter-count">5</span></button>
       </div>
 
-      <p id="render-note" class="text-xs text-slate-400 mb-6 flex items-center gap-2">
-        <span class="live-dot-sm"></span>
-        Free-tier demos sleep when idle &mdash; the first load can take up to a minute to wake.
-      </p>
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
+        <p class="text-xs text-slate-400 flex items-center gap-2">
+          <span class="live-dot-sm"></span>
+          Free-tier demos sleep when idle &mdash; the first load can take up to a minute to wake.
+        </p>
+        <button id="expand-all" class="text-xs font-semibold text-indigo-600 hover:text-indigo-800 transition">
+          Expand all
+        </button>
+      </div>
 
-      <div id="project-grid" class="grid md:grid-cols-2 gap-6">
+      <div id="project-grid" class="grid md:grid-cols-2 gap-6 items-start">
 
-        <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="live">
-          <div class="h-1.5 bg-gradient-to-r from-amber-400 to-rose-500"></div>
-          <div class="p-6 flex flex-col flex-1">
-            <div class="flex items-start gap-3.5">
-              <span class="proj-icon bg-gradient-to-br from-amber-400 to-rose-500">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#g-hex"/></svg>
-              </span>
-              <div class="flex-1 min-w-0 flex items-start justify-between gap-3">
-                <h3 class="font-display text-lg font-semibold text-slate-900 leading-snug">Hexlandia</h3>
-                <span class="badge-live"><span class="live-dot-sm"></span>Live</span>
-              </div>
-            </div>
-            <p class="mt-3 text-sm text-slate-500 leading-relaxed flex-1">
-              A Catan-style island for 2–10 players, running on an authoritative Node.js + WebSocket server — the browser is a thin client that only renders state and sends actions, so a hacked client isn't a category of bug. The board scales from 19 hexes at four players to 61 at ten, empty seats fill with greedy bots, and four-letter room codes replace accounts entirely.
-            </p>
-            <div class="mt-5 flex flex-wrap gap-1.5">
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-nodedotjs"/></svg>Node.js</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md">WebSocket</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-express"/></svg>Express</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md">ws</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-javascript"/></svg>Canvas</span>
-            </div>
-            <div class="mt-4 pt-4 border-t border-slate-900/5 flex flex-wrap gap-4">
-              <a href="https://hexagon-zwye.onrender.com" target="_blank" rel="noopener" class="project-link">Live demo <span aria-hidden="true">&#8599;</span></a>
-              <a href="https://github.com/rohitshidid/hexagon" target="_blank" rel="noopener" class="project-link">GitHub <span aria-hidden="true">&#8599;</span></a>
-            </div>
-          </div>
-        </article>
-
-        <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="live">
-          <div class="h-1.5 bg-gradient-to-r from-emerald-400 to-teal-500"></div>
-          <div class="p-6 flex flex-col flex-1">
-            <div class="flex items-start gap-3.5">
-              <span class="proj-icon bg-gradient-to-br from-emerald-400 to-teal-500">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#g-split"/></svg>
-              </span>
-              <div class="flex-1 min-w-0 flex items-start justify-between gap-3">
-                <h3 class="font-display text-lg font-semibold text-slate-900 leading-snug">Splitplus</h3>
-                <span class="badge-live"><span class="live-dot-sm"></span>Live</span>
-              </div>
-            </div>
-            <p class="mt-3 text-sm text-slate-500 leading-relaxed flex-1">
-              Group expense splitting for trips and shared apartments that settles who owes whom automatically. Data lives in a Google Sheet the user owns, so the ledger stays portable and auditable rather than trapped in someone else's database — with expandable expense cards, per-member balances, settle/undo controls, and cross-device sync in about twenty seconds.
-            </p>
-            <div class="mt-5 flex flex-wrap gap-1.5">
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-nextdotjs"/></svg>Next.js</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-typescript"/></svg>TypeScript</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-googlesheets"/></svg>Google Sheets API</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-tailwindcss"/></svg>Tailwind CSS</span>
-            </div>
-            <div class="mt-4 pt-4 border-t border-slate-900/5 flex flex-wrap gap-4">
-              <a href="https://rohitshidid.github.io/splitplus/" target="_blank" rel="noopener" class="project-link">Live demo <span aria-hidden="true">&#8599;</span></a>
-              <a href="https://github.com/rohitshidid/splitplus" target="_blank" rel="noopener" class="project-link">GitHub <span aria-hidden="true">&#8599;</span></a>
-            </div>
-          </div>
-        </article>
-
-        <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="live">
-          <div class="h-1.5 bg-gradient-to-r from-cyan-400 to-sky-500"></div>
-          <div class="p-6 flex flex-col flex-1">
-            <div class="flex items-start gap-3.5">
-              <span class="proj-icon bg-gradient-to-br from-cyan-400 to-sky-500">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#g-hand"/></svg>
-              </span>
-              <div class="flex-1 min-w-0 flex items-start justify-between gap-3">
-                <h3 class="font-display text-lg font-semibold text-slate-900 leading-snug">AirControl</h3>
-                <span class="badge-live"><span class="live-dot-sm"></span>Live</span>
-              </div>
-            </div>
-            <p class="mt-3 text-sm text-slate-500 leading-relaxed flex-1">
-              Control a web page with your hands and no installs: MediaPipe tracks 21 3D landmarks per frame entirely on-device, mapping five gestures — point to move, thumb-tap to click, two fingers to scroll, plus release and pause. Ships with a live skeleton overlay, sensitivity sliders, an FPS/finger-extension debug readout, and an interactive playground to test against.
-            </p>
-            <div class="mt-5 flex flex-wrap gap-1.5">
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-mediapipe"/></svg>MediaPipe</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-javascript"/></svg>JavaScript</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-webrtc"/></svg>WebRTC</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-javascript"/></svg>Canvas</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md">On-device ML</span>
-            </div>
-            <div class="mt-4 pt-4 border-t border-slate-900/5 flex flex-wrap gap-4">
-              <a href="https://rohitshidid.github.io/Aircontrol/" target="_blank" rel="noopener" class="project-link">Live demo <span aria-hidden="true">&#8599;</span></a>
-              <a href="https://github.com/rohitshidid/Aircontrol" target="_blank" rel="noopener" class="project-link">GitHub <span aria-hidden="true">&#8599;</span></a>
-            </div>
-          </div>
-        </article>
-
-        <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="live ai">
-          <div class="h-1.5 bg-gradient-to-r from-orange-400 to-red-500"></div>
-          <div class="p-6 flex flex-col flex-1">
-            <div class="flex items-start gap-3.5">
-              <span class="proj-icon bg-gradient-to-br from-orange-400 to-red-500">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#g-chartdn"/></svg>
-              </span>
-              <div class="flex-1 min-w-0 flex items-start justify-between gap-3">
-                <h3 class="font-display text-lg font-semibold text-slate-900 leading-snug">Layoff Predictor</h3>
-                <span class="badge-live"><span class="live-dot-sm"></span>Live</span>
-              </div>
-            </div>
-            <p class="mt-3 text-sm text-slate-500 leading-relaxed flex-1">
-              Estimates a company's layoff risk from live financial signals. Pulls 3- and 6-month stock drawdown and volatility through yfinance, scores them with a Random Forest trained on 313 real layoff events plus matched negatives, and returns a probability with a LOW/MED/HIGH band. Fuzzy name-to-ticker resolution across NASDAQ, NYSE and AMEX means you can type “Google” instead of GOOG.
-            </p>
-            <div class="mt-5 flex flex-wrap gap-1.5">
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-flask"/></svg>Flask</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-scikitlearn"/></svg>scikit-learn</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md">yfinance</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-pandas"/></svg>pandas</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-scikitlearn"/></svg>Random Forest</span>
-            </div>
-            <div class="mt-4 pt-4 border-t border-slate-900/5 flex flex-wrap gap-4">
-              <a href="https://layoff-predictor.onrender.com/" target="_blank" rel="noopener" class="project-link">Live demo <span aria-hidden="true">&#8599;</span></a>
-              <a href="https://github.com/rohitshidid/layoff-predictor" target="_blank" rel="noopener" class="project-link">GitHub <span aria-hidden="true">&#8599;</span></a>
-            </div>
-          </div>
-        </article>
-
-        <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="live ai">
-          <div class="h-1.5 bg-gradient-to-r from-violet-500 to-indigo-500"></div>
-          <div class="p-6 flex flex-col flex-1">
-            <div class="flex items-start gap-3.5">
-              <span class="proj-icon bg-gradient-to-br from-violet-500 to-indigo-500">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#g-scale"/></svg>
-              </span>
-              <div class="flex-1 min-w-0 flex items-start justify-between gap-3">
-                <h3 class="font-display text-lg font-semibold text-slate-900 leading-snug">Synapse — Two-Answer Fact Checker</h3>
-                <span class="badge-live"><span class="live-dot-sm"></span>Live</span>
-              </div>
-            </div>
-            <p class="mt-3 text-sm text-slate-500 leading-relaxed flex-1">
-              Settles “which of these two answers is right?” Give it a question and two candidates; it runs a live web search, drops five results into the model's context, and returns a verdict card — A holds up, B holds up, neither, or inconclusive — with confidence, reasoning and source links. A zero-dependency Node server keeps the API key off the client and hard-pins the model to OpenRouter's free tier, so a question costs about $0.007.
-            </p>
-            <div class="mt-5 flex flex-wrap gap-1.5">
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-nodedotjs"/></svg>Node.js</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md">OpenRouter API</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Zero deps</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md">SSE</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-javascript"/></svg>Vanilla JS</span>
-            </div>
-            <div class="mt-4 pt-4 border-t border-slate-900/5 flex flex-wrap gap-4">
-              <a href="https://openrouter-chatbot-8qv6.onrender.com/" target="_blank" rel="noopener" class="project-link">Live demo <span aria-hidden="true">&#8599;</span></a>
-              <a href="https://github.com/rohitshidid/openrouter-chatbot" target="_blank" rel="noopener" class="project-link">GitHub <span aria-hidden="true">&#8599;</span></a>
-            </div>
-          </div>
-        </article>
-
-        <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="live ai">
-          <div class="h-1.5 bg-gradient-to-r from-fuchsia-500 to-purple-600"></div>
-          <div class="p-6 flex flex-col flex-1">
-            <div class="flex items-start gap-3.5">
-              <span class="proj-icon bg-gradient-to-br from-fuchsia-500 to-purple-600">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#g-route"/></svg>
-              </span>
-              <div class="flex-1 min-w-0 flex items-start justify-between gap-3">
-                <h3 class="font-display text-lg font-semibold text-slate-900 leading-snug">OmniRoute — LLM Gateway & Chat</h3>
-                <span class="badge-live"><span class="live-dot-sm"></span>Live</span>
-              </div>
-            </div>
-            <p class="mt-3 text-sm text-slate-500 leading-relaxed flex-1">
-              A self-built AI gateway and its chat client: one OpenAI-compatible wire API routing across 77+ models spanning Claude, OpenAI, Gemini and open weights, with automatic fallthrough when a provider fails, real-time SSE streaming, million-token context auto-negotiation, and reasoning traces streamed in parallel with the answer.
-            </p>
-            <div class="mt-5 flex flex-wrap gap-1.5">
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-fastapi"/></svg>FastAPI</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-python"/></svg>Python</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md">SSE Streaming</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-openai"/></svg>OpenAI-compatible API</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-render"/></svg>Render</span>
-            </div>
-            <div class="mt-4 pt-4 border-t border-slate-900/5 flex flex-wrap gap-4">
-              <a href="https://omiroute-chat.onrender.com/" target="_blank" rel="noopener" class="project-link">Live demo <span aria-hidden="true">&#8599;</span></a>
-              <a href="https://github.com/rohitshidid/omiroute-chat" target="_blank" rel="noopener" class="project-link">GitHub <span aria-hidden="true">&#8599;</span></a>
-            </div>
-          </div>
-        </article>
-
-        <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="live ai research">
+        <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="llm ai live research">
           <div class="h-1.5 bg-gradient-to-r from-indigo-500 to-fuchsia-500"></div>
-          <div class="p-6 flex flex-col flex-1">
+          <div class="p-5">
             <div class="flex items-start gap-3.5">
               <span class="proj-icon bg-gradient-to-br from-indigo-500 to-fuchsia-500">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#g-heal"/></svg>
               </span>
-              <div class="flex-1 min-w-0 flex items-start justify-between gap-3">
-                <h3 class="font-display text-lg font-semibold text-slate-900 leading-snug">Self-Healing RAG System</h3>
-                <span class="badge-live"><span class="live-dot-sm"></span>Live</span>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-start justify-between gap-3">
+                  <h3 class="font-display text-lg font-semibold text-slate-900 leading-snug">Self-Healing RAG System</h3>
+                  <span class="badge-live"><span class="live-dot-sm"></span>Live</span>
+                </div>
+                <p class="mt-1 text-[13px] text-slate-400 leading-snug">Failure-detecting RAG with four healing strategies</p>
               </div>
             </div>
-            <p class="mt-3 text-sm text-slate-500 leading-relaxed flex-1">
-              A retrieval-augmented generation pipeline that detects its own failures and repairs them with four healing strategies — query rewriting, HyDE, claim-targeted re-retrieval and context expansion. Lifted the fully-grounded answer rate by 12 points and cut hallucinated responses 40%, with claim verification handled by a zero-API-cost cross-encoder NLI pass over DeBERTa-v3.
-            </p>
-            <div class="mt-5 flex flex-wrap gap-1.5">
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-python"/></svg>Python</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md">FAISS</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-huggingface"/></svg>DeBERTa-v3</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Groq API</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-streamlit"/></svg>Streamlit</span>
+
+            <div class="mt-4 flex flex-wrap items-center gap-2.5">
+              <a href="https://huggingface.co/spaces/rohitshidid/Self_healing_RAG_demo" target="_blank" rel="noopener" class="btn-primary">Live demo <span aria-hidden="true">&#8599;</span></a>
+              <a href="https://github.com/rohitshidid/Self-Healing-RAG-Failure-Detecting-Retrieval-Augmented-Generation" target="_blank" rel="noopener" class="btn-ghost">GitHub <span aria-hidden="true">&#8599;</span></a>
+              <button class="details-toggle ml-auto" aria-expanded="false" aria-controls="pd-1">
+                <span class="dt-label">Details</span>
+                <svg class="dt-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
             </div>
-            <div class="mt-4 pt-4 border-t border-slate-900/5 flex flex-wrap gap-4">
-              <a href="https://huggingface.co/spaces/rohitshidid/Self_healing_RAG_demo" target="_blank" rel="noopener" class="project-link">Live demo <span aria-hidden="true">&#8599;</span></a>
-              <a href="https://github.com/rohitshidid/Self-Healing-RAG-Failure-Detecting-Retrieval-Augmented-Generation" target="_blank" rel="noopener" class="project-link">GitHub <span aria-hidden="true">&#8599;</span></a>
+
+            <div class="proj-details" id="pd-1" hidden>
+              <p class="mt-4 text-sm text-slate-500 leading-relaxed">
+                A retrieval-augmented generation pipeline that detects its own failures and repairs them with four healing strategies — query rewriting, HyDE, claim-targeted re-retrieval and context expansion. Lifted the fully-grounded answer rate by 12 points and cut hallucinated responses 40%, with claim verification handled by a zero-API-cost cross-encoder NLI pass over DeBERTa-v3.
+              </p>
+              <div class="mt-4 flex flex-wrap gap-1.5">
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-python"/></svg>Python</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md">FAISS</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-huggingface"/></svg>DeBERTa-v3</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md">Groq API</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-streamlit"/></svg>Streamlit</span>
+              </div>
             </div>
           </div>
         </article>
 
-        <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="live ai research">
-          <div class="h-1.5 bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-cyan-400"></div>
-          <div class="p-6 flex flex-col flex-1">
-            <div class="flex items-start gap-3.5">
-              <span class="proj-icon bg-gradient-to-br from-indigo-500 via-fuchsia-500 to-cyan-400">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#g-globe"/></svg>
-              </span>
-              <div class="flex-1 min-w-0 flex items-start justify-between gap-3">
-                <h3 class="font-display text-lg font-semibold text-slate-900 leading-snug">GDELT Real-Time News Intelligence</h3>
-                <span class="badge-live"><span class="live-dot-sm"></span>Live</span>
-              </div>
-            </div>
-            <p class="mt-3 text-sm text-slate-500 leading-relaxed flex-1">
-              A global crisis monitor over the GDELT 2.0 firehose: 500K+ events per run ingested by parallel download and PySpark ETL into a Hive-partitioned Parquet warehouse, then classified for event conflict at 92% F1 across seven tracked models. A PyTorch feed-forward network predicts 0–100 event severity at 0.73 MAE, surfaced through a live dashboard.
-            </p>
-            <div class="mt-5 flex flex-wrap gap-1.5">
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-apachespark"/></svg>PySpark 4.0</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-apachespark"/></svg>Spark MLlib</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-pytorch"/></svg>PyTorch</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-plotly"/></svg>Plotly Dash</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-apacheparquet"/></svg>Parquet</span>
-            </div>
-            <div class="mt-4 pt-4 border-t border-slate-900/5 flex flex-wrap gap-4">
-              <a href="https://huggingface.co/spaces/rohitshidid/GlobalCrisisMonitor" target="_blank" rel="noopener" class="project-link">Live dashboard <span aria-hidden="true">&#8599;</span></a>
-              <a href="https://github.com/rohitshidid/GlobalCrisisMonitor" target="_blank" rel="noopener" class="project-link">GitHub <span aria-hidden="true">&#8599;</span></a>
-            </div>
-          </div>
-        </article>
-
-        <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="live tools">
-          <div class="h-1.5 bg-gradient-to-r from-slate-500 to-slate-700"></div>
-          <div class="p-6 flex flex-col flex-1">
-            <div class="flex items-start gap-3.5">
-              <span class="proj-icon bg-gradient-to-br from-slate-500 to-slate-700">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#g-layers"/></svg>
-              </span>
-              <div class="flex-1 min-w-0 flex items-start justify-between gap-3">
-                <h3 class="font-display text-lg font-semibold text-slate-900 leading-snug">bak — Per-File Version Control</h3>
-                <span class="badge-live"><span class="live-dot-sm"></span>Live</span>
-              </div>
-            </div>
-            <p class="mt-3 text-sm text-slate-500 leading-relaxed flex-1">
-              Undo for files that never made it into git. Timestamped snapshots with notes, compact or full diffs, and safe restores that auto-save your current state first. History lives in ~/.bak rather than littering the working directory, with zstd compression and SHA-256 hashing to deduplicate storage, plus a guard rail against snapshotting anything over 100MB. Shipped as a Homebrew formula.
-            </p>
-            <div class="mt-5 flex flex-wrap gap-1.5">
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-go"/></svg>Go 1.22</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md">zstd</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md">SHA-256</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-homebrew"/></svg>Homebrew</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md">CLI</span>
-            </div>
-            <div class="mt-4 pt-4 border-t border-slate-900/5 flex flex-wrap gap-4">
-              <a href="https://rohitshidid.github.io/bak/" target="_blank" rel="noopener" class="project-link">Demo site <span aria-hidden="true">&#8599;</span></a>
-              <a href="https://github.com/rohitshidid/bak" target="_blank" rel="noopener" class="project-link">GitHub <span aria-hidden="true">&#8599;</span></a>
-            </div>
-          </div>
-        </article>
-
-        <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="live tools">
-          <div class="h-1.5 bg-gradient-to-r from-teal-500 to-emerald-600"></div>
-          <div class="p-6 flex flex-col flex-1">
-            <div class="flex items-start gap-3.5">
-              <span class="proj-icon bg-gradient-to-br from-teal-500 to-emerald-600">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#g-ports"/></svg>
-              </span>
-              <div class="flex-1 min-w-0 flex items-start justify-between gap-3">
-                <h3 class="font-display text-lg font-semibold text-slate-900 leading-snug">portmap — Port &amp; Process Diagnostics</h3>
-                <span class="badge-live"><span class="live-dot-sm"></span>Live</span>
-              </div>
-            </div>
-            <p class="mt-3 text-sm text-slate-500 leading-relaxed flex-1">
-              Replaces five separate diagnostic commands with one table. Merges and deduplicates output from lsof, ss, netstat and docker to show every listening socket alongside its owning process, Docker container mapping and known service name. Adds <code>portmap check &lt;port&gt;</code> with scriptable exit codes, a <code>--watch</code> refresh mode, and <code>--json</code> output. Zero external dependencies, distributed via Homebrew.
-            </p>
-            <div class="mt-5 flex flex-wrap gap-1.5">
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-go"/></svg>Go 1.22</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-homebrew"/></svg>Homebrew</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-docker"/></svg>Docker API</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Networking</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md">CLI</span>
-            </div>
-            <div class="mt-4 pt-4 border-t border-slate-900/5 flex flex-wrap gap-4">
-              <a href="https://rohitshidid.github.io/Homebrew-portman/" target="_blank" rel="noopener" class="project-link">Demo site <span aria-hidden="true">&#8599;</span></a>
-              <a href="https://github.com/rohitshidid/Homebrew-portman" target="_blank" rel="noopener" class="project-link">GitHub <span aria-hidden="true">&#8599;</span></a>
-            </div>
-          </div>
-        </article>
-
-        <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="live tools">
-          <div class="h-1.5 bg-gradient-to-r from-blue-500 to-indigo-600"></div>
-          <div class="p-6 flex flex-col flex-1">
-            <div class="flex items-start gap-3.5">
-              <span class="proj-icon bg-gradient-to-br from-blue-500 to-indigo-600">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#g-treemap"/></svg>
-              </span>
-              <div class="flex-1 min-w-0 flex items-start justify-between gap-3">
-                <h3 class="font-display text-lg font-semibold text-slate-900 leading-snug">Disk Manager</h3>
-                <span class="badge-live"><span class="live-dot-sm"></span>Live</span>
-              </div>
-            </div>
-            <p class="mt-3 text-sm text-slate-500 leading-relaxed flex-1">
-              A visual disk-usage explorer for Apple silicon Macs pairing a squarified treemap with a sortable list, so you can drill into folders and refresh one subtree instead of rescanning the disk. A junk finder reclaims package-manager caches and build artifacts (19.7 GB on the author's machine) and a three-stage hash finds byte-identical duplicates. Deletion is reversible by default — files go to quarantine, ⌘Z works even after quitting, and permanent removal requires typing DELETE.
-            </p>
-            <div class="mt-5 flex flex-wrap gap-1.5">
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-electron"/></svg>Electron</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-nodedotjs"/></svg>Node.js</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md">macOS</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Treemap</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Content hashing</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md">MIT</span>
-            </div>
-            <div class="mt-4 pt-4 border-t border-slate-900/5 flex flex-wrap gap-4">
-              <a href="https://rohitshidid.github.io/Disk-manager/" target="_blank" rel="noopener" class="project-link">Demo site <span aria-hidden="true">&#8599;</span></a>
-              <a href="https://github.com/rohitshidid/Disk-manager" target="_blank" rel="noopener" class="project-link">GitHub <span aria-hidden="true">&#8599;</span></a>
-            </div>
-          </div>
-        </article>
-
-        <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="live ai tools">
-          <div class="h-1.5 bg-gradient-to-r from-lime-500 to-green-600"></div>
-          <div class="p-6 flex flex-col flex-1">
-            <div class="flex items-start gap-3.5">
-              <span class="proj-icon bg-gradient-to-br from-lime-500 to-green-600">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#g-dna"/></svg>
-              </span>
-              <div class="flex-1 min-w-0 flex items-start justify-between gap-3">
-                <h3 class="font-display text-lg font-semibold text-slate-900 leading-snug">Mutation Simulator</h3>
-                <span class="badge-live"><span class="live-dot-sm"></span>Live</span>
-              </div>
-            </div>
-            <p class="mt-3 text-sm text-slate-500 leading-relaxed flex-1">
-              Watch behaviour emerge with nobody programming it. Organisms in an arena steer themselves with 170 numbers — the weights of an 18→8→2 tanh network fed by an eight-wedge radar — and the same architecture is trained two ways for comparison: evolution (elitism, tournament selection, uniform crossover, Gaussian mutation) versus REINFORCE with a baseline and Adam. Live generation stats, death breakdowns, and genome export to JSON.
-            </p>
-            <div class="mt-5 flex flex-wrap gap-1.5">
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-javascript"/></svg>JavaScript</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Neuroevolution</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md">REINFORCE</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-javascript"/></svg>Canvas</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md">RL</span>
-            </div>
-            <div class="mt-4 pt-4 border-t border-slate-900/5 flex flex-wrap gap-4">
-              <a href="https://rohitshidid.github.io/mutation-simulator/index.html" target="_blank" rel="noopener" class="project-link">Demo site <span aria-hidden="true">&#8599;</span></a>
-              <a href="https://github.com/rohitshidid/mutation-simulator" target="_blank" rel="noopener" class="project-link">GitHub <span aria-hidden="true">&#8599;</span></a>
-            </div>
-          </div>
-        </article>
-
-        <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="ai">
-          <div class="h-1.5 bg-gradient-to-r from-cyan-400 via-indigo-500 to-fuchsia-500"></div>
-          <div class="p-6 flex flex-col flex-1">
-            <div class="flex items-start gap-3.5">
-              <span class="proj-icon bg-gradient-to-br from-cyan-400 via-indigo-500 to-fuchsia-500">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#g-clipboard"/></svg>
-              </span>
-              <div class="flex-1 min-w-0 flex items-start justify-between gap-3">
-                <h3 class="font-display text-lg font-semibold text-slate-900 leading-snug">Bandageboard — Clinical Billing Triage</h3>
-                <span class="badge-video">▶ Video</span>
-              </div>
-            </div>
-            <p class="mt-3 text-sm text-slate-500 leading-relaxed flex-1">
-              Automates Medicare Part B wound-care billing triage. A multi-step Claude-powered extraction pipeline turns unstructured clinical notes into structured billing records, surfaced through a secure biller-facing dashboard with role-scoped CRUD.
-            </p>
-            <div class="mt-5 flex flex-wrap gap-1.5">
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-nextdotjs"/></svg>Next.js 14</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-typescript"/></svg>TypeScript</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-anthropic"/></svg>Claude API</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-postgresql"/></svg>PostgreSQL</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-drizzle"/></svg>Drizzle ORM</span>
-            </div>
-            <div class="mt-4 pt-4 border-t border-slate-900/5 flex flex-wrap gap-4">
-              <a href="https://drive.google.com/file/d/1IDWhbeCqQkupWy_Kk9bw5q-T1JQSINli/view?usp=share_link" target="_blank" rel="noopener" class="project-link">Video demo <span aria-hidden="true">&#8599;</span></a>
-              <a href="https://github.com/rohitshidid/bandageboard" target="_blank" rel="noopener" class="project-link">GitHub <span aria-hidden="true">&#8599;</span></a>
-            </div>
-          </div>
-        </article>
-
-        <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="ai">
-          <div class="h-1.5 bg-gradient-to-r from-indigo-500 to-cyan-400"></div>
-          <div class="p-6 flex flex-col flex-1">
-            <div class="flex items-start gap-3.5">
-              <span class="proj-icon bg-gradient-to-br from-indigo-500 to-cyan-400">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#g-trajectory"/></svg>
-              </span>
-              <div class="flex-1 min-w-0 flex items-start justify-between gap-3">
-                <h3 class="font-display text-lg font-semibold text-slate-900 leading-snug">Real-Time Cricket Ball Tracker</h3>
-                <span class="badge-video">▶ Video</span>
-              </div>
-            </div>
-            <p class="mt-3 text-sm text-slate-500 leading-relaxed flex-1">
-              A computer vision pipeline that detects and tracks a cricket ball in real time using tuned HSV colour masking, then classifies delivery length into five categories via a 4-point homography that maps 2D bounce coordinates onto real-world pitch dimensions.
-            </p>
-            <div class="mt-5 flex flex-wrap gap-1.5">
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-python"/></svg>Python</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-opencv"/></svg>OpenCV</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-numpy"/></svg>NumPy</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Homography</span>
-            </div>
-            <div class="mt-4 pt-4 border-t border-slate-900/5 flex flex-wrap gap-4">
-              <a href="https://drive.google.com/file/d/1G6c9ihMt4wW3GS0FW_Ywf_uf73rV7VpU/view?usp=share_link" target="_blank" rel="noopener" class="project-link">Video demo <span aria-hidden="true">&#8599;</span></a>
-              <a href="https://github.com/rohitshidid/Computer-Vision-Cricket-Tracker-" target="_blank" rel="noopener" class="project-link">GitHub <span aria-hidden="true">&#8599;</span></a>
-            </div>
-          </div>
-        </article>
-
-        <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="ai research">
+        <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="llm ai research">
           <div class="h-1.5 bg-gradient-to-r from-purple-500 to-indigo-600"></div>
-          <div class="p-6 flex flex-col flex-1">
+          <div class="p-5">
             <div class="flex items-start gap-3.5">
               <span class="proj-icon bg-gradient-to-br from-purple-500 to-indigo-600">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#g-book"/></svg>
               </span>
-              <div class="flex-1 min-w-0 flex items-start justify-between gap-3">
-                <h3 class="font-display text-lg font-semibold text-slate-900 leading-snug">Research Copilot</h3>
-                <span class="badge-repo">Repo</span>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-start justify-between gap-3">
+                  <h3 class="font-display text-lg font-semibold text-slate-900 leading-snug">Research Copilot</h3>
+                  <span class="badge-repo">Repo</span>
+                </div>
+                <p class="mt-1 text-[13px] text-slate-400 leading-snug">Agentic literature RAG with hybrid RRF retrieval</p>
               </div>
             </div>
-            <p class="mt-3 text-sm text-slate-500 leading-relaxed flex-1">
-              Agentic RAG over arXiv and Semantic Scholar. Ask a research question and get a synthesized answer with inline paper-and-page citations, an interactive citation network graph, a verify-this-claim mode, follow-up Q&amp;A over the retrieved papers, and a swappable LLM backend. Hybrid RRF retrieval, cross-encoder reranking, citation enforcement and tracing are wired in from the start — every retrieval stage is an ablation toggle, so you can measure what actually helps.
-            </p>
-            <div class="mt-5 flex flex-wrap gap-1.5">
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-fastapi"/></svg>FastAPI</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-nextdotjs"/></svg>Next.js</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Hybrid RRF</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Cross-Encoder</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-anthropic"/></svg>Claude API</span>
+
+            <div class="mt-4 flex flex-wrap items-center gap-2.5">
+              <a href="https://github.com/rohitshidid/Research-Copilot" target="_blank" rel="noopener" class="btn-primary">GitHub <span aria-hidden="true">&#8599;</span></a>
+              <button class="details-toggle ml-auto" aria-expanded="false" aria-controls="pd-2">
+                <span class="dt-label">Details</span>
+                <svg class="dt-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
             </div>
-            <div class="mt-4 pt-4 border-t border-slate-900/5 flex flex-wrap gap-4">
-              <a href="https://github.com/rohitshidid/Research-Copilot" target="_blank" rel="noopener" class="project-link">GitHub <span aria-hidden="true">&#8599;</span></a>
+
+            <div class="proj-details" id="pd-2" hidden>
+              <p class="mt-4 text-sm text-slate-500 leading-relaxed">
+                Agentic RAG over arXiv and Semantic Scholar. Ask a research question and get a synthesized answer with inline paper-and-page citations, an interactive citation network graph, a verify-this-claim mode, follow-up Q&amp;A over the retrieved papers, and a swappable LLM backend. Hybrid RRF retrieval, cross-encoder reranking, citation enforcement and tracing are wired in from the start — every retrieval stage is an ablation toggle, so you can measure what actually helps.
+              </p>
+              <div class="mt-4 flex flex-wrap gap-1.5">
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-fastapi"/></svg>FastAPI</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-nextdotjs"/></svg>Next.js</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md">Hybrid RRF</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md">Cross-Encoder</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-anthropic"/></svg>Claude API</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="llm ai live">
+          <div class="h-1.5 bg-gradient-to-r from-fuchsia-500 to-purple-600"></div>
+          <div class="p-5">
+            <div class="flex items-start gap-3.5">
+              <span class="proj-icon bg-gradient-to-br from-fuchsia-500 to-purple-600">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#g-route"/></svg>
+              </span>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-start justify-between gap-3">
+                  <h3 class="font-display text-lg font-semibold text-slate-900 leading-snug">OmniRoute — LLM Gateway &amp; Chat</h3>
+                  <span class="badge-live"><span class="live-dot-sm"></span>Live</span>
+                </div>
+                <p class="mt-1 text-[13px] text-slate-400 leading-snug">One gateway, 77+ models, zero vendor lock-in</p>
+              </div>
+            </div>
+
+            <div class="mt-4 flex flex-wrap items-center gap-2.5">
+              <a href="https://omiroute-chat.onrender.com/" target="_blank" rel="noopener" class="btn-primary">Live demo <span aria-hidden="true">&#8599;</span></a>
+              <a href="https://github.com/rohitshidid/omiroute-chat" target="_blank" rel="noopener" class="btn-ghost">GitHub <span aria-hidden="true">&#8599;</span></a>
+              <button class="details-toggle ml-auto" aria-expanded="false" aria-controls="pd-3">
+                <span class="dt-label">Details</span>
+                <svg class="dt-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+            </div>
+
+            <div class="proj-details" id="pd-3" hidden>
+              <p class="mt-4 text-sm text-slate-500 leading-relaxed">
+                A self-built AI gateway and its chat client: one OpenAI-compatible wire API routing across 77+ models spanning Claude, OpenAI, Gemini and open weights, with automatic fallthrough when a provider fails, real-time SSE streaming, million-token context auto-negotiation, and reasoning traces streamed in parallel with the answer.
+              </p>
+              <div class="mt-4 flex flex-wrap gap-1.5">
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-fastapi"/></svg>FastAPI</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-python"/></svg>Python</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md">SSE Streaming</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-openai"/></svg>OpenAI-compatible API</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-render"/></svg>Render</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="llm ai live">
+          <div class="h-1.5 bg-gradient-to-r from-violet-500 to-indigo-500"></div>
+          <div class="p-5">
+            <div class="flex items-start gap-3.5">
+              <span class="proj-icon bg-gradient-to-br from-violet-500 to-indigo-500">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#g-scale"/></svg>
+              </span>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-start justify-between gap-3">
+                  <h3 class="font-display text-lg font-semibold text-slate-900 leading-snug">Synapse — Two-Answer Fact Checker</h3>
+                  <span class="badge-live"><span class="live-dot-sm"></span>Live</span>
+                </div>
+                <p class="mt-1 text-[13px] text-slate-400 leading-snug">Web-searching fact checker for two-sided arguments</p>
+              </div>
+            </div>
+
+            <div class="mt-4 flex flex-wrap items-center gap-2.5">
+              <a href="https://openrouter-chatbot-8qv6.onrender.com/" target="_blank" rel="noopener" class="btn-primary">Live demo <span aria-hidden="true">&#8599;</span></a>
+              <a href="https://github.com/rohitshidid/openrouter-chatbot" target="_blank" rel="noopener" class="btn-ghost">GitHub <span aria-hidden="true">&#8599;</span></a>
+              <button class="details-toggle ml-auto" aria-expanded="false" aria-controls="pd-4">
+                <span class="dt-label">Details</span>
+                <svg class="dt-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+            </div>
+
+            <div class="proj-details" id="pd-4" hidden>
+              <p class="mt-4 text-sm text-slate-500 leading-relaxed">
+                Settles “which of these two answers is right?” Give it a question and two candidates; it runs a live web search, drops five results into the model's context, and returns a verdict card — A holds up, B holds up, neither, or inconclusive — with confidence, reasoning and source links. A zero-dependency Node server keeps the API key off the client and hard-pins the model to OpenRouter's free tier, so a question costs about $0.007.
+              </p>
+              <div class="mt-4 flex flex-wrap gap-1.5">
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-nodedotjs"/></svg>Node.js</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md">OpenRouter API</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md">Zero deps</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md">SSE</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-javascript"/></svg>Vanilla JS</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="llm ai">
+          <div class="h-1.5 bg-gradient-to-r from-cyan-400 via-indigo-500 to-fuchsia-500"></div>
+          <div class="p-5">
+            <div class="flex items-start gap-3.5">
+              <span class="proj-icon bg-gradient-to-br from-cyan-400 via-indigo-500 to-fuchsia-500">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#g-clipboard"/></svg>
+              </span>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-start justify-between gap-3">
+                  <h3 class="font-display text-lg font-semibold text-slate-900 leading-snug">Bandageboard — Clinical Billing Triage</h3>
+                  <span class="badge-video">▶ Video</span>
+                </div>
+                <p class="mt-1 text-[13px] text-slate-400 leading-snug">Claude-powered clinical billing triage</p>
+              </div>
+            </div>
+
+            <div class="mt-4 flex flex-wrap items-center gap-2.5">
+              <a href="https://drive.google.com/file/d/1IDWhbeCqQkupWy_Kk9bw5q-T1JQSINli/view?usp=share_link" target="_blank" rel="noopener" class="btn-primary">Video demo <span aria-hidden="true">&#8599;</span></a>
+              <a href="https://github.com/rohitshidid/bandageboard" target="_blank" rel="noopener" class="btn-ghost">GitHub <span aria-hidden="true">&#8599;</span></a>
+              <button class="details-toggle ml-auto" aria-expanded="false" aria-controls="pd-5">
+                <span class="dt-label">Details</span>
+                <svg class="dt-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+            </div>
+
+            <div class="proj-details" id="pd-5" hidden>
+              <p class="mt-4 text-sm text-slate-500 leading-relaxed">
+                Automates Medicare Part B wound-care billing triage. A multi-step Claude-powered extraction pipeline turns unstructured clinical notes into structured billing records, surfaced through a secure biller-facing dashboard with role-scoped CRUD.
+              </p>
+              <div class="mt-4 flex flex-wrap gap-1.5">
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-nextdotjs"/></svg>Next.js 14</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-typescript"/></svg>TypeScript</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-anthropic"/></svg>Claude API</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-postgresql"/></svg>PostgreSQL</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-drizzle"/></svg>Drizzle ORM</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="ai live research">
+          <div class="h-1.5 bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-cyan-400"></div>
+          <div class="p-5">
+            <div class="flex items-start gap-3.5">
+              <span class="proj-icon bg-gradient-to-br from-indigo-500 via-fuchsia-500 to-cyan-400">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#g-globe"/></svg>
+              </span>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-start justify-between gap-3">
+                  <h3 class="font-display text-lg font-semibold text-slate-900 leading-snug">GDELT Real-Time News Intelligence</h3>
+                  <span class="badge-live"><span class="live-dot-sm"></span>Live</span>
+                </div>
+                <p class="mt-1 text-[13px] text-slate-400 leading-snug">PySpark + PyTorch global crisis monitor</p>
+              </div>
+            </div>
+
+            <div class="mt-4 flex flex-wrap items-center gap-2.5">
+              <a href="https://huggingface.co/spaces/rohitshidid/GlobalCrisisMonitor" target="_blank" rel="noopener" class="btn-primary">Live dashboard <span aria-hidden="true">&#8599;</span></a>
+              <a href="https://github.com/rohitshidid/GlobalCrisisMonitor" target="_blank" rel="noopener" class="btn-ghost">GitHub <span aria-hidden="true">&#8599;</span></a>
+              <button class="details-toggle ml-auto" aria-expanded="false" aria-controls="pd-6">
+                <span class="dt-label">Details</span>
+                <svg class="dt-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+            </div>
+
+            <div class="proj-details" id="pd-6" hidden>
+              <p class="mt-4 text-sm text-slate-500 leading-relaxed">
+                A global crisis monitor over the GDELT 2.0 firehose: 500K+ events per run ingested by parallel download and PySpark ETL into a Hive-partitioned Parquet warehouse, then classified for event conflict at 92% F1 across seven tracked models. A PyTorch feed-forward network predicts 0–100 event severity at 0.73 MAE, surfaced through a live dashboard.
+              </p>
+              <div class="mt-4 flex flex-wrap gap-1.5">
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-apachespark"/></svg>PySpark 4.0</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-apachespark"/></svg>Spark MLlib</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-pytorch"/></svg>PyTorch</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-plotly"/></svg>Plotly Dash</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-apacheparquet"/></svg>Parquet</span>
+              </div>
             </div>
           </div>
         </article>
 
         <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="ai">
           <div class="h-1.5 bg-gradient-to-r from-cyan-400 to-indigo-500"></div>
-          <div class="p-6 flex flex-col flex-1">
+          <div class="p-5">
             <div class="flex items-start gap-3.5">
               <span class="proj-icon bg-gradient-to-br from-cyan-400 to-indigo-500">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#g-gem"/></svg>
               </span>
-              <div class="flex-1 min-w-0 flex items-start justify-between gap-3">
-                <h3 class="font-display text-lg font-semibold text-slate-900 leading-snug">GemSpot — ML Training Subsystem</h3>
-                <span class="badge-repo">Repo</span>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-start justify-between gap-3">
+                  <h3 class="font-display text-lg font-semibold text-slate-900 leading-snug">GemSpot — ML Training Subsystem</h3>
+                  <span class="badge-repo">Repo</span>
+                </div>
+                <p class="mt-1 text-[13px] text-slate-400 leading-snug">Champion–challenger model promotion gates</p>
               </div>
             </div>
-            <p class="mt-3 text-sm text-slate-500 leading-relaxed flex-1">
-              A champion–challenger promotion pipeline that blocks any model from reaching the registry without clearing strict ROC-AUC and recall gates — zero silent regressions across 12 cycles. Ray Tune with ASHA early stopping cut convergence time 1.4x, and behavioural feedback loops close through PostgreSQL, Kafka and a feature store.
-            </p>
-            <div class="mt-5 flex flex-wrap gap-1.5">
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-scikitlearn"/></svg>scikit-learn</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md">XGBoost</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-mlflow"/></svg>MLflow</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-ray"/></svg>Ray Tune</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Redpanda</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-postgresql"/></svg>PostgreSQL</span>
+
+            <div class="mt-4 flex flex-wrap items-center gap-2.5">
+              <a href="https://github.com/rohitshididnyu/GemSpot_training" target="_blank" rel="noopener" class="btn-primary">GitHub <span aria-hidden="true">&#8599;</span></a>
+              <button class="details-toggle ml-auto" aria-expanded="false" aria-controls="pd-7">
+                <span class="dt-label">Details</span>
+                <svg class="dt-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
             </div>
-            <div class="mt-4 pt-4 border-t border-slate-900/5 flex flex-wrap gap-4">
-              <a href="https://github.com/rohitshididnyu/GemSpot_training" target="_blank" rel="noopener" class="project-link">GitHub <span aria-hidden="true">&#8599;</span></a>
+
+            <div class="proj-details" id="pd-7" hidden>
+              <p class="mt-4 text-sm text-slate-500 leading-relaxed">
+                A champion–challenger promotion pipeline that blocks any model from reaching the registry without clearing strict ROC-AUC and recall gates — zero silent regressions across 12 cycles. Ray Tune with ASHA early stopping cut convergence time 1.4x, and behavioural feedback loops close through PostgreSQL, Kafka and a feature store.
+              </p>
+              <div class="mt-4 flex flex-wrap gap-1.5">
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-scikitlearn"/></svg>scikit-learn</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md">XGBoost</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-mlflow"/></svg>MLflow</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-ray"/></svg>Ray Tune</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md">Redpanda</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-postgresql"/></svg>PostgreSQL</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="ai live">
+          <div class="h-1.5 bg-gradient-to-r from-orange-400 to-red-500"></div>
+          <div class="p-5">
+            <div class="flex items-start gap-3.5">
+              <span class="proj-icon bg-gradient-to-br from-orange-400 to-red-500">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#g-chartdn"/></svg>
+              </span>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-start justify-between gap-3">
+                  <h3 class="font-display text-lg font-semibold text-slate-900 leading-snug">Layoff Predictor</h3>
+                  <span class="badge-live"><span class="live-dot-sm"></span>Live</span>
+                </div>
+                <p class="mt-1 text-[13px] text-slate-400 leading-snug">Layoff risk from live financial signals</p>
+              </div>
+            </div>
+
+            <div class="mt-4 flex flex-wrap items-center gap-2.5">
+              <a href="https://layoff-predictor.onrender.com/" target="_blank" rel="noopener" class="btn-primary">Live demo <span aria-hidden="true">&#8599;</span></a>
+              <a href="https://github.com/rohitshidid/layoff-predictor" target="_blank" rel="noopener" class="btn-ghost">GitHub <span aria-hidden="true">&#8599;</span></a>
+              <button class="details-toggle ml-auto" aria-expanded="false" aria-controls="pd-8">
+                <span class="dt-label">Details</span>
+                <svg class="dt-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+            </div>
+
+            <div class="proj-details" id="pd-8" hidden>
+              <p class="mt-4 text-sm text-slate-500 leading-relaxed">
+                Estimates a company's layoff risk from live financial signals. Pulls 3- and 6-month stock drawdown and volatility through yfinance, scores them with a Random Forest trained on 313 real layoff events plus matched negatives, and returns a probability with a LOW/MED/HIGH band. Fuzzy name-to-ticker resolution across NASDAQ, NYSE and AMEX means you can type “Google” instead of GOOG.
+              </p>
+              <div class="mt-4 flex flex-wrap gap-1.5">
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-flask"/></svg>Flask</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-scikitlearn"/></svg>scikit-learn</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md">yfinance</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-pandas"/></svg>pandas</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-scikitlearn"/></svg>Random Forest</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="ai tools live">
+          <div class="h-1.5 bg-gradient-to-r from-lime-500 to-green-600"></div>
+          <div class="p-5">
+            <div class="flex items-start gap-3.5">
+              <span class="proj-icon bg-gradient-to-br from-lime-500 to-green-600">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#g-dna"/></svg>
+              </span>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-start justify-between gap-3">
+                  <h3 class="font-display text-lg font-semibold text-slate-900 leading-snug">Mutation Simulator</h3>
+                  <span class="badge-live"><span class="live-dot-sm"></span>Live</span>
+                </div>
+                <p class="mt-1 text-[13px] text-slate-400 leading-snug">Neuroevolution vs. REINFORCE, side by side</p>
+              </div>
+            </div>
+
+            <div class="mt-4 flex flex-wrap items-center gap-2.5">
+              <a href="https://rohitshidid.github.io/mutation-simulator/index.html" target="_blank" rel="noopener" class="btn-primary">Demo site <span aria-hidden="true">&#8599;</span></a>
+              <a href="https://github.com/rohitshidid/mutation-simulator" target="_blank" rel="noopener" class="btn-ghost">GitHub <span aria-hidden="true">&#8599;</span></a>
+              <button class="details-toggle ml-auto" aria-expanded="false" aria-controls="pd-9">
+                <span class="dt-label">Details</span>
+                <svg class="dt-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+            </div>
+
+            <div class="proj-details" id="pd-9" hidden>
+              <p class="mt-4 text-sm text-slate-500 leading-relaxed">
+                Watch behaviour emerge with nobody programming it. Organisms in an arena steer themselves with 170 numbers — the weights of an 18→8→2 tanh network fed by an eight-wedge radar — and the same architecture is trained two ways for comparison: evolution (elitism, tournament selection, uniform crossover, Gaussian mutation) versus REINFORCE with a baseline and Adam. Live generation stats, death breakdowns, and genome export to JSON.
+              </p>
+              <div class="mt-4 flex flex-wrap gap-1.5">
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-javascript"/></svg>JavaScript</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md">Neuroevolution</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md">REINFORCE</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-javascript"/></svg>Canvas</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md">RL</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="ai">
+          <div class="h-1.5 bg-gradient-to-r from-indigo-500 to-cyan-400"></div>
+          <div class="p-5">
+            <div class="flex items-start gap-3.5">
+              <span class="proj-icon bg-gradient-to-br from-indigo-500 to-cyan-400">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#g-trajectory"/></svg>
+              </span>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-start justify-between gap-3">
+                  <h3 class="font-display text-lg font-semibold text-slate-900 leading-snug">Real-Time Cricket Ball Tracker</h3>
+                  <span class="badge-video">▶ Video</span>
+                </div>
+                <p class="mt-1 text-[13px] text-slate-400 leading-snug">CV ball tracking with homography calibration</p>
+              </div>
+            </div>
+
+            <div class="mt-4 flex flex-wrap items-center gap-2.5">
+              <a href="https://drive.google.com/file/d/1G6c9ihMt4wW3GS0FW_Ywf_uf73rV7VpU/view?usp=share_link" target="_blank" rel="noopener" class="btn-primary">Video demo <span aria-hidden="true">&#8599;</span></a>
+              <a href="https://github.com/rohitshidid/Computer-Vision-Cricket-Tracker-" target="_blank" rel="noopener" class="btn-ghost">GitHub <span aria-hidden="true">&#8599;</span></a>
+              <button class="details-toggle ml-auto" aria-expanded="false" aria-controls="pd-10">
+                <span class="dt-label">Details</span>
+                <svg class="dt-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+            </div>
+
+            <div class="proj-details" id="pd-10" hidden>
+              <p class="mt-4 text-sm text-slate-500 leading-relaxed">
+                A computer vision pipeline that detects and tracks a cricket ball in real time using tuned HSV colour masking, then classifies delivery length into five categories via a 4-point homography that maps 2D bounce coordinates onto real-world pitch dimensions.
+              </p>
+              <div class="mt-4 flex flex-wrap gap-1.5">
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-python"/></svg>Python</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-opencv"/></svg>OpenCV</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-numpy"/></svg>NumPy</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md">Homography</span>
+              </div>
             </div>
           </div>
         </article>
 
         <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="ai research">
           <div class="h-1.5 bg-gradient-to-r from-fuchsia-500 via-cyan-400 to-indigo-500"></div>
-          <div class="p-6 flex flex-col flex-1">
+          <div class="p-5">
             <div class="flex items-start gap-3.5">
               <span class="proj-icon bg-gradient-to-br from-fuchsia-500 via-cyan-400 to-indigo-500">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#g-pulse"/></svg>
               </span>
-              <div class="flex-1 min-w-0 flex items-start justify-between gap-3">
-                <h3 class="font-display text-lg font-semibold text-slate-900 leading-snug">Parkinson's Motor Symptom Classifier</h3>
-                <span class="badge-repo">Repo</span>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-start justify-between gap-3">
+                  <h3 class="font-display text-lg font-semibold text-slate-900 leading-snug">Parkinson's Motor Symptom Classifier</h3>
+                  <span class="badge-repo">Repo</span>
+                </div>
+                <p class="mt-1 text-[13px] text-slate-400 leading-snug">Four-class motor symptom detection, on-device</p>
               </div>
             </div>
-            <p class="mt-3 text-sm text-slate-500 leading-relaxed flex-1">
-              Four-class real-time motor-symptom classification running entirely on-device: a 6-axis IMU sampled at 52 Hz, Hamming windowing and a 256-point FFT via ARM CMSIS-DSP. Streams to a remote monitor with sub-second latency over a custom BLE GATT service on STM32, with automatic drift suppression.
-            </p>
-            <div class="mt-5 flex flex-wrap gap-1.5">
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-cplusplus"/></svg>C++</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arm"/></svg>ARM Cortex-M4</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arm"/></svg>CMSIS-DSP</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-stmicroelectronics"/></svg>STM32</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-bluetooth"/></svg>BLE</span>
+
+            <div class="mt-4 flex flex-wrap items-center gap-2.5">
+              <a href="https://github.com/rohitshidid/Parkinson-Detection" target="_blank" rel="noopener" class="btn-primary">GitHub <span aria-hidden="true">&#8599;</span></a>
+              <button class="details-toggle ml-auto" aria-expanded="false" aria-controls="pd-11">
+                <span class="dt-label">Details</span>
+                <svg class="dt-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
             </div>
-            <div class="mt-4 pt-4 border-t border-slate-900/5 flex flex-wrap gap-4">
-              <a href="https://github.com/rohitshidid/Parkinson-Detection" target="_blank" rel="noopener" class="project-link">GitHub <span aria-hidden="true">&#8599;</span></a>
+
+            <div class="proj-details" id="pd-11" hidden>
+              <p class="mt-4 text-sm text-slate-500 leading-relaxed">
+                Four-class real-time motor-symptom classification running entirely on-device: a 6-axis IMU sampled at 52 Hz, Hamming windowing and a 256-point FFT via ARM CMSIS-DSP. Streams to a remote monitor with sub-second latency over a custom BLE GATT service on STM32, with automatic drift suppression.
+              </p>
+              <div class="mt-4 flex flex-wrap gap-1.5">
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-cplusplus"/></svg>C++</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arm"/></svg>ARM Cortex-M4</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arm"/></svg>CMSIS-DSP</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-stmicroelectronics"/></svg>STM32</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-bluetooth"/></svg>BLE</span>
+              </div>
             </div>
           </div>
         </article>
 
-        <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="research">
+        <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="ai research">
           <div class="h-1.5 bg-gradient-to-r from-cyan-400 to-fuchsia-500"></div>
-          <div class="p-6 flex flex-col flex-1">
+          <div class="p-5">
             <div class="flex items-start gap-3.5">
               <span class="proj-icon bg-gradient-to-br from-cyan-400 to-fuchsia-500">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#g-brain"/></svg>
               </span>
-              <div class="flex-1 min-w-0 flex items-start justify-between gap-3">
-                <h3 class="font-display text-lg font-semibold text-slate-900 leading-snug">EEG Independent Component Classification</h3>
-                <span class="badge-paper">Published</span>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-start justify-between gap-3">
+                  <h3 class="font-display text-lg font-semibold text-slate-900 leading-snug">EEG Independent Component Classification</h3>
+                  <span class="badge-paper">Published</span>
+                </div>
+                <p class="mt-1 text-[13px] text-slate-400 leading-snug">Published ensemble ML for brain signals</p>
               </div>
             </div>
-            <p class="mt-3 text-sm text-slate-500 leading-relaxed flex-1">
-              Peer-reviewed and published work improving brain signal classification accuracy for cognitive research, using ensemble machine learning over EEG independent component analysis.
-            </p>
-            <div class="mt-5 flex flex-wrap gap-1.5">
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-scikitlearn"/></svg>scikit-learn</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Signal Processing</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Ensemble ML</span>
+
+            <div class="mt-4 flex flex-wrap items-center gap-2.5">
+              <a href="https://doi.org/10.5281/zenodo.13909560" target="_blank" rel="noopener" class="btn-primary">Published paper <span aria-hidden="true">&#8599;</span></a>
+              <a href="https://github.com/rohitshidid/EEG-independent-component-classification-using-ensemble-based-technique" target="_blank" rel="noopener" class="btn-ghost">GitHub <span aria-hidden="true">&#8599;</span></a>
+              <button class="details-toggle ml-auto" aria-expanded="false" aria-controls="pd-12">
+                <span class="dt-label">Details</span>
+                <svg class="dt-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
             </div>
-            <div class="mt-4 pt-4 border-t border-slate-900/5 flex flex-wrap gap-4">
-              <a href="https://doi.org/10.5281/zenodo.13909560" target="_blank" rel="noopener" class="project-link">Published paper <span aria-hidden="true">&#8599;</span></a>
-              <a href="https://github.com/rohitshidid/EEG-independent-component-classification-using-ensemble-based-technique" target="_blank" rel="noopener" class="project-link">GitHub <span aria-hidden="true">&#8599;</span></a>
+
+            <div class="proj-details" id="pd-12" hidden>
+              <p class="mt-4 text-sm text-slate-500 leading-relaxed">
+                Peer-reviewed and published work improving brain signal classification accuracy for cognitive research, using ensemble machine learning over EEG independent component analysis.
+              </p>
+              <div class="mt-4 flex flex-wrap gap-1.5">
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-scikitlearn"/></svg>scikit-learn</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md">Signal Processing</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md">Ensemble ML</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="tools live">
+          <div class="h-1.5 bg-gradient-to-r from-slate-500 to-slate-700"></div>
+          <div class="p-5">
+            <div class="flex items-start gap-3.5">
+              <span class="proj-icon bg-gradient-to-br from-slate-500 to-slate-700">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#g-layers"/></svg>
+              </span>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-start justify-between gap-3">
+                  <h3 class="font-display text-lg font-semibold text-slate-900 leading-snug">bak — Per-File Version Control</h3>
+                  <span class="badge-live"><span class="live-dot-sm"></span>Live</span>
+                </div>
+                <p class="mt-1 text-[13px] text-slate-400 leading-snug">Per-file version control, published to Homebrew</p>
+              </div>
+            </div>
+
+            <div class="mt-4 flex flex-wrap items-center gap-2.5">
+              <a href="https://rohitshidid.github.io/bak/" target="_blank" rel="noopener" class="btn-primary">Demo site <span aria-hidden="true">&#8599;</span></a>
+              <a href="https://github.com/rohitshidid/bak" target="_blank" rel="noopener" class="btn-ghost">GitHub <span aria-hidden="true">&#8599;</span></a>
+              <button class="details-toggle ml-auto" aria-expanded="false" aria-controls="pd-13">
+                <span class="dt-label">Details</span>
+                <svg class="dt-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+            </div>
+
+            <div class="proj-details" id="pd-13" hidden>
+              <p class="mt-4 text-sm text-slate-500 leading-relaxed">
+                Undo for files that never made it into git. Timestamped snapshots with notes, compact or full diffs, and safe restores that auto-save your current state first. History lives in ~/.bak rather than littering the working directory, with zstd compression and SHA-256 hashing to deduplicate storage, plus a guard rail against snapshotting anything over 100MB. Shipped as a Homebrew formula.
+              </p>
+              <div class="mt-4 flex flex-wrap gap-1.5">
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-go"/></svg>Go 1.22</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md">zstd</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md">SHA-256</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-homebrew"/></svg>Homebrew</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md">CLI</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="tools live">
+          <div class="h-1.5 bg-gradient-to-r from-teal-500 to-emerald-600"></div>
+          <div class="p-5">
+            <div class="flex items-start gap-3.5">
+              <span class="proj-icon bg-gradient-to-br from-teal-500 to-emerald-600">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#g-ports"/></svg>
+              </span>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-start justify-between gap-3">
+                  <h3 class="font-display text-lg font-semibold text-slate-900 leading-snug">portmap — Port &amp; Process Diagnostics</h3>
+                  <span class="badge-live"><span class="live-dot-sm"></span>Live</span>
+                </div>
+                <p class="mt-1 text-[13px] text-slate-400 leading-snug">Ports, processes and containers in one table</p>
+              </div>
+            </div>
+
+            <div class="mt-4 flex flex-wrap items-center gap-2.5">
+              <a href="https://rohitshidid.github.io/Homebrew-portman/" target="_blank" rel="noopener" class="btn-primary">Demo site <span aria-hidden="true">&#8599;</span></a>
+              <a href="https://github.com/rohitshidid/Homebrew-portman" target="_blank" rel="noopener" class="btn-ghost">GitHub <span aria-hidden="true">&#8599;</span></a>
+              <button class="details-toggle ml-auto" aria-expanded="false" aria-controls="pd-14">
+                <span class="dt-label">Details</span>
+                <svg class="dt-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+            </div>
+
+            <div class="proj-details" id="pd-14" hidden>
+              <p class="mt-4 text-sm text-slate-500 leading-relaxed">
+                Replaces five separate diagnostic commands with one table. Merges and deduplicates output from lsof, ss, netstat and docker to show every listening socket alongside its owning process, Docker container mapping and known service name. Adds <code>portmap check &lt;port&gt;</code> with scriptable exit codes, a <code>--watch</code> refresh mode, and <code>--json</code> output. Zero external dependencies, distributed via Homebrew.
+              </p>
+              <div class="mt-4 flex flex-wrap gap-1.5">
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-go"/></svg>Go 1.22</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-homebrew"/></svg>Homebrew</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-docker"/></svg>Docker API</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md">Networking</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md">CLI</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="tools live">
+          <div class="h-1.5 bg-gradient-to-r from-blue-500 to-indigo-600"></div>
+          <div class="p-5">
+            <div class="flex items-start gap-3.5">
+              <span class="proj-icon bg-gradient-to-br from-blue-500 to-indigo-600">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#g-treemap"/></svg>
+              </span>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-start justify-between gap-3">
+                  <h3 class="font-display text-lg font-semibold text-slate-900 leading-snug">Disk Manager</h3>
+                  <span class="badge-live"><span class="live-dot-sm"></span>Live</span>
+                </div>
+                <p class="mt-1 text-[13px] text-slate-400 leading-snug">Visual disk explorer with reversible deletion</p>
+              </div>
+            </div>
+
+            <div class="mt-4 flex flex-wrap items-center gap-2.5">
+              <a href="https://rohitshidid.github.io/Disk-manager/" target="_blank" rel="noopener" class="btn-primary">Demo site <span aria-hidden="true">&#8599;</span></a>
+              <a href="https://github.com/rohitshidid/Disk-manager" target="_blank" rel="noopener" class="btn-ghost">GitHub <span aria-hidden="true">&#8599;</span></a>
+              <button class="details-toggle ml-auto" aria-expanded="false" aria-controls="pd-15">
+                <span class="dt-label">Details</span>
+                <svg class="dt-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+            </div>
+
+            <div class="proj-details" id="pd-15" hidden>
+              <p class="mt-4 text-sm text-slate-500 leading-relaxed">
+                A visual disk-usage explorer for Apple silicon Macs pairing a squarified treemap with a sortable list, so you can drill into folders and refresh one subtree instead of rescanning the disk. A junk finder reclaims package-manager caches and build artifacts (19.7 GB on the author's machine) and a three-stage hash finds byte-identical duplicates. Deletion is reversible by default — files go to quarantine, ⌘Z works even after quitting, and permanent removal requires typing DELETE.
+              </p>
+              <div class="mt-4 flex flex-wrap gap-1.5">
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-electron"/></svg>Electron</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-nodedotjs"/></svg>Node.js</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md">macOS</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md">Treemap</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md">Content hashing</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md">MIT</span>
+              </div>
             </div>
           </div>
         </article>
 
         <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="tools">
           <div class="h-1.5 bg-gradient-to-r from-slate-600 to-indigo-600"></div>
-          <div class="p-6 flex flex-col flex-1">
+          <div class="p-5">
             <div class="flex items-start gap-3.5">
               <span class="proj-icon bg-gradient-to-br from-slate-600 to-indigo-600">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#g-merge"/></svg>
               </span>
-              <div class="flex-1 min-w-0 flex items-start justify-between gap-3">
-                <h3 class="font-display text-lg font-semibold text-slate-900 leading-snug">Odysseus — Open-Source Contribution</h3>
-                <span class="badge-repo">Repo</span>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-start justify-between gap-3">
+                  <h3 class="font-display text-lg font-semibold text-slate-900 leading-snug">Odysseus — Open-Source Contribution</h3>
+                  <span class="badge-repo">Repo</span>
+                </div>
+                <p class="mt-1 text-[13px] text-slate-400 leading-snug">Merged bug fix in an 85k★ AI workspace</p>
               </div>
             </div>
-            <p class="mt-3 text-sm text-slate-500 leading-relaxed flex-1">
-              Merged a full-stack bug fix into an 85k★ self-hosted AI workspace. Diagnosed a payload mismatch between the JavaScript frontend (slashCommands.js) and the Python FastAPI route, added query-parameter filtering, and shipped a pytest regression suite to catch the same class of mismatch again.
-            </p>
-            <div class="mt-5 flex flex-wrap gap-1.5">
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-javascript"/></svg>JavaScript</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-python"/></svg>Python</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-fastapi"/></svg>FastAPI</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-python"/></svg>pytest</span>
-              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Open Source</span>
+
+            <div class="mt-4 flex flex-wrap items-center gap-2.5">
+              <a href="https://github.com/pewdiepie-archdaemon/odysseus/pull/2113" target="_blank" rel="noopener" class="btn-primary">Merged pull request <span aria-hidden="true">&#8599;</span></a>
+              <button class="details-toggle ml-auto" aria-expanded="false" aria-controls="pd-16">
+                <span class="dt-label">Details</span>
+                <svg class="dt-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
             </div>
-            <div class="mt-4 pt-4 border-t border-slate-900/5 flex flex-wrap gap-4">
-              <a href="https://github.com/pewdiepie-archdaemon/odysseus/pull/2113" target="_blank" rel="noopener" class="project-link">Merged pull request <span aria-hidden="true">&#8599;</span></a>
+
+            <div class="proj-details" id="pd-16" hidden>
+              <p class="mt-4 text-sm text-slate-500 leading-relaxed">
+                Merged a full-stack bug fix into an 85k★ self-hosted AI workspace. Diagnosed a payload mismatch between the JavaScript frontend (slashCommands.js) and the Python FastAPI route, added query-parameter filtering, and shipped a pytest regression suite to catch the same class of mismatch again.
+              </p>
+              <div class="mt-4 flex flex-wrap gap-1.5">
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-javascript"/></svg>JavaScript</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-python"/></svg>Python</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-fastapi"/></svg>FastAPI</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-python"/></svg>pytest</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md">Open Source</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="ai live">
+          <div class="h-1.5 bg-gradient-to-r from-cyan-400 to-sky-500"></div>
+          <div class="p-5">
+            <div class="flex items-start gap-3.5">
+              <span class="proj-icon bg-gradient-to-br from-cyan-400 to-sky-500">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#g-hand"/></svg>
+              </span>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-start justify-between gap-3">
+                  <h3 class="font-display text-lg font-semibold text-slate-900 leading-snug">AirControl</h3>
+                  <span class="badge-live"><span class="live-dot-sm"></span>Live</span>
+                </div>
+                <p class="mt-1 text-[13px] text-slate-400 leading-snug">Hand-gesture page control, entirely on-device</p>
+              </div>
+            </div>
+
+            <div class="mt-4 flex flex-wrap items-center gap-2.5">
+              <a href="https://rohitshidid.github.io/Aircontrol/" target="_blank" rel="noopener" class="btn-primary">Live demo <span aria-hidden="true">&#8599;</span></a>
+              <a href="https://github.com/rohitshidid/Aircontrol" target="_blank" rel="noopener" class="btn-ghost">GitHub <span aria-hidden="true">&#8599;</span></a>
+              <button class="details-toggle ml-auto" aria-expanded="false" aria-controls="pd-17">
+                <span class="dt-label">Details</span>
+                <svg class="dt-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+            </div>
+
+            <div class="proj-details" id="pd-17" hidden>
+              <p class="mt-4 text-sm text-slate-500 leading-relaxed">
+                Control a web page with your hands and no installs: MediaPipe tracks 21 3D landmarks per frame entirely on-device, mapping five gestures — point to move, thumb-tap to click, two fingers to scroll, plus release and pause. Ships with a live skeleton overlay, sensitivity sliders, an FPS/finger-extension debug readout, and an interactive playground to test against.
+              </p>
+              <div class="mt-4 flex flex-wrap gap-1.5">
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-mediapipe"/></svg>MediaPipe</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-javascript"/></svg>JavaScript</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-webrtc"/></svg>WebRTC</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-javascript"/></svg>Canvas</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md">On-device ML</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="live">
+          <div class="h-1.5 bg-gradient-to-r from-amber-400 to-rose-500"></div>
+          <div class="p-5">
+            <div class="flex items-start gap-3.5">
+              <span class="proj-icon bg-gradient-to-br from-amber-400 to-rose-500">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#g-hex"/></svg>
+              </span>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-start justify-between gap-3">
+                  <h3 class="font-display text-lg font-semibold text-slate-900 leading-snug">Hexlandia</h3>
+                  <span class="badge-live"><span class="live-dot-sm"></span>Live</span>
+                </div>
+                <p class="mt-1 text-[13px] text-slate-400 leading-snug">Real-time multiplayer board game, 2–10 players</p>
+              </div>
+            </div>
+
+            <div class="mt-4 flex flex-wrap items-center gap-2.5">
+              <a href="https://hexagon-zwye.onrender.com" target="_blank" rel="noopener" class="btn-primary">Live demo <span aria-hidden="true">&#8599;</span></a>
+              <a href="https://github.com/rohitshidid/hexagon" target="_blank" rel="noopener" class="btn-ghost">GitHub <span aria-hidden="true">&#8599;</span></a>
+              <button class="details-toggle ml-auto" aria-expanded="false" aria-controls="pd-18">
+                <span class="dt-label">Details</span>
+                <svg class="dt-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+            </div>
+
+            <div class="proj-details" id="pd-18" hidden>
+              <p class="mt-4 text-sm text-slate-500 leading-relaxed">
+                A Catan-style island for 2–10 players, running on an authoritative Node.js + WebSocket server — the browser is a thin client that only renders state and sends actions, so a hacked client isn't a category of bug. The board scales from 19 hexes at four players to 61 at ten, empty seats fill with greedy bots, and four-letter room codes replace accounts entirely.
+              </p>
+              <div class="mt-4 flex flex-wrap gap-1.5">
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-nodedotjs"/></svg>Node.js</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md">WebSocket</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-express"/></svg>Express</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md">ws</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-javascript"/></svg>Canvas</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="live">
+          <div class="h-1.5 bg-gradient-to-r from-emerald-400 to-teal-500"></div>
+          <div class="p-5">
+            <div class="flex items-start gap-3.5">
+              <span class="proj-icon bg-gradient-to-br from-emerald-400 to-teal-500">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#g-split"/></svg>
+              </span>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-start justify-between gap-3">
+                  <h3 class="font-display text-lg font-semibold text-slate-900 leading-snug">Splitplus</h3>
+                  <span class="badge-live"><span class="live-dot-sm"></span>Live</span>
+                </div>
+                <p class="mt-1 text-[13px] text-slate-400 leading-snug">Group expense splitting on a Sheet you own</p>
+              </div>
+            </div>
+
+            <div class="mt-4 flex flex-wrap items-center gap-2.5">
+              <a href="https://rohitshidid.github.io/splitplus/" target="_blank" rel="noopener" class="btn-primary">Live demo <span aria-hidden="true">&#8599;</span></a>
+              <a href="https://github.com/rohitshidid/splitplus" target="_blank" rel="noopener" class="btn-ghost">GitHub <span aria-hidden="true">&#8599;</span></a>
+              <button class="details-toggle ml-auto" aria-expanded="false" aria-controls="pd-19">
+                <span class="dt-label">Details</span>
+                <svg class="dt-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+            </div>
+
+            <div class="proj-details" id="pd-19" hidden>
+              <p class="mt-4 text-sm text-slate-500 leading-relaxed">
+                Group expense splitting for trips and shared apartments that settles who owes whom automatically. Data lives in a Google Sheet the user owns, so the ledger stays portable and auditable rather than trapped in someone else's database — with expandable expense cards, per-member balances, settle/undo controls, and cross-device sync in about twenty seconds.
+              </p>
+              <div class="mt-4 flex flex-wrap gap-1.5">
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-nextdotjs"/></svg>Next.js</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-typescript"/></svg>TypeScript</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-googlesheets"/></svg>Google Sheets API</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-tailwindcss"/></svg>Tailwind CSS</span>
+              </div>
             </div>
           </div>
         </article>
@@ -1772,6 +2068,52 @@
     }, { threshold: 0.12 });
     document.querySelectorAll('.reveal, .reveal-left').forEach((el) => io.observe(el));
 
+    /* ---------- Collapsible project details ---------- */
+    (function () {
+      const grid = document.getElementById('project-grid');
+      const expandAll = document.getElementById('expand-all');
+      if (!grid) return;
+
+      function setOpen(btn, open) {
+        const body = document.getElementById(btn.getAttribute('aria-controls'));
+        if (!body) return;
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        body.hidden = !open;
+        btn.querySelector('.dt-label').textContent = open ? 'Less' : 'Details';
+      }
+
+      grid.addEventListener('click', (e) => {
+        const btn = e.target.closest('.details-toggle');
+        if (!btn) return;
+        setOpen(btn, btn.getAttribute('aria-expanded') !== 'true');
+        syncExpandAll();
+      });
+
+      function toggles() {
+        return Array.from(grid.querySelectorAll('.project-card:not(.is-hidden) .details-toggle'));
+      }
+
+      function syncExpandAll() {
+        if (!expandAll) return;
+        const t = toggles();
+        const allOpen = t.length > 0 && t.every((b) => b.getAttribute('aria-expanded') === 'true');
+        expandAll.textContent = allOpen ? 'Collapse all' : 'Expand all';
+      }
+
+      if (expandAll) {
+        expandAll.addEventListener('click', () => {
+          const t = toggles();
+          const open = !(t.length > 0 && t.every((b) => b.getAttribute('aria-expanded') === 'true'));
+          t.forEach((b) => setOpen(b, open));
+          syncExpandAll();
+        });
+      }
+
+      // filtering changes which cards are visible, so keep the label honest
+      document.getElementById('project-filters')
+        ?.addEventListener('click', () => setTimeout(syncExpandAll, 0));
+    })();
+
     /* ---------- Project filters ---------- */
     (function () {
       const bar = document.getElementById('project-filters');
@@ -1833,7 +2175,7 @@
     const STATIONS = [
       { id: 'about', icon: '🧠', label: 'ABOUT', color: '#818cf8', body: "MS Computer Engineering @ NYU Tandon, ex-Citi SWE. Five years mixing production software, applied ML, and security — systems rigor for ML, ML judgment for systems." },
       { id: 'experience', icon: '🏦', label: 'EXPERIENCE', color: '#22d3ee', body: "Citi (OneTouch trading UI — React/TS, 30% efficiency lift), NYU TA across 4 grad courses, Elespa HEV Software Engineer, FinIQ intern. Zero-rollback production shipping." },
-      { id: 'projects', icon: '🚀', label: 'PROJECTS', color: '#e879f9', body: "19 shipped projects — 12 you can open right now. Hexlandia multiplayer server · Self-Healing RAG (12-point gain) · GDELT crisis monitor at 92% F1 · bak & portmap on Homebrew · Parkinson's classifier on STM32." },
+      { id: 'projects', icon: '🚀', label: 'PROJECTS', color: '#e879f9', body: "19 shipped projects, agentic AI & LLM systems first. Self-Healing RAG (12-point gain) · Research Copilot agentic retrieval · OmniRoute LLM gateway across 77+ models · GDELT crisis monitor at 92% F1 · bak & portmap on Homebrew." },
       { id: 'skills', icon: '🛠️', label: 'SKILLS', color: '#34d399', body: "PyTorch, PySpark, LangGraph, FAISS, Kafka, MLflow · C++/Go on ARM Cortex-M4 · LangChain & RAG · Docker, Kubernetes, AWS · Next.js & React." },
       { id: 'writing', icon: '📜', label: 'RESEARCH', color: '#fbbf24', body: "3 published papers (EEG CNN ensemble, U-Net satellite segmentation, EV battery management) + an IoT emergency-vehicle patent + a book on Amazon." },
       { id: 'top', icon: '📬', label: 'CONTACT', color: '#fb7185', body: "rrs6770@nyu.edu · linkedin.com/in/rohit-shidid · github.com/rohitshidid · NYC, open to relocation. Open to SWE/ML/DS/Security roles & 2026 internships." },
