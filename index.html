@@ -203,6 +203,143 @@
       transform: none;
     }
 
+    /* ====== Project filter bar ====== */
+    .filter-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: #475569;
+      background: rgba(255, 255, 255, 0.65);
+      border: 1px solid rgba(99, 102, 241, 0.14);
+      border-radius: 999px;
+      padding: 0.5rem 0.95rem;
+      cursor: pointer;
+      transition: color .2s, background .2s, border-color .2s, transform .2s;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .filter-pill:hover {
+      color: #3730a3;
+      border-color: rgba(99, 102, 241, 0.32);
+      transform: translateY(-1px);
+    }
+
+    .filter-pill.is-active {
+      color: #fff;
+      background: linear-gradient(110deg, var(--accent-1), var(--accent-3));
+      border-color: transparent;
+      box-shadow: 0 6px 18px -6px rgba(79, 70, 229, 0.55);
+    }
+
+    .filter-count {
+      font-size: 0.6875rem;
+      font-variant-numeric: tabular-nums;
+      padding: 0.05rem 0.4rem;
+      border-radius: 999px;
+      background: rgba(99, 102, 241, 0.12);
+      color: #4338ca;
+    }
+
+    .filter-pill.is-active .filter-count {
+      background: rgba(255, 255, 255, 0.25);
+      color: #fff;
+    }
+
+    /* ====== Project cards ====== */
+    .project-card {
+      transition: transform .35s cubic-bezier(.2, .7, .2, 1), box-shadow .35s,
+        opacity .28s ease, filter .28s ease;
+    }
+
+    .project-card.is-hidden {
+      display: none;
+    }
+
+    .project-card.is-entering {
+      opacity: 0;
+      transform: translateY(14px) scale(.985);
+    }
+
+    .project-link {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #4f46e5;
+      white-space: nowrap;
+      transition: color .18s, gap .18s;
+    }
+
+    .project-link:hover {
+      color: #3730a3;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    /* ====== Status badges ====== */
+    .badge-live,
+    .badge-video,
+    .badge-repo,
+    .badge-paper {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      flex-shrink: 0;
+      font-size: 0.625rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 0.25rem 0.6rem;
+      border-radius: 999px;
+      white-space: nowrap;
+      margin-top: 0.15rem;
+    }
+
+    .badge-live {
+      color: #047857;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.28);
+    }
+
+    .badge-video {
+      color: #b45309;
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .badge-repo {
+      color: #475569;
+      background: rgba(100, 116, 139, 0.09);
+      border: 1px solid rgba(100, 116, 139, 0.22);
+    }
+
+    .badge-paper {
+      color: #7e22ce;
+      background: rgba(168, 85, 247, 0.1);
+      border: 1px solid rgba(168, 85, 247, 0.28);
+    }
+
+    .live-dot-sm {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: #10b981;
+      box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6);
+      animation: pulse-sm 2s infinite;
+      flex-shrink: 0;
+    }
+
+    @keyframes pulse-sm {
+      70% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .live-dot-sm { animation: none; }
+      .project-card { transition: none; }
+    }
+
     .stagger>* {
       opacity: 0;
       transform: translateY(24px);
@@ -426,6 +563,7 @@
         <a href="#projects" class="nav-link">Projects</a>
         <a href="#skills" class="nav-link">Skills</a>
         <a href="#writing" class="nav-link">Writing</a>
+        <a href="./Rohit_Shidid.pdf" target="_blank" rel="noopener" class="nav-link">R&eacute;sum&eacute;</a>
       </div>
       <div class="flex items-center gap-2">
         <button id="game-toggle" title="Explore as a game"
@@ -495,6 +633,13 @@
               </svg>
               Email
             </a>
+            <a href="./Rohit_Shidid.pdf" target="_blank" rel="noopener" download
+              class="group flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium text-white bg-gradient-to-r from-indigo-600 to-cyan-600 hover:opacity-90 transition shadow-sm">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M13 8v6h2.586L12 17.586 8.414 14H11V8h2m2-2H9v6H5l7 7 7-7h-4V6zM4 20h16v2H4z" />
+              </svg>
+              R&eacute;sum&eacute;
+            </a>
           </div>
           <p class="mt-5 text-sm text-slate-400">
             📍 New York City · open to relocating across the US
@@ -537,6 +682,14 @@
         </div>
         <div class="md:col-span-2 grid grid-cols-2 gap-4 stagger reveal">
           <div class="stat-card rounded-2xl p-5">
+            <div class="font-display text-3xl font-bold gradient-text">19</div>
+            <div class="text-xs text-slate-400 mt-1">projects shipped</div>
+          </div>
+          <div class="stat-card rounded-2xl p-5">
+            <div class="font-display text-3xl font-bold gradient-text">12</div>
+            <div class="text-xs text-slate-400 mt-1">demos you can open now</div>
+          </div>
+          <div class="stat-card rounded-2xl p-5">
             <div class="font-display text-3xl font-bold gradient-text">1M+</div>
             <div class="text-xs text-slate-400 mt-1">training rows / run</div>
           </div>
@@ -545,12 +698,12 @@
             <div class="text-xs text-slate-400 mt-1">F1 on event classification</div>
           </div>
           <div class="stat-card rounded-2xl p-5">
-            <div class="font-display text-3xl font-bold gradient-text">30%</div>
-            <div class="text-xs text-slate-400 mt-1">Citi platform efficiency lift</div>
+            <div class="font-display text-3xl font-bold gradient-text">2</div>
+            <div class="text-xs text-slate-400 mt-1">CLIs published to Homebrew</div>
           </div>
           <div class="stat-card rounded-2xl p-5">
-            <div class="font-display text-3xl font-bold gradient-text">4</div>
-            <div class="text-xs text-slate-400 mt-1">grad courses TA'd @ NYU</div>
+            <div class="font-display text-3xl font-bold gradient-text">30%</div>
+            <div class="text-xs text-slate-400 mt-1">Citi platform efficiency lift</div>
           </div>
         </div>
       </div>
@@ -641,217 +794,479 @@
     <!-- Projects -->
     <section id="projects" class="py-20 reveal">
       <p class="section-label mb-3">Projects</p>
-      <h2 class="font-display text-3xl md:text-4xl font-bold text-slate-900 mb-12">Selected work</h2>
+      <h2 class="font-display text-3xl md:text-4xl font-bold text-slate-900 mb-4">Selected work</h2>
+      <p class="text-slate-500 max-w-2xl mb-8 leading-relaxed">
+        Nineteen things I&rsquo;ve built and shipped &mdash; live web apps, published CLIs, ML pipelines and research.
+        Most of them you can open and use right now.
+      </p>
 
-      <div class="grid md:grid-cols-2 gap-6 stagger reveal">
+      <div id="project-filters" class="flex flex-wrap gap-2 mb-8" role="tablist" aria-label="Filter projects">
+        <button class="filter-pill is-active" data-filter="all" role="tab" aria-selected="true">All<span class="filter-count">19</span></button>
+        <button class="filter-pill" data-filter="live" role="tab" aria-selected="false">Live demos<span class="filter-count">12</span></button>
+        <button class="filter-pill" data-filter="ai" role="tab" aria-selected="false">AI &amp; ML<span class="filter-count">11</span></button>
+        <button class="filter-pill" data-filter="tools" role="tab" aria-selected="false">Dev tools<span class="filter-count">5</span></button>
+        <button class="filter-pill" data-filter="research" role="tab" aria-selected="false">Research<span class="filter-count">5</span></button>
+      </div>
 
-        <article class="card rounded-2xl overflow-hidden flex flex-col">
+      <p id="render-note" class="text-xs text-slate-400 mb-6 flex items-center gap-2">
+        <span class="live-dot-sm"></span>
+        Free-tier demos sleep when idle &mdash; the first load can take up to a minute to wake.
+      </p>
+
+      <div id="project-grid" class="grid md:grid-cols-2 gap-6">
+
+        <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="live">
+          <div class="h-1.5 bg-gradient-to-r from-amber-400 to-rose-500"></div>
+          <div class="p-6 flex flex-col flex-1">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-display text-lg font-semibold text-slate-900 leading-snug">Hexlandia</h3>
+              <span class="badge-live"><span class="live-dot-sm"></span>Live</span>
+            </div>
+            <p class="mt-3 text-sm text-slate-500 leading-relaxed flex-1">
+              A Catan-style island for 2–10 players, running on an authoritative Node.js + WebSocket server — the browser is a thin client that only renders state and sends actions, so a hacked client isn't a category of bug. The board scales from 19 hexes at four players to 61 at ten, empty seats fill with greedy bots, and four-letter room codes replace accounts entirely.
+            </p>
+            <div class="mt-5 flex flex-wrap gap-1.5">
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Node.js</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">WebSocket</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Express</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">ws</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Canvas</span>
+            </div>
+            <div class="mt-4 pt-4 border-t border-slate-900/5 flex flex-wrap gap-4">
+              <a href="https://hexagon-zwye.onrender.com" target="_blank" rel="noopener" class="project-link">Live demo <span aria-hidden="true">&#8599;</span></a>
+              <a href="https://github.com/rohitshidid/hexagon" target="_blank" rel="noopener" class="project-link">GitHub <span aria-hidden="true">&#8599;</span></a>
+            </div>
+          </div>
+        </article>
+
+        <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="live">
+          <div class="h-1.5 bg-gradient-to-r from-emerald-400 to-teal-500"></div>
+          <div class="p-6 flex flex-col flex-1">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-display text-lg font-semibold text-slate-900 leading-snug">Splitplus</h3>
+              <span class="badge-live"><span class="live-dot-sm"></span>Live</span>
+            </div>
+            <p class="mt-3 text-sm text-slate-500 leading-relaxed flex-1">
+              Group expense splitting for trips and shared apartments that settles who owes whom automatically. Data lives in a Google Sheet the user owns, so the ledger stays portable and auditable rather than trapped in someone else's database — with expandable expense cards, per-member balances, settle/undo controls, and cross-device sync in about twenty seconds.
+            </p>
+            <div class="mt-5 flex flex-wrap gap-1.5">
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Next.js</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">TypeScript</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Google Sheets API</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Tailwind CSS</span>
+            </div>
+            <div class="mt-4 pt-4 border-t border-slate-900/5 flex flex-wrap gap-4">
+              <a href="https://rohitshidid.github.io/splitplus/" target="_blank" rel="noopener" class="project-link">Live demo <span aria-hidden="true">&#8599;</span></a>
+              <a href="https://github.com/rohitshidid/splitplus" target="_blank" rel="noopener" class="project-link">GitHub <span aria-hidden="true">&#8599;</span></a>
+            </div>
+          </div>
+        </article>
+
+        <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="live">
+          <div class="h-1.5 bg-gradient-to-r from-cyan-400 to-sky-500"></div>
+          <div class="p-6 flex flex-col flex-1">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-display text-lg font-semibold text-slate-900 leading-snug">AirControl</h3>
+              <span class="badge-live"><span class="live-dot-sm"></span>Live</span>
+            </div>
+            <p class="mt-3 text-sm text-slate-500 leading-relaxed flex-1">
+              Control a web page with your hands and no installs: MediaPipe tracks 21 3D landmarks per frame entirely on-device, mapping five gestures — point to move, thumb-tap to click, two fingers to scroll, plus release and pause. Ships with a live skeleton overlay, sensitivity sliders, an FPS/finger-extension debug readout, and an interactive playground to test against.
+            </p>
+            <div class="mt-5 flex flex-wrap gap-1.5">
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">MediaPipe</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">JavaScript</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">WebRTC</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Canvas</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">On-device ML</span>
+            </div>
+            <div class="mt-4 pt-4 border-t border-slate-900/5 flex flex-wrap gap-4">
+              <a href="https://rohitshidid.github.io/Aircontrol/" target="_blank" rel="noopener" class="project-link">Live demo <span aria-hidden="true">&#8599;</span></a>
+              <a href="https://github.com/rohitshidid/Aircontrol" target="_blank" rel="noopener" class="project-link">GitHub <span aria-hidden="true">&#8599;</span></a>
+            </div>
+          </div>
+        </article>
+
+        <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="live ai">
+          <div class="h-1.5 bg-gradient-to-r from-orange-400 to-red-500"></div>
+          <div class="p-6 flex flex-col flex-1">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-display text-lg font-semibold text-slate-900 leading-snug">Layoff Predictor</h3>
+              <span class="badge-live"><span class="live-dot-sm"></span>Live</span>
+            </div>
+            <p class="mt-3 text-sm text-slate-500 leading-relaxed flex-1">
+              Estimates a company's layoff risk from live financial signals. Pulls 3- and 6-month stock drawdown and volatility through yfinance, scores them with a Random Forest trained on 313 real layoff events plus matched negatives, and returns a probability with a LOW/MED/HIGH band. Fuzzy name-to-ticker resolution across NASDAQ, NYSE and AMEX means you can type “Google” instead of GOOG.
+            </p>
+            <div class="mt-5 flex flex-wrap gap-1.5">
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Flask</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">scikit-learn</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">yfinance</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">pandas</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Random Forest</span>
+            </div>
+            <div class="mt-4 pt-4 border-t border-slate-900/5 flex flex-wrap gap-4">
+              <a href="https://layoff-predictor.onrender.com/" target="_blank" rel="noopener" class="project-link">Live demo <span aria-hidden="true">&#8599;</span></a>
+              <a href="https://github.com/rohitshidid/layoff-predictor" target="_blank" rel="noopener" class="project-link">GitHub <span aria-hidden="true">&#8599;</span></a>
+            </div>
+          </div>
+        </article>
+
+        <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="live ai">
+          <div class="h-1.5 bg-gradient-to-r from-violet-500 to-indigo-500"></div>
+          <div class="p-6 flex flex-col flex-1">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-display text-lg font-semibold text-slate-900 leading-snug">Synapse — Two-Answer Fact Checker</h3>
+              <span class="badge-live"><span class="live-dot-sm"></span>Live</span>
+            </div>
+            <p class="mt-3 text-sm text-slate-500 leading-relaxed flex-1">
+              Settles “which of these two answers is right?” Give it a question and two candidates; it runs a live web search, drops five results into the model's context, and returns a verdict card — A holds up, B holds up, neither, or inconclusive — with confidence, reasoning and source links. A zero-dependency Node server keeps the API key off the client and hard-pins the model to OpenRouter's free tier, so a question costs about $0.007.
+            </p>
+            <div class="mt-5 flex flex-wrap gap-1.5">
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Node.js</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">OpenRouter API</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Zero deps</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">SSE</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Vanilla JS</span>
+            </div>
+            <div class="mt-4 pt-4 border-t border-slate-900/5 flex flex-wrap gap-4">
+              <a href="https://openrouter-chatbot-8qv6.onrender.com/" target="_blank" rel="noopener" class="project-link">Live demo <span aria-hidden="true">&#8599;</span></a>
+              <a href="https://github.com/rohitshidid/openrouter-chatbot" target="_blank" rel="noopener" class="project-link">GitHub <span aria-hidden="true">&#8599;</span></a>
+            </div>
+          </div>
+        </article>
+
+        <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="live ai">
+          <div class="h-1.5 bg-gradient-to-r from-fuchsia-500 to-purple-600"></div>
+          <div class="p-6 flex flex-col flex-1">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-display text-lg font-semibold text-slate-900 leading-snug">OmniRoute — LLM Gateway & Chat</h3>
+              <span class="badge-live"><span class="live-dot-sm"></span>Live</span>
+            </div>
+            <p class="mt-3 text-sm text-slate-500 leading-relaxed flex-1">
+              A self-built AI gateway and its chat client: one OpenAI-compatible wire API routing across 77+ models spanning Claude, OpenAI, Gemini and open weights, with automatic fallthrough when a provider fails, real-time SSE streaming, million-token context auto-negotiation, and reasoning traces streamed in parallel with the answer.
+            </p>
+            <div class="mt-5 flex flex-wrap gap-1.5">
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">FastAPI</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Python</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">SSE Streaming</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">OpenAI-compatible API</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Render</span>
+            </div>
+            <div class="mt-4 pt-4 border-t border-slate-900/5 flex flex-wrap gap-4">
+              <a href="https://omiroute-chat.onrender.com/" target="_blank" rel="noopener" class="project-link">Live demo <span aria-hidden="true">&#8599;</span></a>
+              <a href="https://github.com/rohitshidid/omiroute-chat" target="_blank" rel="noopener" class="project-link">GitHub <span aria-hidden="true">&#8599;</span></a>
+            </div>
+          </div>
+        </article>
+
+        <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="live ai research">
           <div class="h-1.5 bg-gradient-to-r from-indigo-500 to-fuchsia-500"></div>
           <div class="p-6 flex flex-col flex-1">
-            <h3 class="font-display text-lg font-semibold text-slate-900">Self-Healing RAG System</h3>
-            <p class="mt-2 text-sm text-slate-500 leading-relaxed flex-1">
-              Engineered a retrieval-augmented generation pipeline with automated failure detection and 4 healing strategies (query rewriting, HyDE, claim-targeted re-retrieval, context expansion). Achieved a 12-point improvement in fully-grounded answer rate and 40% reduction in hallucinated responses. Ran a zero-API cost cross-encoder NLI pipeline for claim verification.
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-display text-lg font-semibold text-slate-900 leading-snug">Self-Healing RAG System</h3>
+              <span class="badge-live"><span class="live-dot-sm"></span>Live</span>
+            </div>
+            <p class="mt-3 text-sm text-slate-500 leading-relaxed flex-1">
+              A retrieval-augmented generation pipeline that detects its own failures and repairs them with four healing strategies — query rewriting, HyDE, claim-targeted re-retrieval and context expansion. Lifted the fully-grounded answer rate by 12 points and cut hallucinated responses 40%, with claim verification handled by a zero-API-cost cross-encoder NLI pass over DeBERTa-v3.
             </p>
-            <div class="mt-4 flex items-center justify-between">
-              <div class="flex flex-wrap gap-1.5">
-                <span class="pill text-[11px] px-2.5 py-1 rounded-md">Python</span>
-                <span class="pill text-[11px] px-2.5 py-1 rounded-md">FAISS</span>
-                <span class="pill text-[11px] px-2.5 py-1 rounded-md">Groq API</span>
-                <span class="pill text-[11px] px-2.5 py-1 rounded-md">DeBERTa-v3</span>
-                <span class="pill text-[11px] px-2.5 py-1 rounded-md">Streamlit</span>
-              </div>
-              <div class="flex gap-3">
-                <a href="https://github.com/rohitshidid/Self-Healing-RAG" target="_blank" rel="noopener" class="text-xs text-indigo-600 hover:text-indigo-800 font-medium whitespace-nowrap">GitHub ↗</a>
-                <a href="#" target="_blank" rel="noopener" class="text-xs text-indigo-600 hover:text-indigo-800 font-medium whitespace-nowrap">Demo ↗</a>
-              </div>
+            <div class="mt-5 flex flex-wrap gap-1.5">
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Python</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">FAISS</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">DeBERTa-v3</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Groq API</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Streamlit</span>
+            </div>
+            <div class="mt-4 pt-4 border-t border-slate-900/5 flex flex-wrap gap-4">
+              <a href="https://huggingface.co/spaces/rohitshidid/Self_healing_RAG_demo" target="_blank" rel="noopener" class="project-link">Live demo <span aria-hidden="true">&#8599;</span></a>
+              <a href="https://github.com/rohitshidid/Self-Healing-RAG-Failure-Detecting-Retrieval-Augmented-Generation" target="_blank" rel="noopener" class="project-link">GitHub <span aria-hidden="true">&#8599;</span></a>
             </div>
           </div>
         </article>
 
-        <article class="card rounded-2xl overflow-hidden flex flex-col">
-          <div class="h-1.5 bg-gradient-to-r from-cyan-400 to-indigo-500"></div>
-          <div class="p-6 flex flex-col flex-1">
-            <h3 class="font-display text-lg font-semibold text-slate-900">GemSpot — ML Training Subsystem &amp; Registry</h3>
-            <p class="mt-2 text-sm text-slate-500 leading-relaxed flex-1">
-              Built a champion–challenger model promotion pipeline blocking registry promotion without meeting strict ROC-AUC and recall thresholds, ensuring zero silent regressions across 12 cycles. Integrated Ray Tune with ASHA early-stopping for 1.4x faster convergence, closing behavioral feedback loops via PostgreSQL, Kafka, and a feature store.
-            </p>
-            <div class="mt-4 flex items-center justify-between">
-              <div class="flex flex-wrap gap-1.5">
-                <span class="pill text-[11px] px-2.5 py-1 rounded-md">scikit-learn</span>
-                <span class="pill text-[11px] px-2.5 py-1 rounded-md">XGBoost</span>
-                <span class="pill text-[11px] px-2.5 py-1 rounded-md">MLflow</span>
-                <span class="pill text-[11px] px-2.5 py-1 rounded-md">Ray Tune</span>
-                <span class="pill text-[11px] px-2.5 py-1 rounded-md">Redpanda</span>
-                <span class="pill text-[11px] px-2.5 py-1 rounded-md">PostgreSQL</span>
-              </div>
-              <a href="https://github.com/rohitshidid/GemSpot" target="_blank" rel="noopener" class="text-xs text-indigo-600 hover:text-indigo-800 font-medium whitespace-nowrap">GitHub ↗</a>
-            </div>
-          </div>
-        </article>
-
-        <article class="card rounded-2xl overflow-hidden flex flex-col">
+        <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="live ai research">
           <div class="h-1.5 bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-cyan-400"></div>
           <div class="p-6 flex flex-col flex-1">
-            <h3 class="font-display text-lg font-semibold text-slate-900">GDELT Real-Time News Intelligence Pipeline</h3>
-            <p class="mt-2 text-sm text-slate-500 leading-relaxed flex-1">
-              Achieved 92% F1 on event conflict classification across 7 tracked models over 500K+ GDELT 2.0 events per run, ingested via parallel download and PySpark ETL into a Hive-style Parquet warehouse. Trained a PyTorch feed-forward network yielding a MAE of 0.73 on 0-100 event severity prediction.
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-display text-lg font-semibold text-slate-900 leading-snug">GDELT Real-Time News Intelligence</h3>
+              <span class="badge-live"><span class="live-dot-sm"></span>Live</span>
+            </div>
+            <p class="mt-3 text-sm text-slate-500 leading-relaxed flex-1">
+              A global crisis monitor over the GDELT 2.0 firehose: 500K+ events per run ingested by parallel download and PySpark ETL into a Hive-partitioned Parquet warehouse, then classified for event conflict at 92% F1 across seven tracked models. A PyTorch feed-forward network predicts 0–100 event severity at 0.73 MAE, surfaced through a live dashboard.
             </p>
-            <div class="mt-4 flex items-center justify-between">
-              <div class="flex flex-wrap gap-1.5">
-                <span class="pill text-[11px] px-2.5 py-1 rounded-md">PySpark 4.0</span>
-                <span class="pill text-[11px] px-2.5 py-1 rounded-md">Spark MLlib</span>
-                <span class="pill text-[11px] px-2.5 py-1 rounded-md">PyTorch</span>
-                <span class="pill text-[11px] px-2.5 py-1 rounded-md">Plotly Dash</span>
-                <span class="pill text-[11px] px-2.5 py-1 rounded-md">Parquet</span>
-              </div>
-              <div class="flex gap-3">
-                <a href="https://github.com/rohitshidid/GDELT-News-Pipeline" target="_blank" rel="noopener" class="text-xs text-indigo-600 hover:text-indigo-800 font-medium whitespace-nowrap">GitHub ↗</a>
-                <a href="#" target="_blank" rel="noopener" class="text-xs text-indigo-600 hover:text-indigo-800 font-medium whitespace-nowrap">Demo ↗</a>
-              </div>
+            <div class="mt-5 flex flex-wrap gap-1.5">
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">PySpark 4.0</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Spark MLlib</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">PyTorch</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Plotly Dash</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Parquet</span>
+            </div>
+            <div class="mt-4 pt-4 border-t border-slate-900/5 flex flex-wrap gap-4">
+              <a href="https://huggingface.co/spaces/rohitshidid/GlobalCrisisMonitor" target="_blank" rel="noopener" class="project-link">Live dashboard <span aria-hidden="true">&#8599;</span></a>
+              <a href="https://github.com/rohitshidid/GlobalCrisisMonitor" target="_blank" rel="noopener" class="project-link">GitHub <span aria-hidden="true">&#8599;</span></a>
             </div>
           </div>
         </article>
 
-        <article class="card rounded-2xl overflow-hidden flex flex-col">
+        <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="live tools">
+          <div class="h-1.5 bg-gradient-to-r from-slate-500 to-slate-700"></div>
+          <div class="p-6 flex flex-col flex-1">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-display text-lg font-semibold text-slate-900 leading-snug">bak — Per-File Version Control</h3>
+              <span class="badge-live"><span class="live-dot-sm"></span>Live</span>
+            </div>
+            <p class="mt-3 text-sm text-slate-500 leading-relaxed flex-1">
+              Undo for files that never made it into git. Timestamped snapshots with notes, compact or full diffs, and safe restores that auto-save your current state first. History lives in ~/.bak rather than littering the working directory, with zstd compression and SHA-256 hashing to deduplicate storage, plus a guard rail against snapshotting anything over 100MB. Shipped as a Homebrew formula.
+            </p>
+            <div class="mt-5 flex flex-wrap gap-1.5">
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Go 1.22</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">zstd</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">SHA-256</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Homebrew</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">CLI</span>
+            </div>
+            <div class="mt-4 pt-4 border-t border-slate-900/5 flex flex-wrap gap-4">
+              <a href="https://rohitshidid.github.io/bak/" target="_blank" rel="noopener" class="project-link">Demo site <span aria-hidden="true">&#8599;</span></a>
+              <a href="https://github.com/rohitshidid/bak" target="_blank" rel="noopener" class="project-link">GitHub <span aria-hidden="true">&#8599;</span></a>
+            </div>
+          </div>
+        </article>
+
+        <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="live tools">
+          <div class="h-1.5 bg-gradient-to-r from-teal-500 to-emerald-600"></div>
+          <div class="p-6 flex flex-col flex-1">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-display text-lg font-semibold text-slate-900 leading-snug">portmap — Port &amp; Process Diagnostics</h3>
+              <span class="badge-live"><span class="live-dot-sm"></span>Live</span>
+            </div>
+            <p class="mt-3 text-sm text-slate-500 leading-relaxed flex-1">
+              Replaces five separate diagnostic commands with one table. Merges and deduplicates output from lsof, ss, netstat and docker to show every listening socket alongside its owning process, Docker container mapping and known service name. Adds <code>portmap check &lt;port&gt;</code> with scriptable exit codes, a <code>--watch</code> refresh mode, and <code>--json</code> output. Zero external dependencies, distributed via Homebrew.
+            </p>
+            <div class="mt-5 flex flex-wrap gap-1.5">
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Go 1.22</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Homebrew</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Docker API</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Networking</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">CLI</span>
+            </div>
+            <div class="mt-4 pt-4 border-t border-slate-900/5 flex flex-wrap gap-4">
+              <a href="https://rohitshidid.github.io/Homebrew-portman/" target="_blank" rel="noopener" class="project-link">Demo site <span aria-hidden="true">&#8599;</span></a>
+              <a href="https://github.com/rohitshidid/Homebrew-portman" target="_blank" rel="noopener" class="project-link">GitHub <span aria-hidden="true">&#8599;</span></a>
+            </div>
+          </div>
+        </article>
+
+        <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="live tools">
+          <div class="h-1.5 bg-gradient-to-r from-blue-500 to-indigo-600"></div>
+          <div class="p-6 flex flex-col flex-1">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-display text-lg font-semibold text-slate-900 leading-snug">Disk Manager</h3>
+              <span class="badge-live"><span class="live-dot-sm"></span>Live</span>
+            </div>
+            <p class="mt-3 text-sm text-slate-500 leading-relaxed flex-1">
+              A visual disk-usage explorer for Apple silicon Macs pairing a squarified treemap with a sortable list, so you can drill into folders and refresh one subtree instead of rescanning the disk. A junk finder reclaims package-manager caches and build artifacts (19.7 GB on the author's machine) and a three-stage hash finds byte-identical duplicates. Deletion is reversible by default — files go to quarantine, ⌘Z works even after quitting, and permanent removal requires typing DELETE.
+            </p>
+            <div class="mt-5 flex flex-wrap gap-1.5">
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Swift</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">macOS</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Treemap</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Content hashing</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">MIT</span>
+            </div>
+            <div class="mt-4 pt-4 border-t border-slate-900/5 flex flex-wrap gap-4">
+              <a href="https://rohitshidid.github.io/Disk-manager/" target="_blank" rel="noopener" class="project-link">Demo site <span aria-hidden="true">&#8599;</span></a>
+              <a href="https://github.com/rohitshidid/Disk-manager" target="_blank" rel="noopener" class="project-link">GitHub <span aria-hidden="true">&#8599;</span></a>
+            </div>
+          </div>
+        </article>
+
+        <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="live ai tools">
+          <div class="h-1.5 bg-gradient-to-r from-lime-500 to-green-600"></div>
+          <div class="p-6 flex flex-col flex-1">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-display text-lg font-semibold text-slate-900 leading-snug">Mutation Simulator</h3>
+              <span class="badge-live"><span class="live-dot-sm"></span>Live</span>
+            </div>
+            <p class="mt-3 text-sm text-slate-500 leading-relaxed flex-1">
+              Watch behaviour emerge with nobody programming it. Organisms in an arena steer themselves with 170 numbers — the weights of an 18→8→2 tanh network fed by an eight-wedge radar — and the same architecture is trained two ways for comparison: evolution (elitism, tournament selection, uniform crossover, Gaussian mutation) versus REINFORCE with a baseline and Adam. Live generation stats, death breakdowns, and genome export to JSON.
+            </p>
+            <div class="mt-5 flex flex-wrap gap-1.5">
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">JavaScript</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Neuroevolution</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">REINFORCE</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Canvas</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">RL</span>
+            </div>
+            <div class="mt-4 pt-4 border-t border-slate-900/5 flex flex-wrap gap-4">
+              <a href="https://rohitshidid.github.io/mutation-simulator/index.html" target="_blank" rel="noopener" class="project-link">Demo site <span aria-hidden="true">&#8599;</span></a>
+              <a href="https://github.com/rohitshidid/mutation-simulator" target="_blank" rel="noopener" class="project-link">GitHub <span aria-hidden="true">&#8599;</span></a>
+            </div>
+          </div>
+        </article>
+
+        <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="ai">
           <div class="h-1.5 bg-gradient-to-r from-cyan-400 via-indigo-500 to-fuchsia-500"></div>
           <div class="p-6 flex flex-col flex-1">
-            <h3 class="font-display text-lg font-semibold text-slate-900">Bandageboard — Healthcare Billing Pipeline</h3>
-            <p class="mt-2 text-sm text-slate-500 leading-relaxed flex-1">
-              Automated Medicare Part B wound-care billing triage using a full-stack Next.js application. Built an Anthropic-powered extraction pipeline processing unstructured clinical notes with multi-step prompts. Implemented a secure biller-facing React dashboard with role-scoped CRUD operations on structured billing records.
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-display text-lg font-semibold text-slate-900 leading-snug">Bandageboard — Clinical Billing Triage</h3>
+              <span class="badge-video">▶ Video</span>
+            </div>
+            <p class="mt-3 text-sm text-slate-500 leading-relaxed flex-1">
+              Automates Medicare Part B wound-care billing triage. A multi-step Claude-powered extraction pipeline turns unstructured clinical notes into structured billing records, surfaced through a secure biller-facing dashboard with role-scoped CRUD.
             </p>
-            <div class="mt-4 flex items-center justify-between">
-              <div class="flex flex-wrap gap-1.5">
-                <span class="pill text-[11px] px-2.5 py-1 rounded-md">Next.js 14</span>
-                <span class="pill text-[11px] px-2.5 py-1 rounded-md">TypeScript</span>
-                <span class="pill text-[11px] px-2.5 py-1 rounded-md">Anthropic API</span>
-                <span class="pill text-[11px] px-2.5 py-1 rounded-md">Vercel Postgres</span>
-                <span class="pill text-[11px] px-2.5 py-1 rounded-md">Drizzle ORM</span>
-              </div>
-              <div class="flex gap-3">
-                <a href="https://github.com/rohitshidid/Bandageboard" target="_blank" rel="noopener" class="text-xs text-indigo-600 hover:text-indigo-800 font-medium whitespace-nowrap">GitHub ↗</a>
-                <a href="#" target="_blank" rel="noopener" class="text-xs text-indigo-600 hover:text-indigo-800 font-medium whitespace-nowrap">Demo ↗</a>
-              </div>
+            <div class="mt-5 flex flex-wrap gap-1.5">
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Next.js 14</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">TypeScript</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Claude API</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">PostgreSQL</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Drizzle ORM</span>
+            </div>
+            <div class="mt-4 pt-4 border-t border-slate-900/5 flex flex-wrap gap-4">
+              <a href="https://drive.google.com/file/d/1IDWhbeCqQkupWy_Kk9bw5q-T1JQSINli/view?usp=share_link" target="_blank" rel="noopener" class="project-link">Video demo <span aria-hidden="true">&#8599;</span></a>
+              <a href="https://github.com/rohitshidid/bandageboard" target="_blank" rel="noopener" class="project-link">GitHub <span aria-hidden="true">&#8599;</span></a>
             </div>
           </div>
         </article>
 
-        <article class="card rounded-2xl overflow-hidden flex flex-col">
-          <div class="h-1.5 bg-gradient-to-r from-fuchsia-500 via-cyan-400 to-indigo-500"></div>
-          <div class="p-6 flex flex-col flex-1">
-            <h3 class="font-display text-lg font-semibold text-slate-900">Parkinson's Motor Symptom Classifier — Embedded AI</h3>
-            <p class="mt-2 text-sm text-slate-500 leading-relaxed flex-1">
-              Four-class real-time motor-symptom classification fully on-device: 6-axis IMU at 52 Hz, Hamming windowing + 256-point FFT via ARM CMSIS-DSP. Achieved live remote monitoring with sub-second BLE streaming latency using a custom GATT service on STM32 with automatic drift suppression.
-            </p>
-            <div class="mt-4 flex items-center justify-between">
-              <div class="flex flex-wrap gap-1.5">
-                <span class="pill text-[11px] px-2.5 py-1 rounded-md">C++</span>
-                <span class="pill text-[11px] px-2.5 py-1 rounded-md">ARM Cortex-M4</span>
-                <span class="pill text-[11px] px-2.5 py-1 rounded-md">CMSIS-DSP</span>
-                <span class="pill text-[11px] px-2.5 py-1 rounded-md">STM32</span>
-                <span class="pill text-[11px] px-2.5 py-1 rounded-md">BLE</span>
-              </div>
-              <a href="https://github.com/rohitshidid/Parkinsons-Motor-Symptom-Classifier" target="_blank" rel="noopener" class="text-xs text-indigo-600 hover:text-indigo-800 font-medium whitespace-nowrap">GitHub ↗</a>
-            </div>
-          </div>
-        </article>
-
-        <article class="card rounded-2xl overflow-hidden flex flex-col">
+        <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="ai">
           <div class="h-1.5 bg-gradient-to-r from-indigo-500 to-cyan-400"></div>
           <div class="p-6 flex flex-col flex-1">
-            <h3 class="font-display text-lg font-semibold text-slate-900">Real-Time Cricket Ball Tracker</h3>
-            <p class="mt-2 text-sm text-slate-500 leading-relaxed flex-1">
-              Engineered a computer vision pipeline for real-time cricket ball detection and trajectory tracking using tuned HSV color masking. Automated delivery length classification into five categories via a 4-point homography calibration transforming 2D image bounce coordinates into real-world pitch dimensions.
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-display text-lg font-semibold text-slate-900 leading-snug">Real-Time Cricket Ball Tracker</h3>
+              <span class="badge-video">▶ Video</span>
+            </div>
+            <p class="mt-3 text-sm text-slate-500 leading-relaxed flex-1">
+              A computer vision pipeline that detects and tracks a cricket ball in real time using tuned HSV colour masking, then classifies delivery length into five categories via a 4-point homography that maps 2D bounce coordinates onto real-world pitch dimensions.
             </p>
-            <div class="mt-4 flex items-center justify-between">
-              <div class="flex flex-wrap gap-1.5">
-                <span class="pill text-[11px] px-2.5 py-1 rounded-md">Python</span>
-                <span class="pill text-[11px] px-2.5 py-1 rounded-md">OpenCV</span>
-                <span class="pill text-[11px] px-2.5 py-1 rounded-md">NumPy</span>
-              </div>
-              <div class="flex gap-3">
-                <a href="https://github.com/rohitshidid/Cricket-Ball-Tracker" target="_blank" rel="noopener" class="text-xs text-indigo-600 hover:text-indigo-800 font-medium whitespace-nowrap">GitHub ↗</a>
-                <a href="#" target="_blank" rel="noopener" class="text-xs text-indigo-600 hover:text-indigo-800 font-medium whitespace-nowrap">Demo ↗</a>
-              </div>
+            <div class="mt-5 flex flex-wrap gap-1.5">
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Python</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">OpenCV</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">NumPy</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Homography</span>
+            </div>
+            <div class="mt-4 pt-4 border-t border-slate-900/5 flex flex-wrap gap-4">
+              <a href="https://drive.google.com/file/d/1G6c9ihMt4wW3GS0FW_Ywf_uf73rV7VpU/view?usp=share_link" target="_blank" rel="noopener" class="project-link">Video demo <span aria-hidden="true">&#8599;</span></a>
+              <a href="https://github.com/rohitshidid/Computer-Vision-Cricket-Tracker-" target="_blank" rel="noopener" class="project-link">GitHub <span aria-hidden="true">&#8599;</span></a>
             </div>
           </div>
         </article>
 
-        <article class="card rounded-2xl overflow-hidden flex flex-col">
-          <div class="h-1.5 bg-gradient-to-r from-cyan-400 to-fuchsia-500"></div>
+        <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="ai research">
+          <div class="h-1.5 bg-gradient-to-r from-purple-500 to-indigo-600"></div>
           <div class="p-6 flex flex-col flex-1">
-            <h3 class="font-display text-lg font-semibold text-slate-900">EEG Independent Component Classification</h3>
-            <p class="mt-2 text-sm text-slate-500 leading-relaxed flex-1">
-              Improved brain signal classification accuracy for cognitive research by implementing ensemble-based ML techniques for EEG independent component analysis. Peer-reviewed and published.
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-display text-lg font-semibold text-slate-900 leading-snug">Research Copilot</h3>
+              <span class="badge-repo">Repo</span>
+            </div>
+            <p class="mt-3 text-sm text-slate-500 leading-relaxed flex-1">
+              Agentic RAG over arXiv and Semantic Scholar. Ask a research question and get a synthesized answer with inline paper-and-page citations, an interactive citation network graph, a verify-this-claim mode, follow-up Q&amp;A over the retrieved papers, and a swappable LLM backend. Hybrid RRF retrieval, cross-encoder reranking, citation enforcement and tracing are wired in from the start — every retrieval stage is an ablation toggle, so you can measure what actually helps.
             </p>
-            <div class="mt-4 flex items-center justify-between">
-              <div class="flex flex-wrap gap-1.5">
-                <span class="pill text-[11px] px-2.5 py-1 rounded-md">scikit-learn</span>
-                <span class="pill text-[11px] px-2.5 py-1 rounded-md">Signal Processing</span>
-              </div>
-              <a href="https://doi.org/10.5281/zenodo.13909560" target="_blank" rel="noopener"
-                class="text-xs text-indigo-600 hover:text-indigo-800 font-medium whitespace-nowrap">Paper ↗</a>
+            <div class="mt-5 flex flex-wrap gap-1.5">
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">FastAPI</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Next.js</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Hybrid RRF</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Cross-Encoder</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Claude API</span>
+            </div>
+            <div class="mt-4 pt-4 border-t border-slate-900/5 flex flex-wrap gap-4">
+              <a href="https://github.com/rohitshidid/Research-Copilot" target="_blank" rel="noopener" class="project-link">GitHub <span aria-hidden="true">&#8599;</span></a>
             </div>
           </div>
         </article>
 
-        <article class="card rounded-2xl overflow-hidden flex flex-col">
-          <div class="h-1.5 bg-gradient-to-r from-fuchsia-500 to-indigo-500"></div>
-          <div class="p-6 flex flex-col flex-1">
-            <h3 class="font-display text-lg font-semibold text-slate-900">portmap — Published Go CLI (Homebrew)</h3>
-            <p class="mt-2 text-sm text-slate-500 leading-relaxed flex-1">
-              Replaced 5 separate diagnostic commands by building and publishing portmap — a lightweight Go CLI available through Homebrew that surfaces listening ports, owning processes, Docker container mappings, and known service labels in a single clean output.
-            </p>
-            <div class="mt-4 flex items-center justify-between">
-              <div class="flex flex-wrap gap-1.5">
-                <span class="pill text-[11px] px-2.5 py-1 rounded-md">Go</span>
-                <span class="pill text-[11px] px-2.5 py-1 rounded-md">Homebrew</span>
-                <span class="pill text-[11px] px-2.5 py-1 rounded-md">Networking</span>
-              </div>
-              <a href="https://github.com/rohitshidid/portmap" target="_blank" rel="noopener"
-                class="text-xs text-indigo-600 hover:text-indigo-800 font-medium whitespace-nowrap">GitHub ↗</a>
-            </div>
-          </div>
-        </article>
-
-        <article class="card rounded-2xl overflow-hidden flex flex-col">
+        <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="ai">
           <div class="h-1.5 bg-gradient-to-r from-cyan-400 to-indigo-500"></div>
           <div class="p-6 flex flex-col flex-1">
-            <h3 class="font-display text-lg font-semibold text-slate-900">bak — Published Go CLI (Homebrew)</h3>
-            <p class="mt-2 text-sm text-slate-500 leading-relaxed flex-1">
-              Engineered a high-performance Go CLI for isolated per-file version control with a centralized zstd-compressed storage engine. Features interactive restore, –keep N pruning, automated garbage collection, and custom hunk-style diffing. Distributed via custom Homebrew formula.
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-display text-lg font-semibold text-slate-900 leading-snug">GemSpot — ML Training Subsystem</h3>
+              <span class="badge-repo">Repo</span>
+            </div>
+            <p class="mt-3 text-sm text-slate-500 leading-relaxed flex-1">
+              A champion–challenger promotion pipeline that blocks any model from reaching the registry without clearing strict ROC-AUC and recall gates — zero silent regressions across 12 cycles. Ray Tune with ASHA early stopping cut convergence time 1.4x, and behavioural feedback loops close through PostgreSQL, Kafka and a feature store.
             </p>
-            <div class="mt-4 flex items-center justify-between">
-              <div class="flex flex-wrap gap-1.5">
-                <span class="pill text-[11px] px-2.5 py-1 rounded-md">Go</span>
-                <span class="pill text-[11px] px-2.5 py-1 rounded-md">Homebrew</span>
-                <span class="pill text-[11px] px-2.5 py-1 rounded-md">CLI</span>
-              </div>
-              <a href="https://github.com/rohitshidid/bak" target="_blank" rel="noopener"
-                class="text-xs text-indigo-600 hover:text-indigo-800 font-medium whitespace-nowrap">GitHub ↗</a>
+            <div class="mt-5 flex flex-wrap gap-1.5">
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">scikit-learn</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">XGBoost</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">MLflow</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Ray Tune</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Redpanda</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">PostgreSQL</span>
+            </div>
+            <div class="mt-4 pt-4 border-t border-slate-900/5 flex flex-wrap gap-4">
+              <a href="https://github.com/rohitshididnyu/GemSpot_training" target="_blank" rel="noopener" class="project-link">GitHub <span aria-hidden="true">&#8599;</span></a>
             </div>
           </div>
         </article>
 
-        <article class="card rounded-2xl overflow-hidden flex flex-col">
-          <div class="h-1.5 bg-gradient-to-r from-indigo-500 to-cyan-400"></div>
+        <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="ai research">
+          <div class="h-1.5 bg-gradient-to-r from-fuchsia-500 via-cyan-400 to-indigo-500"></div>
           <div class="p-6 flex flex-col flex-1">
-            <h3 class="font-display text-lg font-semibold text-slate-900">Open-Source Contribution — Odysseus</h3>
-            <p class="mt-2 text-sm text-slate-500 leading-relaxed flex-1">
-              Resolved a full-stack bug in a 47k+ star self-hosted AI workspace by diagnosing a payload mismatch in the JavaScript frontend (slashCommands.js) and adding query-parameter filtering to the Python FastAPI route. Added regression tests via pytest to catch similar mismatches.
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-display text-lg font-semibold text-slate-900 leading-snug">Parkinson's Motor Symptom Classifier</h3>
+              <span class="badge-repo">Repo</span>
+            </div>
+            <p class="mt-3 text-sm text-slate-500 leading-relaxed flex-1">
+              Four-class real-time motor-symptom classification running entirely on-device: a 6-axis IMU sampled at 52 Hz, Hamming windowing and a 256-point FFT via ARM CMSIS-DSP. Streams to a remote monitor with sub-second latency over a custom BLE GATT service on STM32, with automatic drift suppression.
             </p>
-            <div class="mt-4 flex items-center justify-between">
-              <div class="flex flex-wrap gap-1.5">
-                <span class="pill text-[11px] px-2.5 py-1 rounded-md">JavaScript</span>
-                <span class="pill text-[11px] px-2.5 py-1 rounded-md">Python</span>
-                <span class="pill text-[11px] px-2.5 py-1 rounded-md">FastAPI</span>
-                <span class="pill text-[11px] px-2.5 py-1 rounded-md">pytest</span>
-              </div>
-              <a href="https://github.com/Odysseus-AI/Odysseus" target="_blank" rel="noopener" class="text-xs text-indigo-600 hover:text-indigo-800 font-medium whitespace-nowrap">GitHub ↗</a>
+            <div class="mt-5 flex flex-wrap gap-1.5">
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">C++</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">ARM Cortex-M4</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">CMSIS-DSP</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">STM32</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">BLE</span>
+            </div>
+            <div class="mt-4 pt-4 border-t border-slate-900/5 flex flex-wrap gap-4">
+              <a href="https://github.com/rohitshidid/Parkinson-Detection" target="_blank" rel="noopener" class="project-link">GitHub <span aria-hidden="true">&#8599;</span></a>
+            </div>
+          </div>
+        </article>
+
+        <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="research">
+          <div class="h-1.5 bg-gradient-to-r from-cyan-400 to-fuchsia-500"></div>
+          <div class="p-6 flex flex-col flex-1">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-display text-lg font-semibold text-slate-900 leading-snug">EEG Independent Component Classification</h3>
+              <span class="badge-paper">Published</span>
+            </div>
+            <p class="mt-3 text-sm text-slate-500 leading-relaxed flex-1">
+              Peer-reviewed and published work improving brain signal classification accuracy for cognitive research, using ensemble machine learning over EEG independent component analysis.
+            </p>
+            <div class="mt-5 flex flex-wrap gap-1.5">
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">scikit-learn</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Signal Processing</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Ensemble ML</span>
+            </div>
+            <div class="mt-4 pt-4 border-t border-slate-900/5 flex flex-wrap gap-4">
+              <a href="https://doi.org/10.5281/zenodo.13909560" target="_blank" rel="noopener" class="project-link">Published paper <span aria-hidden="true">&#8599;</span></a>
+              <a href="https://github.com/rohitshidid/EEG-independent-component-classification-using-ensemble-based-technique" target="_blank" rel="noopener" class="project-link">GitHub <span aria-hidden="true">&#8599;</span></a>
+            </div>
+          </div>
+        </article>
+
+        <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="tools">
+          <div class="h-1.5 bg-gradient-to-r from-slate-600 to-indigo-600"></div>
+          <div class="p-6 flex flex-col flex-1">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-display text-lg font-semibold text-slate-900 leading-snug">Odysseus — Open-Source Contribution</h3>
+              <span class="badge-repo">Repo</span>
+            </div>
+            <p class="mt-3 text-sm text-slate-500 leading-relaxed flex-1">
+              Merged a full-stack bug fix into an 85k★ self-hosted AI workspace. Diagnosed a payload mismatch between the JavaScript frontend (slashCommands.js) and the Python FastAPI route, added query-parameter filtering, and shipped a pytest regression suite to catch the same class of mismatch again.
+            </p>
+            <div class="mt-5 flex flex-wrap gap-1.5">
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">JavaScript</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Python</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">FastAPI</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">pytest</span>
+              <span class="pill text-[11px] px-2.5 py-1 rounded-md">Open Source</span>
+            </div>
+            <div class="mt-4 pt-4 border-t border-slate-900/5 flex flex-wrap gap-4">
+              <a href="https://github.com/pewdiepie-archdaemon/odysseus/pull/2113" target="_blank" rel="noopener" class="project-link">Merged pull request <span aria-hidden="true">&#8599;</span></a>
             </div>
           </div>
         </article>
 
       </div>
+
+      <p id="no-results" class="hidden text-center text-slate-400 py-12">No projects in this category.</p>
     </section>
 
     <!-- Skills -->
@@ -1034,6 +1449,8 @@
       <a href="https://github.com/rohitshidid" target="_blank" rel="noopener"
         class="hover:text-slate-700 transition">GitHub</a>
       <a href="mailto:rrs6770@nyu.edu" class="hover:text-slate-700 transition">Email</a>
+      <a href="./Rohit_Shidid.pdf" target="_blank" rel="noopener"
+        class="hover:text-slate-700 transition">R&eacute;sum&eacute;</a>
     </div>
   </footer>
 
@@ -1087,6 +1504,51 @@
       });
     }, { threshold: 0.12 });
     document.querySelectorAll('.reveal, .reveal-left').forEach((el) => io.observe(el));
+
+    /* ---------- Project filters ---------- */
+    (function () {
+      const bar = document.getElementById('project-filters');
+      const grid = document.getElementById('project-grid');
+      if (!bar || !grid) return;
+
+      const cards = Array.from(grid.querySelectorAll('.project-card'));
+      const empty = document.getElementById('no-results');
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      function apply(filter) {
+        let shown = 0;
+        cards.forEach((card) => {
+          const cats = (card.dataset.cat || '').split(' ');
+          const match = filter === 'all' || cats.includes(filter);
+          if (match) {
+            shown++;
+            if (card.classList.contains('is-hidden')) {
+              card.classList.remove('is-hidden');
+              if (!reduce) {
+                card.classList.add('is-entering');
+                requestAnimationFrame(() =>
+                  requestAnimationFrame(() => card.classList.remove('is-entering'))
+                );
+              }
+            }
+          } else {
+            card.classList.add('is-hidden');
+          }
+        });
+        if (empty) empty.classList.toggle('hidden', shown > 0);
+      }
+
+      bar.addEventListener('click', (e) => {
+        const btn = e.target.closest('.filter-pill');
+        if (!btn) return;
+        bar.querySelectorAll('.filter-pill').forEach((b) => {
+          const on = b === btn;
+          b.classList.toggle('is-active', on);
+          b.setAttribute('aria-selected', on ? 'true' : 'false');
+        });
+        apply(btn.dataset.filter);
+      });
+    })();
 
     /* ---------- Scroll progress + parallax blobs ---------- */
     const progress = document.getElementById('scroll-progress');
@@ -1332,7 +1794,7 @@
     const STATIONS = [
       { id: 'about', icon: '🧠', label: 'ABOUT', color: '#818cf8', body: "MS Computer Engineering @ NYU Tandon, ex-Citi SWE. Five years mixing production software, applied ML, and security — systems rigor for ML, ML judgment for systems." },
       { id: 'experience', icon: '🏦', label: 'EXPERIENCE', color: '#22d3ee', body: "Citi (OneTouch trading UI — React/TS, 30% efficiency lift), NYU TA across 4 grad courses, Elespa HEV Software Engineer, FinIQ intern. Zero-rollback production shipping." },
-      { id: 'projects', icon: '🚀', label: 'PROJECTS', color: '#e879f9', body: "Self-Healing RAG pipeline (12-point gain) · GemSpot ML registry · Bandageboard Healthcare Pipeline · Parkinson's classifier on STM32." },
+      { id: 'projects', icon: '🚀', label: 'PROJECTS', color: '#e879f9', body: "19 shipped projects — 12 you can open right now. Hexlandia multiplayer server · Self-Healing RAG (12-point gain) · GDELT crisis monitor at 92% F1 · bak & portmap on Homebrew · Parkinson's classifier on STM32." },
       { id: 'skills', icon: '🛠️', label: 'SKILLS', color: '#34d399', body: "PyTorch, PySpark, LangGraph, FAISS, Kafka, MLflow · C++/Go on ARM Cortex-M4 · LangChain & RAG · Docker, Kubernetes, AWS · Next.js & React." },
       { id: 'writing', icon: '📜', label: 'RESEARCH', color: '#fbbf24', body: "3 published papers (EEG CNN ensemble, U-Net satellite segmentation, EV battery management) + an IoT emergency-vehicle patent + a book on Amazon." },
       { id: 'top', icon: '📬', label: 'CONTACT', color: '#fb7185', body: "rrs6770@nyu.edu · linkedin.com/in/rohit-shidid · github.com/rohitshidid · NYC, open to relocation. Open to SWE/ML/DS/Security roles & 2026 internships." },
