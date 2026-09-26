@@ -397,6 +397,86 @@
       transform: translateY(-1px);
     }
 
+    /* ====== Project video ====== */
+    .btn-video {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.4rem 0.8rem;
+      border-radius: 0.6rem;
+      white-space: nowrap;
+      color: #0f172a;
+      background: #fff;
+      border: 1px solid rgba(15, 23, 42, 0.12);
+      transition: background .2s, border-color .2s, transform .2s;
+    }
+
+    .btn-video svg {
+      width: 0.8rem;
+      height: 0.8rem;
+      color: #c026d3;
+    }
+
+    .btn-video:hover {
+      border-color: rgba(192, 38, 211, 0.4);
+      transform: translateY(-1px);
+    }
+
+    #video-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 90;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      background: rgba(2, 6, 23, 0.82);
+      backdrop-filter: blur(6px);
+    }
+
+    #video-modal[hidden] {
+      display: none;
+    }
+
+    #video-modal .vm-frame {
+      width: min(1100px, 100%);
+    }
+
+    #video-modal video {
+      display: block;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #000;
+      border-radius: 0.9rem;
+      box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.7);
+    }
+
+    #video-modal .vm-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 0.6rem;
+      color: #e2e8f0;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    #video-modal .vm-close {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #e2e8f0;
+      padding: 0.35rem 0.75rem;
+      border-radius: 0.5rem;
+      border: 1px solid rgba(226, 232, 240, 0.3);
+    }
+
+    #video-modal .vm-close:hover {
+      background: rgba(226, 232, 240, 0.12);
+    }
+
     /* ====== Collapsible details ====== */
     .details-toggle {
       display: inline-flex;
@@ -911,11 +991,11 @@
         </div>
         <div class="md:col-span-2 grid grid-cols-2 gap-4 stagger reveal">
           <div class="stat-card rounded-2xl p-5">
-            <div class="font-display text-3xl font-bold gradient-text">20</div>
+            <div class="font-display text-3xl font-bold gradient-text">21</div>
             <div class="text-xs text-slate-400 mt-1">projects shipped</div>
           </div>
           <div class="stat-card rounded-2xl p-5">
-            <div class="font-display text-3xl font-bold gradient-text">13</div>
+            <div class="font-display text-3xl font-bold gradient-text">14</div>
             <div class="text-xs text-slate-400 mt-1">demos you can open now</div>
           </div>
           <div class="stat-card rounded-2xl p-5">
@@ -1045,15 +1125,15 @@
       <p class="section-label mb-3">Projects</p>
       <h2 class="font-display text-3xl md:text-4xl font-bold text-slate-900 mb-4">Selected work</h2>
       <p class="text-slate-500 max-w-2xl mb-8 leading-relaxed">
-        Twenty things I&rsquo;ve built and shipped, agentic AI and LLM systems first &mdash;
+        Twenty-one things I&rsquo;ve built and shipped, agentic AI and LLM systems first &mdash;
         then the ML pipelines, developer tools and web apps. Most of them you can open and use right now.
       </p>
 
       <div id="project-filters" class="flex flex-wrap gap-2 mb-6" role="tablist" aria-label="Filter projects">
-        <button class="filter-pill is-active" data-filter="all" role="tab" aria-selected="true">All<span class="filter-count">20</span></button>
-        <button class="filter-pill" data-filter="llm" role="tab" aria-selected="false">Agentic AI &amp; LLM<span class="filter-count">5</span></button>
-        <button class="filter-pill" data-filter="ai" role="tab" aria-selected="false">AI &amp; ML<span class="filter-count">14</span></button>
-        <button class="filter-pill" data-filter="live" role="tab" aria-selected="false">Live demos<span class="filter-count">13</span></button>
+        <button class="filter-pill is-active" data-filter="all" role="tab" aria-selected="true">All<span class="filter-count">21</span></button>
+        <button class="filter-pill" data-filter="llm" role="tab" aria-selected="false">Agentic AI &amp; LLM<span class="filter-count">6</span></button>
+        <button class="filter-pill" data-filter="ai" role="tab" aria-selected="false">AI &amp; ML<span class="filter-count">15</span></button>
+        <button class="filter-pill" data-filter="live" role="tab" aria-selected="false">Live demos<span class="filter-count">14</span></button>
         <button class="filter-pill" data-filter="tools" role="tab" aria-selected="false">Dev tools<span class="filter-count">6</span></button>
         <button class="filter-pill" data-filter="research" role="tab" aria-selected="false">Research<span class="filter-count">5</span></button>
       </div>
@@ -1089,6 +1169,7 @@
             <div class="mt-4 flex flex-wrap items-center gap-2.5">
               <a href="https://huggingface.co/spaces/rohitshidid/Self_healing_RAG_demo" target="_blank" rel="noopener" class="btn-primary">Live demo <span aria-hidden="true">&#8599;</span></a>
               <a href="https://github.com/rohitshidid/Self-Healing-RAG-Failure-Detecting-Retrieval-Augmented-Generation" target="_blank" rel="noopener" class="btn-ghost">GitHub <span aria-hidden="true">&#8599;</span></a>
+              <button class="btn-video" data-video="self-healing-rag" data-title="Self-Healing RAG System"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg>Watch</button>
               <button class="details-toggle ml-auto" aria-expanded="false" aria-controls="pd-1">
                 <span class="dt-label">Details</span>
                 <svg class="dt-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
@@ -1128,6 +1209,7 @@
 
             <div class="mt-4 flex flex-wrap items-center gap-2.5">
               <a href="https://github.com/rohitshidid/Research-Copilot" target="_blank" rel="noopener" class="btn-primary">GitHub <span aria-hidden="true">&#8599;</span></a>
+              <button class="btn-video" data-video="research-copilot" data-title="Research Copilot"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg>Watch</button>
               <button class="details-toggle ml-auto" aria-expanded="false" aria-controls="pd-2">
                 <span class="dt-label">Details</span>
                 <svg class="dt-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
@@ -1168,6 +1250,7 @@
             <div class="mt-4 flex flex-wrap items-center gap-2.5">
               <a href="https://omiroute-chat.onrender.com/" target="_blank" rel="noopener" class="btn-primary">Live demo <span aria-hidden="true">&#8599;</span></a>
               <a href="https://github.com/rohitshidid/omiroute-chat" target="_blank" rel="noopener" class="btn-ghost">GitHub <span aria-hidden="true">&#8599;</span></a>
+              <button class="btn-video" data-video="omniroute" data-title="OmniRoute — LLM Gateway &amp; Chat"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg>Watch</button>
               <button class="details-toggle ml-auto" aria-expanded="false" aria-controls="pd-3">
                 <span class="dt-label">Details</span>
                 <svg class="dt-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
@@ -1184,6 +1267,51 @@
                 <span class="pill text-[11px] px-2.5 py-1 rounded-md">SSE Streaming</span>
                 <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-openai"/></svg>OpenAI-compatible API</span>
                 <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-render"/></svg>Render</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="llm ai live">
+          <div class="h-1.5 bg-gradient-to-r from-emerald-500 to-teal-600"></div>
+          <div class="p-5">
+            <div class="flex items-start gap-3.5">
+              <span class="proj-icon bg-gradient-to-br from-emerald-500 to-teal-600">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#g-route"/></svg>
+              </span>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-start justify-between gap-3">
+                  <h3 class="font-display text-lg font-semibold text-slate-900 leading-snug">PromptLint — LLM Router &amp; Prompt Linter</h3>
+                  <span class="badge-live"><span class="live-dot-sm"></span>Live</span>
+                </div>
+                <p class="mt-1 text-[13px] text-slate-400 leading-snug">Cheapest capable model per prompt, plus a quality score</p>
+              </div>
+            </div>
+
+            <div class="mt-4 flex flex-wrap items-center gap-2.5">
+              <a href="https://promptlint.onrender.com" target="_blank" rel="noopener" class="btn-primary">Live demo <span aria-hidden="true">&#8599;</span></a>
+              <a href="https://github.com/rohitshidid/Promptlint" target="_blank" rel="noopener" class="btn-ghost">GitHub <span aria-hidden="true">&#8599;</span></a>
+              <button class="btn-video" data-video="promptlint" data-title="PromptLint — LLM Router &amp; Prompt Linter"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg>Watch</button>
+              <button class="details-toggle ml-auto" aria-expanded="false" aria-controls="pd-21">
+                <span class="dt-label">Details</span>
+                <svg class="dt-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+            </div>
+
+            <div class="proj-details" id="pd-21" hidden>
+              <p class="mt-4 text-sm text-slate-500 leading-relaxed">
+                An API that routes every prompt to the most cost-effective LLM that can handle it, and grades the prompt&rsquo;s quality in the same call. TypeSafe&rsquo;s Jev decision model judges each prompt&rsquo;s difficulty and task type in about 200ms, then picks between Claude, GPT, Gemini, or any OpenAI-compatible endpoint based on task fit and price, with automatic fallback to another provider if a call fails. Each request also returns a 0&ndash;100 prompt score, first-try success odds, eleven quality checks, and ranked fix-it tips &mdash; flagging prompts that should be clarified before any money is spent. On a 480-prompt benchmark, balanced routing came out 89% cheaper than always using the priciest model. Full stack built solo: a FastAPI backend with async SQLAlchemy and Alembic migrations, self-serve accounts with hashed API keys and rate limits, a plain HTML/JS frontend with a savings calculator and a prompt-engineering quiz with a leaderboard, 181 automated tests and offline evaluations running in GitHub Actions CI, and zero-cost deployment on Render and Neon Postgres.
+              </p>
+              <div class="mt-4 flex flex-wrap gap-1.5">
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-python"/></svg>Python</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md pill-logo"><svg class="pill-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-fastapi"/></svg>FastAPI</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md">PostgreSQL</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md">SQLAlchemy</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md">REST APIs</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md">LLM Integration (OpenAI, Anthropic, Gemini)</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md">Cost Optimization</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md">Security</span>
+                <span class="pill text-[11px] px-2.5 py-1 rounded-md">CI/CD</span>
               </div>
             </div>
           </div>
@@ -1208,6 +1336,7 @@
             <div class="mt-4 flex flex-wrap items-center gap-2.5">
               <a href="https://openrouter-chatbot-8qv6.onrender.com/" target="_blank" rel="noopener" class="btn-primary">Live demo <span aria-hidden="true">&#8599;</span></a>
               <a href="https://github.com/rohitshidid/openrouter-chatbot" target="_blank" rel="noopener" class="btn-ghost">GitHub <span aria-hidden="true">&#8599;</span></a>
+              <button class="btn-video" data-video="synapse" data-title="Synapse — Two-Answer Fact Checker"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg>Watch</button>
               <button class="details-toggle ml-auto" aria-expanded="false" aria-controls="pd-4">
                 <span class="dt-label">Details</span>
                 <svg class="dt-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
@@ -1248,6 +1377,7 @@
             <div class="mt-4 flex flex-wrap items-center gap-2.5">
               <a href="https://drive.google.com/file/d/1IDWhbeCqQkupWy_Kk9bw5q-T1JQSINli/view?usp=share_link" target="_blank" rel="noopener" class="btn-primary">Video demo <span aria-hidden="true">&#8599;</span></a>
               <a href="https://github.com/rohitshidid/bandageboard" target="_blank" rel="noopener" class="btn-ghost">GitHub <span aria-hidden="true">&#8599;</span></a>
+              <button class="btn-video" data-video="bandageboard" data-title="Bandageboard — Clinical Billing Triage"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg>Watch</button>
               <button class="details-toggle ml-auto" aria-expanded="false" aria-controls="pd-5">
                 <span class="dt-label">Details</span>
                 <svg class="dt-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
@@ -1288,6 +1418,7 @@
             <div class="mt-4 flex flex-wrap items-center gap-2.5">
               <a href="https://rohitshidid.github.io/murmur/" target="_blank" rel="noopener" class="btn-primary">Demo site <span aria-hidden="true">&#8599;</span></a>
               <a href="https://github.com/rohitshidid/murmur" target="_blank" rel="noopener" class="btn-ghost">GitHub <span aria-hidden="true">&#8599;</span></a>
+              <button class="btn-video" data-video="murmur" data-title="Murmur — On-Device Dictation"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg>Watch</button>
               <button class="details-toggle ml-auto" aria-expanded="false" aria-controls="pd-20">
                 <span class="dt-label">Details</span>
                 <svg class="dt-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
@@ -1329,6 +1460,7 @@
             <div class="mt-4 flex flex-wrap items-center gap-2.5">
               <a href="https://huggingface.co/spaces/rohitshidid/GlobalCrisisMonitor" target="_blank" rel="noopener" class="btn-primary">Live dashboard <span aria-hidden="true">&#8599;</span></a>
               <a href="https://github.com/rohitshidid/GlobalCrisisMonitor" target="_blank" rel="noopener" class="btn-ghost">GitHub <span aria-hidden="true">&#8599;</span></a>
+              <button class="btn-video" data-video="gdelt" data-title="GDELT Real-Time News Intelligence"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg>Watch</button>
               <button class="details-toggle ml-auto" aria-expanded="false" aria-controls="pd-6">
                 <span class="dt-label">Details</span>
                 <svg class="dt-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
@@ -1368,6 +1500,7 @@
 
             <div class="mt-4 flex flex-wrap items-center gap-2.5">
               <a href="https://github.com/rohitshididnyu/GemSpot_training" target="_blank" rel="noopener" class="btn-primary">GitHub <span aria-hidden="true">&#8599;</span></a>
+              <button class="btn-video" data-video="gemspot" data-title="GemSpot — ML Training Subsystem"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg>Watch</button>
               <button class="details-toggle ml-auto" aria-expanded="false" aria-controls="pd-7">
                 <span class="dt-label">Details</span>
                 <svg class="dt-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
@@ -1409,6 +1542,7 @@
             <div class="mt-4 flex flex-wrap items-center gap-2.5">
               <a href="https://layoff-predictor.onrender.com/" target="_blank" rel="noopener" class="btn-primary">Live demo <span aria-hidden="true">&#8599;</span></a>
               <a href="https://github.com/rohitshidid/layoff-predictor" target="_blank" rel="noopener" class="btn-ghost">GitHub <span aria-hidden="true">&#8599;</span></a>
+              <button class="btn-video" data-video="layoff-predictor" data-title="Layoff Predictor"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg>Watch</button>
               <button class="details-toggle ml-auto" aria-expanded="false" aria-controls="pd-8">
                 <span class="dt-label">Details</span>
                 <svg class="dt-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
@@ -1449,6 +1583,7 @@
             <div class="mt-4 flex flex-wrap items-center gap-2.5">
               <a href="https://rohitshidid.github.io/mutation-simulator/index.html" target="_blank" rel="noopener" class="btn-primary">Demo site <span aria-hidden="true">&#8599;</span></a>
               <a href="https://github.com/rohitshidid/mutation-simulator" target="_blank" rel="noopener" class="btn-ghost">GitHub <span aria-hidden="true">&#8599;</span></a>
+              <button class="btn-video" data-video="mutation-simulator" data-title="Mutation Simulator"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg>Watch</button>
               <button class="details-toggle ml-auto" aria-expanded="false" aria-controls="pd-9">
                 <span class="dt-label">Details</span>
                 <svg class="dt-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
@@ -1489,6 +1624,7 @@
             <div class="mt-4 flex flex-wrap items-center gap-2.5">
               <a href="https://drive.google.com/file/d/1G6c9ihMt4wW3GS0FW_Ywf_uf73rV7VpU/view?usp=share_link" target="_blank" rel="noopener" class="btn-primary">Video demo <span aria-hidden="true">&#8599;</span></a>
               <a href="https://github.com/rohitshidid/Computer-Vision-Cricket-Tracker-" target="_blank" rel="noopener" class="btn-ghost">GitHub <span aria-hidden="true">&#8599;</span></a>
+              <button class="btn-video" data-video="cricket-ball-tracker" data-title="Real-Time Cricket Ball Tracker"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg>Watch</button>
               <button class="details-toggle ml-auto" aria-expanded="false" aria-controls="pd-10">
                 <span class="dt-label">Details</span>
                 <svg class="dt-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
@@ -1527,6 +1663,7 @@
 
             <div class="mt-4 flex flex-wrap items-center gap-2.5">
               <a href="https://github.com/rohitshidid/Parkinson-Detection" target="_blank" rel="noopener" class="btn-primary">GitHub <span aria-hidden="true">&#8599;</span></a>
+              <button class="btn-video" data-video="parkinsons" data-title="Parkinson's Motor Symptom Classifier"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg>Watch</button>
               <button class="details-toggle ml-auto" aria-expanded="false" aria-controls="pd-11">
                 <span class="dt-label">Details</span>
                 <svg class="dt-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
@@ -1605,6 +1742,7 @@
             <div class="mt-4 flex flex-wrap items-center gap-2.5">
               <a href="https://rohitshidid.github.io/bak/" target="_blank" rel="noopener" class="btn-primary">Demo site <span aria-hidden="true">&#8599;</span></a>
               <a href="https://github.com/rohitshidid/bak" target="_blank" rel="noopener" class="btn-ghost">GitHub <span aria-hidden="true">&#8599;</span></a>
+              <button class="btn-video" data-video="bak" data-title="bak — Per-File Version Control"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg>Watch</button>
               <button class="details-toggle ml-auto" aria-expanded="false" aria-controls="pd-13">
                 <span class="dt-label">Details</span>
                 <svg class="dt-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
@@ -1645,6 +1783,7 @@
             <div class="mt-4 flex flex-wrap items-center gap-2.5">
               <a href="https://rohitshidid.github.io/Homebrew-portman/" target="_blank" rel="noopener" class="btn-primary">Demo site <span aria-hidden="true">&#8599;</span></a>
               <a href="https://github.com/rohitshidid/Homebrew-portman" target="_blank" rel="noopener" class="btn-ghost">GitHub <span aria-hidden="true">&#8599;</span></a>
+              <button class="btn-video" data-video="portmap" data-title="portmap — Port &amp; Process Diagnostics"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg>Watch</button>
               <button class="details-toggle ml-auto" aria-expanded="false" aria-controls="pd-14">
                 <span class="dt-label">Details</span>
                 <svg class="dt-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
@@ -1685,6 +1824,7 @@
             <div class="mt-4 flex flex-wrap items-center gap-2.5">
               <a href="https://rohitshidid.github.io/Disk-manager/" target="_blank" rel="noopener" class="btn-primary">Demo site <span aria-hidden="true">&#8599;</span></a>
               <a href="https://github.com/rohitshidid/Disk-manager" target="_blank" rel="noopener" class="btn-ghost">GitHub <span aria-hidden="true">&#8599;</span></a>
+              <button class="btn-video" data-video="disk-manager" data-title="Disk Manager"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg>Watch</button>
               <button class="details-toggle ml-auto" aria-expanded="false" aria-controls="pd-15">
                 <span class="dt-label">Details</span>
                 <svg class="dt-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
@@ -1725,6 +1865,7 @@
 
             <div class="mt-4 flex flex-wrap items-center gap-2.5">
               <a href="https://github.com/pewdiepie-archdaemon/odysseus/pull/2113" target="_blank" rel="noopener" class="btn-primary">Merged pull request <span aria-hidden="true">&#8599;</span></a>
+              <button class="btn-video" data-video="odysseus" data-title="Odysseus — Open-Source Contribution"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg>Watch</button>
               <button class="details-toggle ml-auto" aria-expanded="false" aria-controls="pd-16">
                 <span class="dt-label">Details</span>
                 <svg class="dt-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
@@ -1765,6 +1906,7 @@
             <div class="mt-4 flex flex-wrap items-center gap-2.5">
               <a href="https://rohitshidid.github.io/Aircontrol/" target="_blank" rel="noopener" class="btn-primary">Live demo <span aria-hidden="true">&#8599;</span></a>
               <a href="https://github.com/rohitshidid/Aircontrol" target="_blank" rel="noopener" class="btn-ghost">GitHub <span aria-hidden="true">&#8599;</span></a>
+              <button class="btn-video" data-video="aircontrol" data-title="AirControl"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg>Watch</button>
               <button class="details-toggle ml-auto" aria-expanded="false" aria-controls="pd-17">
                 <span class="dt-label">Details</span>
                 <svg class="dt-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
@@ -1805,6 +1947,7 @@
             <div class="mt-4 flex flex-wrap items-center gap-2.5">
               <a href="https://hexagon-zwye.onrender.com" target="_blank" rel="noopener" class="btn-primary">Live demo <span aria-hidden="true">&#8599;</span></a>
               <a href="https://github.com/rohitshidid/hexagon" target="_blank" rel="noopener" class="btn-ghost">GitHub <span aria-hidden="true">&#8599;</span></a>
+              <button class="btn-video" data-video="hexagon" data-title="Hexagon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg>Watch</button>
               <button class="details-toggle ml-auto" aria-expanded="false" aria-controls="pd-18">
                 <span class="dt-label">Details</span>
                 <svg class="dt-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
@@ -1845,6 +1988,7 @@
             <div class="mt-4 flex flex-wrap items-center gap-2.5">
               <a href="https://rohitshidid.github.io/splitplus/" target="_blank" rel="noopener" class="btn-primary">Live demo <span aria-hidden="true">&#8599;</span></a>
               <a href="https://github.com/rohitshidid/splitplus" target="_blank" rel="noopener" class="btn-ghost">GitHub <span aria-hidden="true">&#8599;</span></a>
+              <button class="btn-video" data-video="splitplus" data-title="Splitplus"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg>Watch</button>
               <button class="details-toggle ml-auto" aria-expanded="false" aria-controls="pd-19">
                 <span class="dt-label">Details</span>
                 <svg class="dt-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
@@ -2095,6 +2239,17 @@
     </div>
   </div>
 
+  <!-- Project video lightbox -->
+  <div id="video-modal" role="dialog" aria-modal="true" aria-labelledby="vm-title" hidden>
+    <div class="vm-frame">
+      <div class="vm-bar">
+        <span id="vm-title"></span>
+        <button class="vm-close" type="button">Close &times;</button>
+      </div>
+      <video id="vm-video" controls playsinline preload="none"></video>
+    </div>
+  </div>
+
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
 
@@ -2197,6 +2352,46 @@
       });
     })();
 
+    /* ---------- Project video lightbox ---------- */
+    (function () {
+      const modal = document.getElementById('video-modal');
+      const video = document.getElementById('vm-video');
+      const title = document.getElementById('vm-title');
+      let opener = null;
+
+      function open(btn) {
+        opener = btn;
+        const slug = btn.dataset.video;
+        title.textContent = btn.dataset.title;
+        video.poster = 'videos/' + slug + '.jpg';
+        video.src = 'videos/' + slug + '.mp4';
+        modal.hidden = false;
+        document.body.style.overflow = 'hidden';
+        modal.querySelector('.vm-close').focus();
+        video.play().catch(() => {});
+      }
+
+      function close() {
+        video.pause();
+        video.removeAttribute('src');
+        video.load();
+        modal.hidden = true;
+        document.body.style.overflow = '';
+        if (opener) opener.focus();
+      }
+
+      document.getElementById('project-grid')?.addEventListener('click', (e) => {
+        const btn = e.target.closest('.btn-video');
+        if (btn) open(btn);
+      });
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal || e.target.closest('.vm-close')) close();
+      });
+      addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !modal.hidden) close();
+      });
+    })();
+
 
 
     /* ====================================================== */
@@ -2213,7 +2408,7 @@
     const STATIONS = [
       { id: 'about', icon: '🧠', label: 'ABOUT', color: '#818cf8', body: "MS Computer Engineering @ NYU Tandon, ex-Citi SWE. Five years mixing production software, applied ML, and security — systems rigor for ML, ML judgment for systems." },
       { id: 'experience', icon: '🏦', label: 'EXPERIENCE', color: '#22d3ee', body: "Citi (OneTouch trading UI — React/TS, 30% efficiency lift), NYU TA across 4 grad courses, Elespa HEV Software Engineer, FinIQ intern. Zero-rollback production shipping." },
-      { id: 'projects', icon: '🚀', label: 'PROJECTS', color: '#e879f9', body: "20 shipped projects, agentic AI & LLM systems first. Self-Healing RAG (12-point gain) · Research Copilot agentic retrieval · OmniRoute LLM gateway across 77+ models · GDELT crisis monitor at 92% F1 · bak & portmap on Homebrew." },
+      { id: 'projects', icon: '🚀', label: 'PROJECTS', color: '#e879f9', body: "21 shipped projects, agentic AI & LLM systems first. Self-Healing RAG (12-point gain) · Research Copilot agentic retrieval · OmniRoute LLM gateway across 77+ models · PromptLint router 89% cheaper · GDELT crisis monitor at 92% F1 · bak & portmap on Homebrew." },
       { id: 'skills', icon: '🛠️', label: 'SKILLS', color: '#34d399', body: "PyTorch, PySpark, LangGraph, FAISS, Kafka, MLflow · C++/Go on ARM Cortex-M4 · LangChain & RAG · Docker, Kubernetes, AWS · Next.js & React." },
       { id: 'writing', icon: '📜', label: 'RESEARCH', color: '#fbbf24', body: "3 published papers (EEG CNN ensemble, U-Net satellite segmentation, EV battery management) + an IoT emergency-vehicle patent + a book on Amazon." },
       { id: 'top', icon: '📬', label: 'CONTACT', color: '#fb7185', body: "rrs6770@nyu.edu · linkedin.com/in/rohit-shidid · github.com/rohitshidid · NYC, open to relocation. Open to SWE/ML/DS/Security roles & 2026 internships." },
