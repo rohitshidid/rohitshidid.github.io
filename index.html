@@ -397,84 +397,459 @@
       transform: translateY(-1px);
     }
 
-    /* ====== Project video ====== */
-    .btn-video {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.3rem;
-      font-size: 0.75rem;
-      font-weight: 600;
-      padding: 0.4rem 0.8rem;
-      border-radius: 0.6rem;
-      white-space: nowrap;
-      color: #0f172a;
-      background: #fff;
-      border: 1px solid rgba(15, 23, 42, 0.12);
-      transition: background .2s, border-color .2s, transform .2s;
+    /* ====== Project video: inline preview ====== */
+    .proj-media {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      background: #0b1020;
+      isolation: isolate;
     }
 
-    .btn-video svg {
-      width: 0.8rem;
-      height: 0.8rem;
-      color: #c026d3;
-    }
-
-    .btn-video:hover {
-      border-color: rgba(192, 38, 211, 0.4);
-      transform: translateY(-1px);
-    }
-
-    #video-modal {
-      position: fixed;
+    .pm-video {
+      position: absolute;
       inset: 0;
-      z-index: 90;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: scale(1.001);
+      transition: transform .6s cubic-bezier(.2, .7, .2, 1), filter .4s;
+    }
+
+    .card:hover .pm-video {
+      transform: scale(1.035);
+    }
+
+    .pm-veil {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(180deg, rgba(2, 6, 23, 0) 70%, rgba(2, 6, 23, 0.22) 100%);
+      transition: background .3s;
+    }
+
+    .pm-open {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 1rem;
-      background: rgba(2, 6, 23, 0.82);
-      backdrop-filter: blur(6px);
+      cursor: pointer;
     }
 
-    #video-modal[hidden] {
+    .pm-open:focus-visible {
+      outline: 3px solid #a5b4fc;
+      outline-offset: -3px;
+    }
+
+    .pm-cue {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #fff;
+      padding: 0.6rem 1rem 0.6rem 0.8rem;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.55);
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      backdrop-filter: blur(10px) saturate(140%);
+      -webkit-backdrop-filter: blur(10px) saturate(140%);
+      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.6);
+      opacity: 0;
+      transform: translateY(6px) scale(.96);
+      transition: opacity .25s, transform .3s cubic-bezier(.2, .7, .2, 1);
+    }
+
+    .pm-cue svg {
+      width: 1rem;
+      height: 1rem;
+    }
+
+    .proj-media:hover .pm-cue,
+    .pm-open:focus-visible .pm-cue,
+    .proj-media:not(.is-playing) .pm-cue {
+      opacity: 1;
+      transform: none;
+    }
+
+    .proj-media:hover .pm-veil {
+      background: rgba(2, 6, 23, 0.28);
+    }
+
+    .pm-sound {
+      position: absolute;
+      right: 0.7rem;
+      bottom: 0.9rem;
+      z-index: 2;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.1rem;
+      height: 2.1rem;
+      border-radius: 999px;
+      color: #fff;
+      background: rgba(15, 23, 42, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      transition: background .2s, transform .2s;
+    }
+
+    .pm-sound:hover {
+      background: rgba(15, 23, 42, 0.75);
+      transform: scale(1.06);
+    }
+
+    .pm-sound svg {
+      width: 1rem;
+      height: 1rem;
+    }
+
+    .pm-sound .i-on,
+    .pm-sound[aria-pressed="true"] .i-off {
       display: none;
     }
 
-    #video-modal .vm-frame {
-      width: min(1100px, 100%);
+    .pm-sound[aria-pressed="true"] .i-on {
+      display: block;
     }
 
-    #video-modal video {
+    .pm-sound[aria-pressed="true"] {
+      background: linear-gradient(110deg, var(--accent-1), var(--accent-2));
+      border-color: transparent;
+    }
+
+    .pm-track {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 2;
+      height: 4px;
+      background-color: transparent;
+      opacity: 1;
+    }
+
+    .pm-track::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.55);
+    }
+
+    .pm-bar {
+      position: absolute;
+      inset: 0;
+      transform-origin: left center;
+      transform: scaleX(0);
+    }
+
+    .proj-media:not(.has-played) .pm-bar {
+      transform: none;
+    }
+
+    /* ====== Project video: theater ====== */
+    #theater {
+      position: fixed;
+      inset: 0;
+      z-index: 90;
+      overflow: hidden;
+      color: #e2e8f0;
+      background: #05060d;
+      opacity: 0;
+      transition: opacity .3s ease;
+    }
+
+    #theater.is-open {
+      opacity: 1;
+    }
+
+    #theater[hidden] {
+      display: none;
+    }
+
+    #th-ambient {
+      position: absolute;
+      inset: -12%;
+      width: 124%;
+      height: 124%;
+      filter: blur(70px) saturate(1.5);
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    #theater::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(90% 80% at 40% 45%, transparent 30%, rgba(5, 6, 13, 0.75) 100%);
+    }
+
+    .th-shell {
+      position: relative;
+      z-index: 1;
+      height: 100%;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 22rem;
+      gap: 2rem;
+      align-items: center;
+      padding: 4.5rem 5rem 3rem;
+      max-width: 1500px;
+      margin: 0 auto;
+    }
+
+    .th-stage {
+      position: relative;
+      transform: translateY(14px) scale(.98);
+      transition: transform .45s cubic-bezier(.2, .7, .2, 1);
+    }
+
+    #theater.is-open .th-stage {
+      transform: none;
+    }
+
+    #th-video {
       display: block;
       width: 100%;
+      max-height: calc(100vh - 9rem);
       aspect-ratio: 16 / 9;
       background: #000;
-      border-radius: 0.9rem;
-      box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.7);
+      border-radius: 1rem;
+      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08), 0 40px 120px -30px rgba(0, 0, 0, 0.9);
     }
 
-    #video-modal .vm-bar {
+    .th-info {
+      max-height: calc(100vh - 7.5rem);
+      overflow-y: auto;
+      padding: 1.5rem;
+      border-radius: 1.25rem;
+      background: rgba(15, 23, 42, 0.45);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(24px) saturate(140%);
+      -webkit-backdrop-filter: blur(24px) saturate(140%);
+      scrollbar-width: thin;
+    }
+
+    .th-count {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      color: #a5b4fc;
+      font-variant-numeric: tabular-nums;
+    }
+
+    #th-title {
+      margin-top: 0.6rem;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.6rem;
+      line-height: 1.15;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    #th-sub {
+      margin-top: 0.4rem;
+      font-size: 0.875rem;
+      color: #94a3b8;
+    }
+
+    #th-actions {
+      margin-top: 1.1rem;
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      margin-bottom: 0.6rem;
-      color: #e2e8f0;
-      font-size: 0.9rem;
-      font-weight: 600;
+      flex-wrap: wrap;
+      gap: 0.5rem;
     }
 
-    #video-modal .vm-close {
+    #th-actions:empty {
+      display: none;
+    }
+
+    #theater .btn-ghost {
+      color: #e0e7ff;
+      background: rgba(255, 255, 255, 0.07);
+      border-color: rgba(255, 255, 255, 0.16);
+    }
+
+    #th-desc p {
+      color: #cbd5e1 !important;
+    }
+
+    #th-desc code {
+      color: #e0e7ff;
+    }
+
+    #theater .pill {
+      color: #e0e7ff;
+      background: rgba(255, 255, 255, 0.07);
+      border-color: rgba(255, 255, 255, 0.14);
+    }
+
+    .th-upnext {
+      margin-top: 1.25rem;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
       font-size: 0.75rem;
-      font-weight: 600;
-      color: #e2e8f0;
-      padding: 0.35rem 0.75rem;
-      border-radius: 0.5rem;
-      border: 1px solid rgba(226, 232, 240, 0.3);
+      color: #94a3b8;
     }
 
-    #video-modal .vm-close:hover {
-      background: rgba(226, 232, 240, 0.12);
+    .th-upnext button {
+      display: block;
+      margin-top: 0.2rem;
+      font-weight: 600;
+      color: #e2e8f0;
+      text-align: left;
+    }
+
+    .th-upnext button:hover {
+      color: #a5b4fc;
+    }
+
+    .th-btn {
+      position: absolute;
+      z-index: 2;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.75rem;
+      height: 2.75rem;
+      border-radius: 999px;
+      color: #fff;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: background .2s, transform .2s;
+    }
+
+    .th-btn:hover {
+      background: rgba(255, 255, 255, 0.18);
+      transform: scale(1.06);
+    }
+
+    .th-btn svg {
+      width: 1.2rem;
+      height: 1.2rem;
+    }
+
+    .th-close {
+      top: 1.1rem;
+      right: 1.1rem;
+    }
+
+    .th-prev,
+    .th-next {
+      top: 50%;
+      margin-top: -1.375rem;
+    }
+
+    .th-prev {
+      left: 1.1rem;
+    }
+
+    .th-next {
+      right: 1.1rem;
+    }
+
+    .th-hint {
+      position: absolute;
+      z-index: 2;
+      top: 1.6rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.7rem;
+      color: #64748b;
+      white-space: nowrap;
+    }
+
+    @media (max-width: 1023px) {
+      .th-shell {
+        grid-template-columns: 1fr;
+        align-content: start;
+        gap: 1rem;
+        padding: 4rem 1rem 1.5rem;
+        overflow-y: auto;
+      }
+
+      .th-info {
+        max-height: none;
+        overflow: visible;
+        padding: 1.1rem;
+      }
+
+      .th-prev,
+      .th-next {
+        top: 1.1rem;
+        margin-top: 0;
+      }
+
+      .th-prev {
+        left: 1rem;
+      }
+
+      .th-next {
+        right: 4.4rem;
+      }
+
+      .th-hint {
+        display: none;
+      }
+    }
+
+    /* ====== Reel call-to-action ====== */
+    .btn-reel {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #fff;
+      padding: 0.65rem 1.1rem 0.65rem 0.7rem;
+      border-radius: 0.75rem;
+      background: linear-gradient(110deg, var(--accent-1), var(--accent-2) 55%, var(--accent-3));
+      background-size: 200% 100%;
+      box-shadow: 0 10px 26px -10px rgba(192, 38, 211, 0.6);
+      transition: background-position .6s, transform .2s, box-shadow .2s;
+    }
+
+    .btn-reel:hover {
+      background-position: 100% 0;
+      transform: translateY(-1px);
+      box-shadow: 0 14px 30px -10px rgba(79, 70, 229, 0.7);
+    }
+
+    .btn-reel .reel-dot {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.6rem;
+      height: 1.6rem;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.22);
+    }
+
+    .btn-reel svg {
+      width: 0.8rem;
+      height: 0.8rem;
+      margin-left: 2px;
+    }
+
+    .btn-reel-sm {
+      font-size: 0.75rem;
+      padding: 0.4rem 0.8rem 0.4rem 0.45rem;
+      border-radius: 0.6rem;
+    }
+
+    .btn-reel-sm .reel-dot {
+      width: 1.25rem;
+      height: 1.25rem;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .pm-video, .th-stage, #theater, .pm-cue { transition: none; }
+      .card:hover .pm-video { transform: none; }
     }
 
     /* ====== Collapsible details ====== */
@@ -925,6 +1300,7 @@
             prototype meets production.
           </p>
           <div class="mt-7 flex flex-wrap justify-center md:justify-start items-center gap-3">
+            <button class="btn-reel" type="button" data-reel><span class="reel-dot"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg></span>Watch the project reel</button>
             <a href="https://www.linkedin.com/in/rohit-shidid/" target="_blank" rel="noopener"
               class="group flex items-center gap-2 card rounded-xl px-4 py-2.5 text-sm font-medium text-slate-700 hover:text-indigo-600">
               <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -1139,10 +1515,13 @@
       </div>
 
       <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
-        <p class="text-xs text-slate-400 flex items-center gap-2">
-          <span class="live-dot-sm"></span>
-          Free-tier demos sleep when idle &mdash; the first load can take up to a minute to wake.
-        </p>
+        <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
+          <button class="btn-reel btn-reel-sm" type="button" data-reel><span class="reel-dot"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg></span>Play all demos</button>
+          <p class="text-xs text-slate-400 flex items-center gap-2">
+            <span class="live-dot-sm"></span>
+            Previews play as you scroll &mdash; tap one to watch with sound. Free-tier live demos can take a minute to wake.
+          </p>
+        </div>
         <button id="expand-all" class="text-xs font-semibold text-indigo-600 hover:text-indigo-800 transition">
           Expand all
         </button>
@@ -1151,7 +1530,18 @@
       <div id="project-grid" class="grid md:grid-cols-2 gap-6 items-start">
 
         <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="llm ai live research">
-          <div class="h-1.5 bg-gradient-to-r from-indigo-500 to-fuchsia-500"></div>
+          <div class="proj-media" data-video="self-healing-rag">
+            <video class="pm-video" muted loop playsinline preload="none" poster="videos/self-healing-rag.jpg" disablepictureinpicture aria-hidden="true" tabindex="-1"></video>
+            <div class="pm-veil" aria-hidden="true"></div>
+            <button class="pm-open" type="button" aria-label="Watch the Self-Healing RAG System demo with sound">
+              <span class="pm-cue"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg>Watch with sound</span>
+            </button>
+            <button class="pm-sound" type="button" aria-label="Turn sound on" aria-pressed="false">
+              <svg class="i-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="m22 9-6 6M16 9l6 6"/></svg>
+              <svg class="i-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+            </button>
+            <div class="pm-track" aria-hidden="true"><span class="pm-bar bg-gradient-to-r from-indigo-500 to-fuchsia-500"></span></div>
+          </div>
           <div class="p-5">
             <div class="flex items-start gap-3.5">
               <span class="proj-icon bg-gradient-to-br from-indigo-500 to-fuchsia-500">
@@ -1169,7 +1559,6 @@
             <div class="mt-4 flex flex-wrap items-center gap-2.5">
               <a href="https://huggingface.co/spaces/rohitshidid/Self_healing_RAG_demo" target="_blank" rel="noopener" class="btn-primary">Live demo <span aria-hidden="true">&#8599;</span></a>
               <a href="https://github.com/rohitshidid/Self-Healing-RAG-Failure-Detecting-Retrieval-Augmented-Generation" target="_blank" rel="noopener" class="btn-ghost">GitHub <span aria-hidden="true">&#8599;</span></a>
-              <button class="btn-video" data-video="self-healing-rag" data-title="Self-Healing RAG System"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg>Watch</button>
               <button class="details-toggle ml-auto" aria-expanded="false" aria-controls="pd-1">
                 <span class="dt-label">Details</span>
                 <svg class="dt-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
@@ -1192,7 +1581,18 @@
         </article>
 
         <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="llm ai research">
-          <div class="h-1.5 bg-gradient-to-r from-purple-500 to-indigo-600"></div>
+          <div class="proj-media" data-video="research-copilot">
+            <video class="pm-video" muted loop playsinline preload="none" poster="videos/research-copilot.jpg" disablepictureinpicture aria-hidden="true" tabindex="-1"></video>
+            <div class="pm-veil" aria-hidden="true"></div>
+            <button class="pm-open" type="button" aria-label="Watch the Research Copilot demo with sound">
+              <span class="pm-cue"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg>Watch with sound</span>
+            </button>
+            <button class="pm-sound" type="button" aria-label="Turn sound on" aria-pressed="false">
+              <svg class="i-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="m22 9-6 6M16 9l6 6"/></svg>
+              <svg class="i-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+            </button>
+            <div class="pm-track" aria-hidden="true"><span class="pm-bar bg-gradient-to-r from-purple-500 to-indigo-600"></span></div>
+          </div>
           <div class="p-5">
             <div class="flex items-start gap-3.5">
               <span class="proj-icon bg-gradient-to-br from-purple-500 to-indigo-600">
@@ -1209,7 +1609,6 @@
 
             <div class="mt-4 flex flex-wrap items-center gap-2.5">
               <a href="https://github.com/rohitshidid/Research-Copilot" target="_blank" rel="noopener" class="btn-primary">GitHub <span aria-hidden="true">&#8599;</span></a>
-              <button class="btn-video" data-video="research-copilot" data-title="Research Copilot"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg>Watch</button>
               <button class="details-toggle ml-auto" aria-expanded="false" aria-controls="pd-2">
                 <span class="dt-label">Details</span>
                 <svg class="dt-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
@@ -1232,7 +1631,18 @@
         </article>
 
         <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="llm ai live">
-          <div class="h-1.5 bg-gradient-to-r from-fuchsia-500 to-purple-600"></div>
+          <div class="proj-media" data-video="omniroute">
+            <video class="pm-video" muted loop playsinline preload="none" poster="videos/omniroute.jpg" disablepictureinpicture aria-hidden="true" tabindex="-1"></video>
+            <div class="pm-veil" aria-hidden="true"></div>
+            <button class="pm-open" type="button" aria-label="Watch the OmniRoute — LLM Gateway &amp; Chat demo with sound">
+              <span class="pm-cue"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg>Watch with sound</span>
+            </button>
+            <button class="pm-sound" type="button" aria-label="Turn sound on" aria-pressed="false">
+              <svg class="i-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="m22 9-6 6M16 9l6 6"/></svg>
+              <svg class="i-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+            </button>
+            <div class="pm-track" aria-hidden="true"><span class="pm-bar bg-gradient-to-r from-fuchsia-500 to-purple-600"></span></div>
+          </div>
           <div class="p-5">
             <div class="flex items-start gap-3.5">
               <span class="proj-icon bg-gradient-to-br from-fuchsia-500 to-purple-600">
@@ -1250,7 +1660,6 @@
             <div class="mt-4 flex flex-wrap items-center gap-2.5">
               <a href="https://omiroute-chat.onrender.com/" target="_blank" rel="noopener" class="btn-primary">Live demo <span aria-hidden="true">&#8599;</span></a>
               <a href="https://github.com/rohitshidid/omiroute-chat" target="_blank" rel="noopener" class="btn-ghost">GitHub <span aria-hidden="true">&#8599;</span></a>
-              <button class="btn-video" data-video="omniroute" data-title="OmniRoute — LLM Gateway &amp; Chat"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg>Watch</button>
               <button class="details-toggle ml-auto" aria-expanded="false" aria-controls="pd-3">
                 <span class="dt-label">Details</span>
                 <svg class="dt-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
@@ -1273,7 +1682,18 @@
         </article>
 
         <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="llm ai live">
-          <div class="h-1.5 bg-gradient-to-r from-emerald-500 to-teal-600"></div>
+          <div class="proj-media" data-video="promptlint">
+            <video class="pm-video" muted loop playsinline preload="none" poster="videos/promptlint.jpg" disablepictureinpicture aria-hidden="true" tabindex="-1"></video>
+            <div class="pm-veil" aria-hidden="true"></div>
+            <button class="pm-open" type="button" aria-label="Watch the PromptLint — LLM Router &amp; Prompt Linter demo with sound">
+              <span class="pm-cue"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg>Watch with sound</span>
+            </button>
+            <button class="pm-sound" type="button" aria-label="Turn sound on" aria-pressed="false">
+              <svg class="i-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="m22 9-6 6M16 9l6 6"/></svg>
+              <svg class="i-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+            </button>
+            <div class="pm-track" aria-hidden="true"><span class="pm-bar bg-gradient-to-r from-emerald-500 to-teal-600"></span></div>
+          </div>
           <div class="p-5">
             <div class="flex items-start gap-3.5">
               <span class="proj-icon bg-gradient-to-br from-emerald-500 to-teal-600">
@@ -1291,7 +1711,6 @@
             <div class="mt-4 flex flex-wrap items-center gap-2.5">
               <a href="https://promptlint.onrender.com" target="_blank" rel="noopener" class="btn-primary">Live demo <span aria-hidden="true">&#8599;</span></a>
               <a href="https://github.com/rohitshidid/Promptlint" target="_blank" rel="noopener" class="btn-ghost">GitHub <span aria-hidden="true">&#8599;</span></a>
-              <button class="btn-video" data-video="promptlint" data-title="PromptLint — LLM Router &amp; Prompt Linter"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg>Watch</button>
               <button class="details-toggle ml-auto" aria-expanded="false" aria-controls="pd-21">
                 <span class="dt-label">Details</span>
                 <svg class="dt-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
@@ -1318,7 +1737,18 @@
         </article>
 
         <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="llm ai live">
-          <div class="h-1.5 bg-gradient-to-r from-violet-500 to-indigo-500"></div>
+          <div class="proj-media" data-video="synapse">
+            <video class="pm-video" muted loop playsinline preload="none" poster="videos/synapse.jpg" disablepictureinpicture aria-hidden="true" tabindex="-1"></video>
+            <div class="pm-veil" aria-hidden="true"></div>
+            <button class="pm-open" type="button" aria-label="Watch the Synapse — Two-Answer Fact Checker demo with sound">
+              <span class="pm-cue"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg>Watch with sound</span>
+            </button>
+            <button class="pm-sound" type="button" aria-label="Turn sound on" aria-pressed="false">
+              <svg class="i-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="m22 9-6 6M16 9l6 6"/></svg>
+              <svg class="i-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+            </button>
+            <div class="pm-track" aria-hidden="true"><span class="pm-bar bg-gradient-to-r from-violet-500 to-indigo-500"></span></div>
+          </div>
           <div class="p-5">
             <div class="flex items-start gap-3.5">
               <span class="proj-icon bg-gradient-to-br from-violet-500 to-indigo-500">
@@ -1336,7 +1766,6 @@
             <div class="mt-4 flex flex-wrap items-center gap-2.5">
               <a href="https://openrouter-chatbot-8qv6.onrender.com/" target="_blank" rel="noopener" class="btn-primary">Live demo <span aria-hidden="true">&#8599;</span></a>
               <a href="https://github.com/rohitshidid/openrouter-chatbot" target="_blank" rel="noopener" class="btn-ghost">GitHub <span aria-hidden="true">&#8599;</span></a>
-              <button class="btn-video" data-video="synapse" data-title="Synapse — Two-Answer Fact Checker"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg>Watch</button>
               <button class="details-toggle ml-auto" aria-expanded="false" aria-controls="pd-4">
                 <span class="dt-label">Details</span>
                 <svg class="dt-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
@@ -1359,7 +1788,18 @@
         </article>
 
         <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="llm ai">
-          <div class="h-1.5 bg-gradient-to-r from-cyan-400 via-indigo-500 to-fuchsia-500"></div>
+          <div class="proj-media" data-video="bandageboard">
+            <video class="pm-video" muted loop playsinline preload="none" poster="videos/bandageboard.jpg" disablepictureinpicture aria-hidden="true" tabindex="-1"></video>
+            <div class="pm-veil" aria-hidden="true"></div>
+            <button class="pm-open" type="button" aria-label="Watch the Bandageboard — Clinical Billing Triage demo with sound">
+              <span class="pm-cue"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg>Watch with sound</span>
+            </button>
+            <button class="pm-sound" type="button" aria-label="Turn sound on" aria-pressed="false">
+              <svg class="i-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="m22 9-6 6M16 9l6 6"/></svg>
+              <svg class="i-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+            </button>
+            <div class="pm-track" aria-hidden="true"><span class="pm-bar bg-gradient-to-r from-cyan-400 via-indigo-500 to-fuchsia-500"></span></div>
+          </div>
           <div class="p-5">
             <div class="flex items-start gap-3.5">
               <span class="proj-icon bg-gradient-to-br from-cyan-400 via-indigo-500 to-fuchsia-500">
@@ -1377,7 +1817,6 @@
             <div class="mt-4 flex flex-wrap items-center gap-2.5">
               <a href="https://drive.google.com/file/d/1IDWhbeCqQkupWy_Kk9bw5q-T1JQSINli/view?usp=share_link" target="_blank" rel="noopener" class="btn-primary">Video demo <span aria-hidden="true">&#8599;</span></a>
               <a href="https://github.com/rohitshidid/bandageboard" target="_blank" rel="noopener" class="btn-ghost">GitHub <span aria-hidden="true">&#8599;</span></a>
-              <button class="btn-video" data-video="bandageboard" data-title="Bandageboard — Clinical Billing Triage"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg>Watch</button>
               <button class="details-toggle ml-auto" aria-expanded="false" aria-controls="pd-5">
                 <span class="dt-label">Details</span>
                 <svg class="dt-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
@@ -1400,7 +1839,18 @@
         </article>
 
         <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="ai tools live">
-          <div class="h-1.5 bg-gradient-to-r from-sky-500 to-violet-600"></div>
+          <div class="proj-media" data-video="murmur">
+            <video class="pm-video" muted loop playsinline preload="none" poster="videos/murmur.jpg" disablepictureinpicture aria-hidden="true" tabindex="-1"></video>
+            <div class="pm-veil" aria-hidden="true"></div>
+            <button class="pm-open" type="button" aria-label="Watch the Murmur — On-Device Dictation demo with sound">
+              <span class="pm-cue"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg>Watch with sound</span>
+            </button>
+            <button class="pm-sound" type="button" aria-label="Turn sound on" aria-pressed="false">
+              <svg class="i-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="m22 9-6 6M16 9l6 6"/></svg>
+              <svg class="i-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+            </button>
+            <div class="pm-track" aria-hidden="true"><span class="pm-bar bg-gradient-to-r from-sky-500 to-violet-600"></span></div>
+          </div>
           <div class="p-5">
             <div class="flex items-start gap-3.5">
               <span class="proj-icon bg-gradient-to-br from-sky-500 to-violet-600">
@@ -1418,7 +1868,6 @@
             <div class="mt-4 flex flex-wrap items-center gap-2.5">
               <a href="https://rohitshidid.github.io/murmur/" target="_blank" rel="noopener" class="btn-primary">Demo site <span aria-hidden="true">&#8599;</span></a>
               <a href="https://github.com/rohitshidid/murmur" target="_blank" rel="noopener" class="btn-ghost">GitHub <span aria-hidden="true">&#8599;</span></a>
-              <button class="btn-video" data-video="murmur" data-title="Murmur — On-Device Dictation"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg>Watch</button>
               <button class="details-toggle ml-auto" aria-expanded="false" aria-controls="pd-20">
                 <span class="dt-label">Details</span>
                 <svg class="dt-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
@@ -1442,7 +1891,18 @@
         </article>
 
         <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="ai live research">
-          <div class="h-1.5 bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-cyan-400"></div>
+          <div class="proj-media" data-video="gdelt">
+            <video class="pm-video" muted loop playsinline preload="none" poster="videos/gdelt.jpg" disablepictureinpicture aria-hidden="true" tabindex="-1"></video>
+            <div class="pm-veil" aria-hidden="true"></div>
+            <button class="pm-open" type="button" aria-label="Watch the GDELT Real-Time News Intelligence demo with sound">
+              <span class="pm-cue"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg>Watch with sound</span>
+            </button>
+            <button class="pm-sound" type="button" aria-label="Turn sound on" aria-pressed="false">
+              <svg class="i-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="m22 9-6 6M16 9l6 6"/></svg>
+              <svg class="i-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+            </button>
+            <div class="pm-track" aria-hidden="true"><span class="pm-bar bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-cyan-400"></span></div>
+          </div>
           <div class="p-5">
             <div class="flex items-start gap-3.5">
               <span class="proj-icon bg-gradient-to-br from-indigo-500 via-fuchsia-500 to-cyan-400">
@@ -1460,7 +1920,6 @@
             <div class="mt-4 flex flex-wrap items-center gap-2.5">
               <a href="https://huggingface.co/spaces/rohitshidid/GlobalCrisisMonitor" target="_blank" rel="noopener" class="btn-primary">Live dashboard <span aria-hidden="true">&#8599;</span></a>
               <a href="https://github.com/rohitshidid/GlobalCrisisMonitor" target="_blank" rel="noopener" class="btn-ghost">GitHub <span aria-hidden="true">&#8599;</span></a>
-              <button class="btn-video" data-video="gdelt" data-title="GDELT Real-Time News Intelligence"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg>Watch</button>
               <button class="details-toggle ml-auto" aria-expanded="false" aria-controls="pd-6">
                 <span class="dt-label">Details</span>
                 <svg class="dt-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
@@ -1483,7 +1942,18 @@
         </article>
 
         <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="ai">
-          <div class="h-1.5 bg-gradient-to-r from-cyan-400 to-indigo-500"></div>
+          <div class="proj-media" data-video="gemspot">
+            <video class="pm-video" muted loop playsinline preload="none" poster="videos/gemspot.jpg" disablepictureinpicture aria-hidden="true" tabindex="-1"></video>
+            <div class="pm-veil" aria-hidden="true"></div>
+            <button class="pm-open" type="button" aria-label="Watch the GemSpot — ML Training Subsystem demo with sound">
+              <span class="pm-cue"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg>Watch with sound</span>
+            </button>
+            <button class="pm-sound" type="button" aria-label="Turn sound on" aria-pressed="false">
+              <svg class="i-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="m22 9-6 6M16 9l6 6"/></svg>
+              <svg class="i-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+            </button>
+            <div class="pm-track" aria-hidden="true"><span class="pm-bar bg-gradient-to-r from-cyan-400 to-indigo-500"></span></div>
+          </div>
           <div class="p-5">
             <div class="flex items-start gap-3.5">
               <span class="proj-icon bg-gradient-to-br from-cyan-400 to-indigo-500">
@@ -1500,7 +1970,6 @@
 
             <div class="mt-4 flex flex-wrap items-center gap-2.5">
               <a href="https://github.com/rohitshididnyu/GemSpot_training" target="_blank" rel="noopener" class="btn-primary">GitHub <span aria-hidden="true">&#8599;</span></a>
-              <button class="btn-video" data-video="gemspot" data-title="GemSpot — ML Training Subsystem"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg>Watch</button>
               <button class="details-toggle ml-auto" aria-expanded="false" aria-controls="pd-7">
                 <span class="dt-label">Details</span>
                 <svg class="dt-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
@@ -1524,7 +1993,18 @@
         </article>
 
         <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="ai live">
-          <div class="h-1.5 bg-gradient-to-r from-orange-400 to-red-500"></div>
+          <div class="proj-media" data-video="layoff-predictor">
+            <video class="pm-video" muted loop playsinline preload="none" poster="videos/layoff-predictor.jpg" disablepictureinpicture aria-hidden="true" tabindex="-1"></video>
+            <div class="pm-veil" aria-hidden="true"></div>
+            <button class="pm-open" type="button" aria-label="Watch the Layoff Predictor demo with sound">
+              <span class="pm-cue"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg>Watch with sound</span>
+            </button>
+            <button class="pm-sound" type="button" aria-label="Turn sound on" aria-pressed="false">
+              <svg class="i-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="m22 9-6 6M16 9l6 6"/></svg>
+              <svg class="i-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+            </button>
+            <div class="pm-track" aria-hidden="true"><span class="pm-bar bg-gradient-to-r from-orange-400 to-red-500"></span></div>
+          </div>
           <div class="p-5">
             <div class="flex items-start gap-3.5">
               <span class="proj-icon bg-gradient-to-br from-orange-400 to-red-500">
@@ -1542,7 +2022,6 @@
             <div class="mt-4 flex flex-wrap items-center gap-2.5">
               <a href="https://layoff-predictor.onrender.com/" target="_blank" rel="noopener" class="btn-primary">Live demo <span aria-hidden="true">&#8599;</span></a>
               <a href="https://github.com/rohitshidid/layoff-predictor" target="_blank" rel="noopener" class="btn-ghost">GitHub <span aria-hidden="true">&#8599;</span></a>
-              <button class="btn-video" data-video="layoff-predictor" data-title="Layoff Predictor"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg>Watch</button>
               <button class="details-toggle ml-auto" aria-expanded="false" aria-controls="pd-8">
                 <span class="dt-label">Details</span>
                 <svg class="dt-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
@@ -1565,7 +2044,18 @@
         </article>
 
         <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="ai tools live">
-          <div class="h-1.5 bg-gradient-to-r from-lime-500 to-green-600"></div>
+          <div class="proj-media" data-video="mutation-simulator">
+            <video class="pm-video" muted loop playsinline preload="none" poster="videos/mutation-simulator.jpg" disablepictureinpicture aria-hidden="true" tabindex="-1"></video>
+            <div class="pm-veil" aria-hidden="true"></div>
+            <button class="pm-open" type="button" aria-label="Watch the Mutation Simulator demo with sound">
+              <span class="pm-cue"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg>Watch with sound</span>
+            </button>
+            <button class="pm-sound" type="button" aria-label="Turn sound on" aria-pressed="false">
+              <svg class="i-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="m22 9-6 6M16 9l6 6"/></svg>
+              <svg class="i-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+            </button>
+            <div class="pm-track" aria-hidden="true"><span class="pm-bar bg-gradient-to-r from-lime-500 to-green-600"></span></div>
+          </div>
           <div class="p-5">
             <div class="flex items-start gap-3.5">
               <span class="proj-icon bg-gradient-to-br from-lime-500 to-green-600">
@@ -1583,7 +2073,6 @@
             <div class="mt-4 flex flex-wrap items-center gap-2.5">
               <a href="https://rohitshidid.github.io/mutation-simulator/index.html" target="_blank" rel="noopener" class="btn-primary">Demo site <span aria-hidden="true">&#8599;</span></a>
               <a href="https://github.com/rohitshidid/mutation-simulator" target="_blank" rel="noopener" class="btn-ghost">GitHub <span aria-hidden="true">&#8599;</span></a>
-              <button class="btn-video" data-video="mutation-simulator" data-title="Mutation Simulator"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg>Watch</button>
               <button class="details-toggle ml-auto" aria-expanded="false" aria-controls="pd-9">
                 <span class="dt-label">Details</span>
                 <svg class="dt-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
@@ -1606,7 +2095,18 @@
         </article>
 
         <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="ai">
-          <div class="h-1.5 bg-gradient-to-r from-indigo-500 to-cyan-400"></div>
+          <div class="proj-media" data-video="cricket-ball-tracker">
+            <video class="pm-video" muted loop playsinline preload="none" poster="videos/cricket-ball-tracker.jpg" disablepictureinpicture aria-hidden="true" tabindex="-1"></video>
+            <div class="pm-veil" aria-hidden="true"></div>
+            <button class="pm-open" type="button" aria-label="Watch the Real-Time Cricket Ball Tracker demo with sound">
+              <span class="pm-cue"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg>Watch with sound</span>
+            </button>
+            <button class="pm-sound" type="button" aria-label="Turn sound on" aria-pressed="false">
+              <svg class="i-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="m22 9-6 6M16 9l6 6"/></svg>
+              <svg class="i-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+            </button>
+            <div class="pm-track" aria-hidden="true"><span class="pm-bar bg-gradient-to-r from-indigo-500 to-cyan-400"></span></div>
+          </div>
           <div class="p-5">
             <div class="flex items-start gap-3.5">
               <span class="proj-icon bg-gradient-to-br from-indigo-500 to-cyan-400">
@@ -1624,7 +2124,6 @@
             <div class="mt-4 flex flex-wrap items-center gap-2.5">
               <a href="https://drive.google.com/file/d/1G6c9ihMt4wW3GS0FW_Ywf_uf73rV7VpU/view?usp=share_link" target="_blank" rel="noopener" class="btn-primary">Video demo <span aria-hidden="true">&#8599;</span></a>
               <a href="https://github.com/rohitshidid/Computer-Vision-Cricket-Tracker-" target="_blank" rel="noopener" class="btn-ghost">GitHub <span aria-hidden="true">&#8599;</span></a>
-              <button class="btn-video" data-video="cricket-ball-tracker" data-title="Real-Time Cricket Ball Tracker"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg>Watch</button>
               <button class="details-toggle ml-auto" aria-expanded="false" aria-controls="pd-10">
                 <span class="dt-label">Details</span>
                 <svg class="dt-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
@@ -1646,7 +2145,18 @@
         </article>
 
         <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="ai research">
-          <div class="h-1.5 bg-gradient-to-r from-fuchsia-500 via-cyan-400 to-indigo-500"></div>
+          <div class="proj-media" data-video="parkinsons">
+            <video class="pm-video" muted loop playsinline preload="none" poster="videos/parkinsons.jpg" disablepictureinpicture aria-hidden="true" tabindex="-1"></video>
+            <div class="pm-veil" aria-hidden="true"></div>
+            <button class="pm-open" type="button" aria-label="Watch the Parkinson's Motor Symptom Classifier demo with sound">
+              <span class="pm-cue"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg>Watch with sound</span>
+            </button>
+            <button class="pm-sound" type="button" aria-label="Turn sound on" aria-pressed="false">
+              <svg class="i-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="m22 9-6 6M16 9l6 6"/></svg>
+              <svg class="i-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+            </button>
+            <div class="pm-track" aria-hidden="true"><span class="pm-bar bg-gradient-to-r from-fuchsia-500 via-cyan-400 to-indigo-500"></span></div>
+          </div>
           <div class="p-5">
             <div class="flex items-start gap-3.5">
               <span class="proj-icon bg-gradient-to-br from-fuchsia-500 via-cyan-400 to-indigo-500">
@@ -1663,7 +2173,6 @@
 
             <div class="mt-4 flex flex-wrap items-center gap-2.5">
               <a href="https://github.com/rohitshidid/Parkinson-Detection" target="_blank" rel="noopener" class="btn-primary">GitHub <span aria-hidden="true">&#8599;</span></a>
-              <button class="btn-video" data-video="parkinsons" data-title="Parkinson's Motor Symptom Classifier"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg>Watch</button>
               <button class="details-toggle ml-auto" aria-expanded="false" aria-controls="pd-11">
                 <span class="dt-label">Details</span>
                 <svg class="dt-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
@@ -1724,7 +2233,18 @@
         </article>
 
         <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="tools live">
-          <div class="h-1.5 bg-gradient-to-r from-slate-500 to-slate-700"></div>
+          <div class="proj-media" data-video="bak">
+            <video class="pm-video" muted loop playsinline preload="none" poster="videos/bak.jpg" disablepictureinpicture aria-hidden="true" tabindex="-1"></video>
+            <div class="pm-veil" aria-hidden="true"></div>
+            <button class="pm-open" type="button" aria-label="Watch the bak — Per-File Version Control demo with sound">
+              <span class="pm-cue"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg>Watch with sound</span>
+            </button>
+            <button class="pm-sound" type="button" aria-label="Turn sound on" aria-pressed="false">
+              <svg class="i-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="m22 9-6 6M16 9l6 6"/></svg>
+              <svg class="i-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+            </button>
+            <div class="pm-track" aria-hidden="true"><span class="pm-bar bg-gradient-to-r from-slate-500 to-slate-700"></span></div>
+          </div>
           <div class="p-5">
             <div class="flex items-start gap-3.5">
               <span class="proj-icon bg-gradient-to-br from-slate-500 to-slate-700">
@@ -1742,7 +2262,6 @@
             <div class="mt-4 flex flex-wrap items-center gap-2.5">
               <a href="https://rohitshidid.github.io/bak/" target="_blank" rel="noopener" class="btn-primary">Demo site <span aria-hidden="true">&#8599;</span></a>
               <a href="https://github.com/rohitshidid/bak" target="_blank" rel="noopener" class="btn-ghost">GitHub <span aria-hidden="true">&#8599;</span></a>
-              <button class="btn-video" data-video="bak" data-title="bak — Per-File Version Control"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg>Watch</button>
               <button class="details-toggle ml-auto" aria-expanded="false" aria-controls="pd-13">
                 <span class="dt-label">Details</span>
                 <svg class="dt-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
@@ -1765,7 +2284,18 @@
         </article>
 
         <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="tools live">
-          <div class="h-1.5 bg-gradient-to-r from-teal-500 to-emerald-600"></div>
+          <div class="proj-media" data-video="portmap">
+            <video class="pm-video" muted loop playsinline preload="none" poster="videos/portmap.jpg" disablepictureinpicture aria-hidden="true" tabindex="-1"></video>
+            <div class="pm-veil" aria-hidden="true"></div>
+            <button class="pm-open" type="button" aria-label="Watch the portmap — Port &amp; Process Diagnostics demo with sound">
+              <span class="pm-cue"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg>Watch with sound</span>
+            </button>
+            <button class="pm-sound" type="button" aria-label="Turn sound on" aria-pressed="false">
+              <svg class="i-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="m22 9-6 6M16 9l6 6"/></svg>
+              <svg class="i-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+            </button>
+            <div class="pm-track" aria-hidden="true"><span class="pm-bar bg-gradient-to-r from-teal-500 to-emerald-600"></span></div>
+          </div>
           <div class="p-5">
             <div class="flex items-start gap-3.5">
               <span class="proj-icon bg-gradient-to-br from-teal-500 to-emerald-600">
@@ -1783,7 +2313,6 @@
             <div class="mt-4 flex flex-wrap items-center gap-2.5">
               <a href="https://rohitshidid.github.io/Homebrew-portman/" target="_blank" rel="noopener" class="btn-primary">Demo site <span aria-hidden="true">&#8599;</span></a>
               <a href="https://github.com/rohitshidid/Homebrew-portman" target="_blank" rel="noopener" class="btn-ghost">GitHub <span aria-hidden="true">&#8599;</span></a>
-              <button class="btn-video" data-video="portmap" data-title="portmap — Port &amp; Process Diagnostics"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg>Watch</button>
               <button class="details-toggle ml-auto" aria-expanded="false" aria-controls="pd-14">
                 <span class="dt-label">Details</span>
                 <svg class="dt-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
@@ -1806,7 +2335,18 @@
         </article>
 
         <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="tools live">
-          <div class="h-1.5 bg-gradient-to-r from-blue-500 to-indigo-600"></div>
+          <div class="proj-media" data-video="disk-manager">
+            <video class="pm-video" muted loop playsinline preload="none" poster="videos/disk-manager.jpg" disablepictureinpicture aria-hidden="true" tabindex="-1"></video>
+            <div class="pm-veil" aria-hidden="true"></div>
+            <button class="pm-open" type="button" aria-label="Watch the Disk Manager demo with sound">
+              <span class="pm-cue"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg>Watch with sound</span>
+            </button>
+            <button class="pm-sound" type="button" aria-label="Turn sound on" aria-pressed="false">
+              <svg class="i-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="m22 9-6 6M16 9l6 6"/></svg>
+              <svg class="i-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+            </button>
+            <div class="pm-track" aria-hidden="true"><span class="pm-bar bg-gradient-to-r from-blue-500 to-indigo-600"></span></div>
+          </div>
           <div class="p-5">
             <div class="flex items-start gap-3.5">
               <span class="proj-icon bg-gradient-to-br from-blue-500 to-indigo-600">
@@ -1824,7 +2364,6 @@
             <div class="mt-4 flex flex-wrap items-center gap-2.5">
               <a href="https://rohitshidid.github.io/Disk-manager/" target="_blank" rel="noopener" class="btn-primary">Demo site <span aria-hidden="true">&#8599;</span></a>
               <a href="https://github.com/rohitshidid/Disk-manager" target="_blank" rel="noopener" class="btn-ghost">GitHub <span aria-hidden="true">&#8599;</span></a>
-              <button class="btn-video" data-video="disk-manager" data-title="Disk Manager"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg>Watch</button>
               <button class="details-toggle ml-auto" aria-expanded="false" aria-controls="pd-15">
                 <span class="dt-label">Details</span>
                 <svg class="dt-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
@@ -1848,7 +2387,18 @@
         </article>
 
         <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="tools">
-          <div class="h-1.5 bg-gradient-to-r from-slate-600 to-indigo-600"></div>
+          <div class="proj-media" data-video="odysseus">
+            <video class="pm-video" muted loop playsinline preload="none" poster="videos/odysseus.jpg" disablepictureinpicture aria-hidden="true" tabindex="-1"></video>
+            <div class="pm-veil" aria-hidden="true"></div>
+            <button class="pm-open" type="button" aria-label="Watch the Odysseus — Open-Source Contribution demo with sound">
+              <span class="pm-cue"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg>Watch with sound</span>
+            </button>
+            <button class="pm-sound" type="button" aria-label="Turn sound on" aria-pressed="false">
+              <svg class="i-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="m22 9-6 6M16 9l6 6"/></svg>
+              <svg class="i-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+            </button>
+            <div class="pm-track" aria-hidden="true"><span class="pm-bar bg-gradient-to-r from-slate-600 to-indigo-600"></span></div>
+          </div>
           <div class="p-5">
             <div class="flex items-start gap-3.5">
               <span class="proj-icon bg-gradient-to-br from-slate-600 to-indigo-600">
@@ -1865,7 +2415,6 @@
 
             <div class="mt-4 flex flex-wrap items-center gap-2.5">
               <a href="https://github.com/pewdiepie-archdaemon/odysseus/pull/2113" target="_blank" rel="noopener" class="btn-primary">Merged pull request <span aria-hidden="true">&#8599;</span></a>
-              <button class="btn-video" data-video="odysseus" data-title="Odysseus — Open-Source Contribution"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg>Watch</button>
               <button class="details-toggle ml-auto" aria-expanded="false" aria-controls="pd-16">
                 <span class="dt-label">Details</span>
                 <svg class="dt-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
@@ -1888,7 +2437,18 @@
         </article>
 
         <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="ai live">
-          <div class="h-1.5 bg-gradient-to-r from-cyan-400 to-sky-500"></div>
+          <div class="proj-media" data-video="aircontrol">
+            <video class="pm-video" muted loop playsinline preload="none" poster="videos/aircontrol.jpg" disablepictureinpicture aria-hidden="true" tabindex="-1"></video>
+            <div class="pm-veil" aria-hidden="true"></div>
+            <button class="pm-open" type="button" aria-label="Watch the AirControl demo with sound">
+              <span class="pm-cue"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg>Watch with sound</span>
+            </button>
+            <button class="pm-sound" type="button" aria-label="Turn sound on" aria-pressed="false">
+              <svg class="i-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="m22 9-6 6M16 9l6 6"/></svg>
+              <svg class="i-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+            </button>
+            <div class="pm-track" aria-hidden="true"><span class="pm-bar bg-gradient-to-r from-cyan-400 to-sky-500"></span></div>
+          </div>
           <div class="p-5">
             <div class="flex items-start gap-3.5">
               <span class="proj-icon bg-gradient-to-br from-cyan-400 to-sky-500">
@@ -1906,7 +2466,6 @@
             <div class="mt-4 flex flex-wrap items-center gap-2.5">
               <a href="https://rohitshidid.github.io/Aircontrol/" target="_blank" rel="noopener" class="btn-primary">Live demo <span aria-hidden="true">&#8599;</span></a>
               <a href="https://github.com/rohitshidid/Aircontrol" target="_blank" rel="noopener" class="btn-ghost">GitHub <span aria-hidden="true">&#8599;</span></a>
-              <button class="btn-video" data-video="aircontrol" data-title="AirControl"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg>Watch</button>
               <button class="details-toggle ml-auto" aria-expanded="false" aria-controls="pd-17">
                 <span class="dt-label">Details</span>
                 <svg class="dt-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
@@ -1929,7 +2488,18 @@
         </article>
 
         <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="live">
-          <div class="h-1.5 bg-gradient-to-r from-amber-400 to-rose-500"></div>
+          <div class="proj-media" data-video="hexagon">
+            <video class="pm-video" muted loop playsinline preload="none" poster="videos/hexagon.jpg" disablepictureinpicture aria-hidden="true" tabindex="-1"></video>
+            <div class="pm-veil" aria-hidden="true"></div>
+            <button class="pm-open" type="button" aria-label="Watch the Hexagon demo with sound">
+              <span class="pm-cue"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg>Watch with sound</span>
+            </button>
+            <button class="pm-sound" type="button" aria-label="Turn sound on" aria-pressed="false">
+              <svg class="i-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="m22 9-6 6M16 9l6 6"/></svg>
+              <svg class="i-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+            </button>
+            <div class="pm-track" aria-hidden="true"><span class="pm-bar bg-gradient-to-r from-amber-400 to-rose-500"></span></div>
+          </div>
           <div class="p-5">
             <div class="flex items-start gap-3.5">
               <span class="proj-icon bg-gradient-to-br from-amber-400 to-rose-500">
@@ -1947,7 +2517,6 @@
             <div class="mt-4 flex flex-wrap items-center gap-2.5">
               <a href="https://hexagon-zwye.onrender.com" target="_blank" rel="noopener" class="btn-primary">Live demo <span aria-hidden="true">&#8599;</span></a>
               <a href="https://github.com/rohitshidid/hexagon" target="_blank" rel="noopener" class="btn-ghost">GitHub <span aria-hidden="true">&#8599;</span></a>
-              <button class="btn-video" data-video="hexagon" data-title="Hexagon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg>Watch</button>
               <button class="details-toggle ml-auto" aria-expanded="false" aria-controls="pd-18">
                 <span class="dt-label">Details</span>
                 <svg class="dt-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
@@ -1970,7 +2539,18 @@
         </article>
 
         <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="live">
-          <div class="h-1.5 bg-gradient-to-r from-emerald-400 to-teal-500"></div>
+          <div class="proj-media" data-video="splitplus">
+            <video class="pm-video" muted loop playsinline preload="none" poster="videos/splitplus.jpg" disablepictureinpicture aria-hidden="true" tabindex="-1"></video>
+            <div class="pm-veil" aria-hidden="true"></div>
+            <button class="pm-open" type="button" aria-label="Watch the Splitplus demo with sound">
+              <span class="pm-cue"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg>Watch with sound</span>
+            </button>
+            <button class="pm-sound" type="button" aria-label="Turn sound on" aria-pressed="false">
+              <svg class="i-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="m22 9-6 6M16 9l6 6"/></svg>
+              <svg class="i-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+            </button>
+            <div class="pm-track" aria-hidden="true"><span class="pm-bar bg-gradient-to-r from-emerald-400 to-teal-500"></span></div>
+          </div>
           <div class="p-5">
             <div class="flex items-start gap-3.5">
               <span class="proj-icon bg-gradient-to-br from-emerald-400 to-teal-500">
@@ -1988,7 +2568,6 @@
             <div class="mt-4 flex flex-wrap items-center gap-2.5">
               <a href="https://rohitshidid.github.io/splitplus/" target="_blank" rel="noopener" class="btn-primary">Live demo <span aria-hidden="true">&#8599;</span></a>
               <a href="https://github.com/rohitshidid/splitplus" target="_blank" rel="noopener" class="btn-ghost">GitHub <span aria-hidden="true">&#8599;</span></a>
-              <button class="btn-video" data-video="splitplus" data-title="Splitplus"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor"/></svg>Watch</button>
               <button class="details-toggle ml-auto" aria-expanded="false" aria-controls="pd-19">
                 <span class="dt-label">Details</span>
                 <svg class="dt-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
@@ -2239,14 +2818,25 @@
     </div>
   </div>
 
-  <!-- Project video lightbox -->
-  <div id="video-modal" role="dialog" aria-modal="true" aria-labelledby="vm-title" hidden>
-    <div class="vm-frame">
-      <div class="vm-bar">
-        <span id="vm-title"></span>
-        <button class="vm-close" type="button">Close &times;</button>
+  <!-- Project video theater -->
+  <div id="theater" role="dialog" aria-modal="true" aria-labelledby="th-title" hidden>
+    <canvas id="th-ambient" width="48" height="27" aria-hidden="true"></canvas>
+    <p class="th-hint" aria-hidden="true">&larr; &rarr; switch project &middot; space pause &middot; esc close</p>
+    <button class="th-btn th-prev" type="button" aria-label="Previous project"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg></button>
+    <button class="th-btn th-next" type="button" aria-label="Next project"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></button>
+    <button class="th-btn th-close" type="button" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    <div class="th-shell">
+      <div class="th-stage">
+        <video id="th-video" controls playsinline preload="auto"></video>
       </div>
-      <video id="vm-video" controls playsinline preload="none"></video>
+      <aside class="th-info">
+        <p class="th-count" id="th-count"></p>
+        <h2 id="th-title"></h2>
+        <p id="th-sub"></p>
+        <div id="th-actions"></div>
+        <div id="th-desc"></div>
+        <div class="th-upnext">Up next<button type="button" id="th-upnext"></button></div>
+      </aside>
     </div>
   </div>
 
@@ -2258,7 +2848,7 @@
       entries.forEach((e) => {
         if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
       });
-    }, { threshold: 0.12 });
+    }, { threshold: 0, rootMargin: '0px 0px -12% 0px' });
     document.querySelectorAll('.reveal, .reveal-left').forEach((el) => io.observe(el));
 
     /* ---------- Collapsible project details ---------- */
@@ -2352,44 +2942,210 @@
       });
     })();
 
-    /* ---------- Project video lightbox ---------- */
+    /* ---------- Project videos: inline previews + theater ---------- */
     (function () {
-      const modal = document.getElementById('video-modal');
-      const video = document.getElementById('vm-video');
-      const title = document.getElementById('vm-title');
-      let opener = null;
+      const grid = document.getElementById('project-grid');
+      if (!grid) return;
+      const medias = Array.from(grid.querySelectorAll('.proj-media'));
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const saveData = !!(navigator.connection && navigator.connection.saveData);
+      const autoplay = !reduce && !saveData;
+      const preview = (slug) => 'videos/preview/' + slug + '.mp4';
+      const full = (slug) => 'videos/' + slug + '.mp4';
 
-      function open(btn) {
-        opener = btn;
-        const slug = btn.dataset.video;
-        title.textContent = btn.dataset.title;
-        video.poster = 'videos/' + slug + '.jpg';
-        video.src = 'videos/' + slug + '.mp4';
-        modal.hidden = false;
+      /* --- inline previews --- */
+      const inView = new Set();
+      let theaterOpen = false;
+
+      function play(m) {
+        const v = m.querySelector('video');
+        if (!v.getAttribute('src')) v.src = preview(m.dataset.video);
+        v.play().catch(() => {});
+      }
+
+      function pause(m) {
+        m.querySelector('video').pause();
+      }
+
+      function setSound(m, on) {
+        const v = m.querySelector('video');
+        const btn = m.querySelector('.pm-sound');
+        btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+        btn.setAttribute('aria-label', on ? 'Turn sound off' : 'Turn sound on');
+        if (on) {
+          // previews are silent, so switch this card to the full video at the same moment
+          const t = v.currentTime || 0;
+          if (!m.dataset.full) {
+            m.dataset.full = '1';
+            v.src = full(m.dataset.video);
+            v.addEventListener('loadedmetadata', () => { v.currentTime = t; }, { once: true });
+          }
+          v.muted = false;
+          v.play().catch(() => {});
+        } else {
+          v.muted = true;
+          if (!autoplay) v.pause();
+        }
+      }
+
+      medias.forEach((m) => {
+        const v = m.querySelector('video');
+        const bar = m.querySelector('.pm-bar');
+        let last = 0;
+        v.addEventListener('playing', () => m.classList.add('is-playing', 'has-played'));
+        v.addEventListener('pause', () => m.classList.remove('is-playing'));
+        v.addEventListener('timeupdate', () => {
+          if (!v.duration) return;
+          const t = v.currentTime;
+          bar.style.transition = t < last ? 'none' : 'transform .25s linear';
+          bar.style.transform = 'scaleX(' + (t / v.duration) + ')';
+          last = t;
+        });
+        m.querySelector('.pm-sound').addEventListener('click', () => {
+          const on = m.querySelector('.pm-sound').getAttribute('aria-pressed') !== 'true';
+          if (on) medias.forEach((o) => { if (o !== m && o.querySelector('.pm-sound').getAttribute('aria-pressed') === 'true') setSound(o, false); });
+          setSound(m, on);
+        });
+        m.querySelector('.pm-open').addEventListener('click', () => openTheater(m));
+        if (!autoplay) {
+          // no autoplay: preview on hover only
+          m.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') play(m); });
+          m.addEventListener('pointerleave', (e) => {
+            if (e.pointerType === 'mouse' && m.querySelector('.pm-sound').getAttribute('aria-pressed') !== 'true') pause(m);
+          });
+        }
+      });
+
+      const vio = new IntersectionObserver((entries) => {
+        entries.forEach((e) => {
+          const m = e.target;
+          if (e.isIntersecting && e.intersectionRatio >= 0.35) {
+            inView.add(m);
+            if (autoplay && !theaterOpen) play(m);
+          } else {
+            inView.delete(m);
+            pause(m);
+          }
+        });
+      }, { threshold: [0, 0.35, 0.7] });
+      medias.forEach((m) => vio.observe(m));
+
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) medias.forEach(pause);
+        else if (autoplay && !theaterOpen) inView.forEach(play);
+      });
+
+      /* --- theater --- */
+      const th = document.getElementById('theater');
+      const tv = document.getElementById('th-video');
+      const amb = document.getElementById('th-ambient');
+      const actx = amb.getContext('2d');
+      const el = (id) => document.getElementById(id);
+      let list = [], idx = 0, opener = null, ambRaf = 0, reelMode = false;
+
+      function visibleMedias() {
+        return medias.filter((m) => !m.closest('.project-card').classList.contains('is-hidden'));
+      }
+
+      function titleOf(m) {
+        return m.closest('.project-card').querySelector('h3').textContent.trim();
+      }
+
+      function load(i) {
+        idx = (i + list.length) % list.length;
+        const m = list[idx];
+        const card = m.closest('.project-card');
+        const inline = m.querySelector('video');
+        const start = inline.currentTime && !reelMode ? inline.currentTime : 0;
+
+        el('th-count').textContent = String(idx + 1).padStart(2, '0') + ' / ' + String(list.length).padStart(2, '0');
+        el('th-title').textContent = titleOf(m);
+        el('th-sub').textContent = card.querySelector('.flex-1 > p')?.textContent.trim() || '';
+        const actions = el('th-actions');
+        actions.replaceChildren(...Array.from(card.querySelectorAll('.btn-primary, .btn-ghost')).map((a) => a.cloneNode(true)));
+        const desc = card.querySelector('.proj-details');
+        el('th-desc').innerHTML = desc ? desc.innerHTML : '';
+        el('th-upnext').textContent = titleOf(list[(idx + 1) % list.length]);
+        el('th-upnext').parentElement.hidden = list.length < 2;
+
+        tv.poster = 'videos/' + m.dataset.video + '.jpg';
+        tv.src = full(m.dataset.video);
+        tv.addEventListener('loadedmetadata', () => { if (start) tv.currentTime = start; }, { once: true });
+        tv.play().catch(() => {});
+      }
+
+      function drawAmbient() {
+        if (tv.readyState >= 2) {
+          try { actx.drawImage(tv, 0, 0, amb.width, amb.height); } catch (e) {}
+        }
+        ambRaf = requestAnimationFrame(drawAmbient);
+      }
+
+      function openTheater(m, reel) {
+        list = visibleMedias();
+        if (!list.length) list = medias.slice();
+        let i = list.indexOf(m);
+        if (i < 0) i = 0;
+        reelMode = !!reel;
+        opener = document.activeElement;
+        theaterOpen = true;
+        medias.forEach((o) => {
+          if (o.querySelector('.pm-sound').getAttribute('aria-pressed') === 'true') setSound(o, false);
+          pause(o);
+        });
+        th.hidden = false;
         document.body.style.overflow = 'hidden';
-        modal.querySelector('.vm-close').focus();
-        video.play().catch(() => {});
+        requestAnimationFrame(() => th.classList.add('is-open'));
+        load(i);
+        th.querySelector('.th-close').focus({ preventScroll: true });
+        if (!reduce) drawAmbient();
       }
 
-      function close() {
-        video.pause();
-        video.removeAttribute('src');
-        video.load();
-        modal.hidden = true;
+      function closeTheater() {
+        cancelAnimationFrame(ambRaf);
+        tv.pause();
+        tv.removeAttribute('src');
+        tv.load();
+        th.classList.remove('is-open');
+        th.hidden = true;
         document.body.style.overflow = '';
-        if (opener) opener.focus();
+        theaterOpen = false;
+        if (autoplay) inView.forEach(play);
+        if (opener && opener.focus) opener.focus({ preventScroll: true });
       }
 
-      document.getElementById('project-grid')?.addEventListener('click', (e) => {
-        const btn = e.target.closest('.btn-video');
-        if (btn) open(btn);
+      tv.addEventListener('ended', () => { if (list.length > 1) load(idx + 1); else tv.play(); });
+      th.querySelector('.th-close').addEventListener('click', closeTheater);
+      th.querySelector('.th-prev').addEventListener('click', () => load(idx - 1));
+      th.querySelector('.th-next').addEventListener('click', () => load(idx + 1));
+      el('th-upnext').addEventListener('click', () => load(idx + 1));
+      th.addEventListener('click', (e) => {
+        if (e.target === th || e.target.classList.contains('th-shell')) closeTheater();
       });
-      modal.addEventListener('click', (e) => {
-        if (e.target === modal || e.target.closest('.vm-close')) close();
-      });
+
       addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && !modal.hidden) close();
+        if (th.hidden) return;
+        const typing = e.target.closest && e.target.closest('input, textarea');
+        if (e.key === 'Escape') closeTheater();
+        else if (e.key === 'ArrowRight' && e.target !== tv) load(idx + 1);
+        else if (e.key === 'ArrowLeft' && e.target !== tv) load(idx - 1);
+        else if (e.key === ' ' && !typing && e.target.tagName !== 'BUTTON' && e.target.tagName !== 'A' && e.target !== tv) {
+          e.preventDefault();
+          tv.paused ? tv.play() : tv.pause();
+        } else if (e.key === 'Tab') {
+          // keep focus inside the dialog
+          const f = Array.from(th.querySelectorAll('button:not([hidden]), a[href], video'))
+            .filter((x) => x.offsetParent !== null);
+          if (!f.length) return;
+          const first = f[0], lastEl = f[f.length - 1];
+          if (e.shiftKey && document.activeElement === first) { e.preventDefault(); lastEl.focus(); }
+          else if (!e.shiftKey && document.activeElement === lastEl) { e.preventDefault(); first.focus(); }
+        }
       });
+
+      document.querySelectorAll('[data-reel]').forEach((b) =>
+        b.addEventListener('click', () => openTheater(visibleMedias()[0] || medias[0], true))
+      );
     })();
 
 
