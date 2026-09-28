@@ -2,6 +2,19 @@
 <html lang="en">
 
 <head>
+  <!-- Google tag (gtag.js): only loads on the live site, so local testing doesn't pollute the stats -->
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    if (location.hostname === 'rohitshidid.github.io') {
+      const s = document.createElement('script');
+      s.async = true;
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=G-6G7QQCFGCN';
+      document.head.appendChild(s);
+      gtag('js', new Date());
+      gtag('config', 'G-6G7QQCFGCN');
+    }
+  </script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description"
@@ -3667,6 +3680,66 @@
     })();
 
 
+
+
+    /* ---------- Analytics events ---------- */
+    (function () {
+      const track = (name, params) => gtag('event', name, params || {});
+      const projectOf = (el) => {
+        const card = el.closest('.project-card');
+        if (card) return card.querySelector('h3')?.textContent.trim();
+        if (el.closest('#theater')) return document.getElementById('th-title')?.textContent.trim();
+        return undefined;
+      };
+
+      // one capture-phase listener, so it sees clicks before other handlers change the page
+      document.addEventListener('click', (e) => {
+        const t = e.target.closest('a, button');
+        if (!t) return;
+        const project = projectOf(t);
+
+        if (t.matches('.pm-sound')) {
+          track('video_sound', { project, state: t.getAttribute('aria-pressed') === 'true' ? 'off' : 'on' });
+        } else if (t.matches('.pm-open')) {
+          track('video_open', { project });
+        } else if (t.matches('[data-reel]')) {
+          track('reel_start', { location: t.closest('section')?.id || 'hero' });
+        } else if (t.matches('.th-next, .th-prev, #th-upnext')) {
+          track('video_navigate', { project, direction: t.matches('.th-prev') ? 'previous' : 'next' });
+        } else if (t.matches('.details-toggle') && t.getAttribute('aria-expanded') !== 'true') {
+          track('project_details', { project });
+        } else if (t.matches('.filter-pill')) {
+          track('project_filter', { filter: t.dataset.filter });
+        } else if (t.id === 'game-toggle') {
+          track('game_mode_start');
+        } else if (t.tagName === 'A') {
+          const href = t.getAttribute('href') || '';
+          if (project && /^https?:/.test(href)) {
+            track('project_link', { project, link: t.textContent.replace(/[\u2197\s]+$/, '').trim(), url: href });
+          } else if (href.startsWith('mailto:')) {
+            track('contact_click', { method: 'email' });
+          } else if (href.includes('linkedin.com')) {
+            track('contact_click', { method: 'linkedin' });
+          } else if (href.includes('github.com')) {
+            track('contact_click', { method: 'github' });
+          } else if (/\.pdf$/i.test(href)) {
+            track('resume_open');
+          }
+        }
+      }, true);
+
+      // which sections people actually reach
+      const seen = new Set();
+      const so = new IntersectionObserver((entries) => {
+        entries.forEach((e) => {
+          if (!e.isIntersecting || seen.has(e.target.id)) return;
+          seen.add(e.target.id);
+          track('section_view', { section: e.target.id });
+          so.unobserve(e.target);
+        });
+      }, { rootMargin: '0px 0px -40% 0px' });
+      document.querySelectorAll('section[id]').forEach((sec) => so.observe(sec));
+    })();
 
     /* ====================================================== */
     /* ==================== GAME MODE ======================= */
