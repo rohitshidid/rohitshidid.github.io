@@ -1,5 +1,7 @@
 # PDFs (resumes / profiles — keep out of repo)
 *.pdf
+# ...except the public résumé the site links to
+!Rohit_Shidid.pdf
 
 # macOS
 .DS_Store
