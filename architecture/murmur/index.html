@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Murmur Architecture</title>
+<style>
+  :root { --bg:#f7f7f9; --card:#ffffff; --text:#18181b; --muted:#52525b; --line:#e4e4e7; --accent:#5b5bd6; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#111114; --card:#1b1b20; --text:#f4f4f5; --muted:#a1a1aa; --line:#2e2e35; --accent:#9b9bf0; }
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font:16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+  main { max-width:760px; margin:0 auto; padding:48px 16px 64px; }
+  h1 { font-size:1.9rem; line-height:1.2; margin:0 0 4px; }
+  .sub { color:var(--muted); margin:0 0 24px; }
+  p { margin:0 0 28px; }
+  h2 { font-size:1rem; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); margin:0 0 12px; }
+  ul { list-style:none; padding:0; margin:0; display:grid; gap:12px; }
+  li a { display:block; padding:16px 18px; background:var(--card); border:1px solid var(--line); border-radius:12px; color:inherit; text-decoration:none; }
+  li a:hover, li a:focus-visible { border-color:var(--accent); outline:none; }
+  .name { font-weight:600; color:var(--accent); }
+  .desc { display:block; color:var(--muted); font-size:.95rem; }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size:.9em; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Murmur — On-Device Dictation</h1>
+  <p class="sub">Architecture diagrams generated from the source code</p>
+  <p>Murmur is a push-to-talk dictation app for macOS, written in Swift. Holding a hotkey (watched by a <code>CGEventTap</code>) starts microphone capture, and the audio streams in order to an on-device speech engine: Apple's <code>SpeechAnalyzer</code> or Parakeet running on CoreML through FluidAudio. When the key is released, the transcript goes through a rule-based structure pass (retraction, spoken commands, lists, email shape), optional on-device cleanup with Apple Foundation Models, and the user's dictionary. The result is then typed into the focused text field through the Accessibility API, or pasted if that fails. A floating overlay shows the live transcript and never takes focus.</p>
+  <h2>Diagrams</h2>
+  <ul>
+    <li><a href="01-architecture.html"><span class="name">System architecture</span><span class="desc">The main components, from hotkey and audio capture through transcription and formatting to text injection.</span></a></li>
+    <li><a href="02-dataflow-text-pipeline.html"><span class="name">Speech-to-text data flow</span><span class="desc">The order in which a transcript is pre-cleaned, cleaned up, structured, corrected and inserted.</span></a></li>
+    <li><a href="03-lifecycle-dictation-state.html"><span class="name">Dictation state machine</span><span class="desc">How <code>DictationController</code> moves through idle, starting, listening and finishing, plus its error and empty-transcript exits.</span></a></li>
+  </ul>
+</main>
+</body>
+</html>

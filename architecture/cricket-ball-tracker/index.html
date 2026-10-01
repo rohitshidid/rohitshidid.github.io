@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cricket Ball Tracker Diagrams</title>
+<style>
+  :root { --bg:#f7f8fa; --fg:#1b1f24; --muted:#5b6470; --card:#ffffff; --line:#dde1e6; --link:#0b6bcb; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#0d1117; --fg:#e6edf3; --muted:#9aa4af; --card:#161b22; --line:#30363d; --link:#58a6ff; }
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg); font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif; }
+  main { max-width:760px; margin:0 auto; padding:48px 16px; }
+  h1 { font-size:1.8rem; margin:0 0 12px; }
+  p { color:var(--muted); margin:0 0 28px; }
+  ul { list-style:none; padding:0; margin:0; display:grid; gap:12px; }
+  li { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:16px 18px; display:flex; flex-direction:column; gap:4px; }
+  a { color:var(--link); font-weight:600; text-decoration:none; }
+  a:hover { text-decoration:underline; }
+  span { color:var(--muted); font-size:.95rem; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Cricket Ball Tracker</h1>
+  <p>A side-on camera feed (video file or webcam) is read frame by frame in main.py. detector.py finds the ball as the largest HSV colour blob, and trajectory.py chains the centroids into one Delivery per ball, takes the lowest image point as the bounce, and projects it to ground metres with the homography saved by calibrate.py. That distance from the batsman&#x27;s stumps is binned into a length (Yorker, Full, Good length, Back of length, Short, or Full toss) and drawn on the live overlay. Tracking is 2D from a single camera; the homography is only applied at the bounce, where the ball is on the ground.</p>
+  <ul>
+    <li><a href="01-architecture.html">System architecture</a><span>The scripts, the JSON files they share (calibration.json, color_profile.json), and the realtime detect -&gt; track -&gt; classify path.</span></li>
+    <li><a href="02-dataflow-frame-to-length.html">Data flow: frame to delivery length</a><span>How one frame becomes a mask, a centroid, a bounce pixel, a distance in metres, and finally a length label.</span></li>
+  </ul>
+</main>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>bak Diagrams</title>
+<style>
+:root{--bg:#f7f8fa;--card:#fff;--fg:#14171c;--muted:#5b6472;--line:#e2e6ec;--accent:#0b7fa5}
+@media (prefers-color-scheme:dark){:root{--bg:#0b0f17;--card:#121826;--fg:#e6e9ef;--muted:#9aa4b2;--line:#232b3a;--accent:#38bdf8}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+main{max-width:760px;margin:0 auto;padding:48px 16px}h1{margin:0 0 4px;font-size:28px}.sub{color:var(--muted);margin:0 0 24px;font-size:14px}
+.about{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin-bottom:28px}
+code{font:13px ui-monospace,SFMono-Regular,Menlo,monospace;background:color-mix(in srgb,var(--accent) 10%,transparent);padding:1px 5px;border-radius:4px}
+h2{font-size:15px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:0 0 12px}
+ul{list-style:none;margin:0;padding:0;display:grid;gap:12px}li{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 18px}
+li a{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;text-decoration:none;color:var(--accent);font-weight:600}
+li .f{font:12px ui-monospace,Menlo,monospace;color:var(--muted);font-weight:400}li p{margin:6px 0 0;color:var(--muted);font-size:14px}
+</style></head><body><main>
+<h1>bak</h1><p class="sub">Architecture diagrams generated with Archify</p>
+<section class="about"><h2>How it works</h2><p style="margin:0">bak is a single-binary Go CLI that gives loose files (dotfiles, /etc/hosts, .env) their own version history. Running <code>bak &lt;file&gt;</code> reads the file, hashes it with SHA-256, and — if it changed — stores the next version as a zstd-compressed blob under <code>~/.bak/objects/&lt;sha256(path)&gt;/</code>, alongside a <code>meta.json</code> and a global <code>index.json</code>. list, diff, show, prune and gc read that store, and restore is non-lossy: unsaved live content is snapshotted before it is overwritten.</p></section>
+<h2>Diagrams</h2><ul>
+<li><a href="01-architecture.html"><span class="t">Architecture</span><span class="f">01-architecture.html</span></a><p>How the CLI, command handlers, zstd codec and the ~/.bak store fit together.</p></li>
+<li><a href="02-workflow-snapshot.html"><span class="t">Workflow</span><span class="f">02-workflow-snapshot.html</span></a><p>What happens on <code>bak &lt;file&gt;</code>: size gate, no-op on unchanged SHA, compress, write, index.</p></li>
+<li><a href="03-sequence-restore.html"><span class="t">Sequence</span><span class="f">03-sequence-restore.html</span></a><p>The non-lossy restore: version lookup, auto-save of live content, decode and write back.</p></li>
+</ul></main></body></html>

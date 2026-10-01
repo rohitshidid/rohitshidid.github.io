@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Parkinson&#x27;s Symptom Detector Diagrams</title>
+<style>
+  :root { --bg:#f7f8fa; --fg:#1b1f24; --muted:#5b6470; --card:#ffffff; --line:#dde1e6; --link:#0b6bcb; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#0d1117; --fg:#e6edf3; --muted:#9aa4af; --card:#161b22; --line:#30363d; --link:#58a6ff; }
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg); font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif; }
+  main { max-width:760px; margin:0 auto; padding:48px 16px; }
+  h1 { font-size:1.8rem; margin:0 0 12px; }
+  p { color:var(--muted); margin:0 0 28px; }
+  ul { list-style:none; padding:0; margin:0; display:grid; gap:12px; }
+  li { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:16px 18px; display:flex; flex-direction:column; gap:4px; }
+  a { color:var(--link); font-weight:600; text-decoration:none; }
+  a:hover { text-decoration:underline; }
+  span { color:var(--muted); font-size:.95rem; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Parkinson&#x27;s Symptom Detector</h1>
+  <p>Mbed OS firmware for the STM32 B-L475E-IOT01A board. It reads the on-board LSM6DSL accelerometer and gyroscope over I2C at 52 Hz, fills 3-second windows, and runs CMSIS-DSP FFTs to find the dominant frequency of each signal. Fixed threshold rules (not a trained model) turn those frequencies into Walking, Freezing of Gait, Tremor (3-5 Hz) or Dyskinesia (5-7 Hz). Each result lights an LED, prints to the serial port, and is sent over BLE to a phone through the custom GATT service 0xA000.</p>
+  <ul>
+    <li><a href="01-architecture.html">System architecture</a><span>The IMU -&gt; acquisition -&gt; FFT -&gt; symptom logic chain on the board, and the LED, serial and BLE outputs.</span></li>
+    <li><a href="02-lifecycle-symptom-states.html">Lifecycle: symptom state machine</a><span>Boot and calibration, the Normal -&gt; Walking -&gt; FOG gait path, the per-window Tremor/Dyskinesia alerts, and the sensor-fail halt.</span></li>
+  </ul>
+</main>
+</body>
+</html>

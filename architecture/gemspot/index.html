@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GemSpot Training Diagrams</title>
+<style>
+  :root { --bg:#f7f8fa; --fg:#1b1f24; --muted:#5b6470; --card:#ffffff; --line:#dde1e6; --link:#0b6bcb; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#0d1117; --fg:#e6edf3; --muted:#9aa4af; --card:#161b22; --line:#30363d; --link:#58a6ff; }
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg); font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif; }
+  main { max-width:760px; margin:0 auto; padding:48px 16px; }
+  h1 { font-size:1.8rem; margin:0 0 12px; }
+  p { color:var(--muted); margin:0 0 28px; }
+  ul { list-style:none; padding:0; margin:0; display:grid; gap:12px; }
+  li { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:16px 18px; display:flex; flex-direction:column; gap:4px; }
+  a { color:var(--link); font-weight:600; text-decoration:none; }
+  a:hover { text-decoration:underline; }
+  span { color:var(--muted); font-size:.95rem; }
+</style>
+</head>
+<body>
+<main>
+  <h1>GemSpot Training</h1>
+  <p>This subsystem trains the GemSpot will_visit classifier. export_training_data.py pulls the batch-pipeline Parquet from MinIO and writes train.csv / val.csv. src/train.py expands the list-encoded columns into 85 features and trains every candidate in configs/candidates.yaml (a dummy baseline, HistGradientBoosting, and two XGBoost variants), logging each run to MLflow. quality_gate.py then checks F1, AUC, precision, recall and the baseline margin, registers the best passing run as GemSpotWillVisit in Staging, and retrain_pipeline.py hands that model to the canary deploy script.</p>
+  <ul>
+    <li><a href="01-architecture.html">System architecture</a><span>Data sources, the training container, MLflow tracking and registry, the quality gate, and the optional Ray Tune cluster.</span></li>
+    <li><a href="02-workflow-retrain-pipeline.html">Workflow: retrain_pipeline.py</a><span>The five orchestrated steps, plus the abort and keep-current-model stop conditions.</span></li>
+  </ul>
+</main>
+</body>
+</html>

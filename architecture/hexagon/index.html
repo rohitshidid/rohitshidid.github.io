@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hexlandia (Hexagon) Diagrams</title>
+<style>
+:root{--bg:#f7f8fa;--fg:#1a1d23;--muted:#5b6370;--card:#fff;--border:#e2e5ea;--accent:#0b7a75}
+@media (prefers-color-scheme: dark){:root{--bg:#111418;--fg:#e8eaed;--muted:#9aa3ae;--card:#1a1e24;--border:#2c323a;--accent:#4fd1c5}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:760px;margin:0 auto;padding:48px 16px}
+h1{margin:0 0 4px;font-size:1.9rem}
+.sub{margin:0 0 20px;color:var(--muted);font-size:.9rem}
+p.lead{margin:0 0 32px}
+h2{font-size:1rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:0 0 12px}
+ul{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+a{display:block;padding:16px 18px;background:var(--card);border:1px solid var(--border);border-radius:10px;color:inherit;text-decoration:none}
+a:hover,a:focus-visible{border-color:var(--accent)}
+.t{display:block;font-weight:600;color:var(--accent)}
+.d{display:block;color:var(--muted);font-size:.93rem}
+</style>
+</head>
+<body>
+<main>
+<h1>Hexlandia (Hexagon)</h1>
+<p class="sub">Architecture diagrams generated from the source code</p>
+<p class="lead">Hexlandia is a Catan-style board game for 2–10 players that runs in the browser. A single Node.js server (Express for static pages, the ws library for real-time messages) keeps every room in an in-memory map and owns the authoritative Game engine: clients only send intents such as &quot;build a road&quot;, and the engine validates each one before broadcasting a personalised state view to every player. Bots are driven server-side on a 750 ms timer, and a reload reconnects the player to the same seat via a session id stored in localStorage.</p>
+<h2>Diagrams</h2>
+<ul><li><a href="01-architecture.html"><span class="t">Architecture</span><span class="d">Browser client, Express + WebSocket server, rooms Map, game engine, board generator and bot AI.</span></a></li><li><a href="02-lifecycle-game-phases.html"><span class="t">Lifecycle — game phases</span><span class="d">How Game.phase moves through setup → roll → main → game_over, including the robber detour and room teardown.</span></a></li><li><a href="03-sequence-player-action.html"><span class="t">Sequence — player action round-trip</span><span class="d">One click from the browser to Game.act(), the per-player state broadcast, and the bot follow-up turn.</span></a></li></ul>
+</main>
+</body>
+</html>

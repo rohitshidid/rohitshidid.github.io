@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EEG Independent Component Classification Diagrams</title>
+<style>
+  :root { --bg:#f7f8fa; --card:#ffffff; --text:#1c2230; --muted:#5a6475; --accent:#0b7a75; --border:#dde2ea; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#11151c; --card:#1a2029; --text:#e6e9ef; --muted:#9aa4b5; --accent:#4fd1c5; --border:#2a3240; }
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font:16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+  main { max-width:760px; margin:0 auto; padding:48px 16px; }
+  h1 { font-size:1.8rem; margin:0 0 4px; }
+  .kicker { color:var(--muted); font-size:.85rem; text-transform:uppercase; letter-spacing:.06em; }
+  p.lead { color:var(--text); margin:20px 0 32px; }
+  ul { list-style:none; padding:0; margin:0; display:grid; gap:12px; }
+  li { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:16px 18px; }
+  li a { display:block; color:var(--accent); font-weight:600; text-decoration:none; font-size:1.05rem; }
+  li a:hover { text-decoration:underline; }
+  li span { display:block; color:var(--muted); font-size:.92rem; margin-top:4px; }
+  footer { margin-top:32px; color:var(--muted); font-size:.82rem; }
+</style>
+</head>
+<body>
+<main>
+  <div class="kicker">Architecture diagrams</div>
+  <h1>EEG Independent Component Classification</h1>
+  <p class="lead">This project decides whether an EEG independent component (IC) is an artifact, using a stacked ensemble. Each IC from the Zenodo dataset is read as three views: a 67x67 topoplot, a 90-bin power spectral density, and a raw time series. Each view trains its own Keras CNN, and a Random Forest is trained on statistical features of the time series. The base models&#x27; probabilities are saved and stacked (temporal CNN + RF merged first by logistic regression). Meta-learners (SVC, logistic regression, a small neural net) then make the final decision.</p>
+  <ul>
+      <li><a href="01-architecture.html">Architecture</a><span>The notebooks (Hyperparameters Tuning, Feature extraction, Meta-learner), the index CSVs, and the saved weights and prediction artifacts.</span></li>
+      <li><a href="02-dataflow-ensemble.html">Data flow: ensemble pipeline</a><span>From the IC dataset to the three representations, the base models, the fusion step and the meta-learner.</span></li>
+  </ul>
+  <footer>Interactive diagrams generated with Archify. Each page supports light/dark themes, guided views, and trace animation.</footer>
+</main>
+</body>
+</html>

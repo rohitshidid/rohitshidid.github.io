@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Layoff Predictor diagrams</title><style>:root{--bg:#f7f8fa;--fg:#14181f;--muted:#5b6472;--card:#fff;--line:#e2e6ec;--accent:#0b7fa8}
+@media (prefers-color-scheme:dark){:root{--bg:#0d1117;--fg:#e6e9ee;--muted:#9aa4b2;--card:#161b22;--line:#2a313c;--accent:#4cc3e8}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+main{max-width:820px;margin:0 auto;padding:48px 16px}h1{font-size:2rem;margin:0 0 4px}.kicker{color:var(--muted);font-size:.85rem;text-transform:uppercase;letter-spacing:.08em;margin:0}
+p.lede{font-size:1.05rem;margin:20px 0 32px}h2{font-size:1.1rem;margin:0 0 12px}ul{list-style:none;padding:0;margin:0;display:grid;gap:12px}
+li a{display:block;padding:16px 18px;background:var(--card);border:1px solid var(--line);border-radius:10px;text-decoration:none;color:inherit}
+li a:hover{border-color:var(--accent)}li strong{color:var(--accent);display:block}li span{color:var(--muted);font-size:.95rem}</style></head>
+<body><main><p class="kicker">Architecture diagrams</p><h1>Layoff Predictor</h1>
+<p class="lede">A Flask web app estimates the chance a US public company will announce layoffs soon. When you enter a ticker or company name, predict.py resolves it to a ticker using the NASDAQ/NYSE/AMEX lists, pulls about 400 days of prices from Yahoo Finance via yfinance, and computes six technical signals (3- and 6-month price drop, volatility, RSI, and distance from the 50/200-day averages). A RandomForest saved in model.pkl scores those signals and also builds a 12-month risk timeline. The model was trained offline by train.py on real layoff events (layoffs.csv) against random no-layoff dates.</p><h2>Diagrams</h2><ul>
+<li><a href="01-architecture.html"><strong>Architecture</strong><span>How the browser, Flask routes, predict.py, financials.py, data_loader.py, model.pkl and Yahoo Finance connect on Render.</span></a></li>
+<li><a href="02-dataflow-training.html"><strong>Data flow: training</strong><span>How train.py builds positive and negative samples, tunes a RandomForest with GridSearchCV and saves model.pkl.</span></a></li>
+<li><a href="03-sequence-predict.html"><strong>Sequence: POST /predict</strong><span>Step by step: name resolution, live feature fetch, scoring, and the weekly timeline loop.</span></a></li>
+</ul></main></body></html>
