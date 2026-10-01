@@ -1083,6 +1083,38 @@
       transform: rotate(180deg);
     }
 
+    /* Two-column layout: each card is a subgrid over four shared row tracks
+       (media, title block, buttons, details), so titles and button rows line up
+       across a row even when one card's title or buttons wrap to a second line. */
+    @media (min-width: 768px) {
+      /* Row spacing comes from card margins; a parent row-gap would leak into
+         every card's subgrid tracks as extra blank space. */
+      #project-grid {
+        row-gap: 0;
+      }
+
+      #project-grid > .project-card {
+        display: grid;
+        grid-row: span 4;
+        grid-template-rows: subgrid;
+        row-gap: 0;
+        margin-bottom: 1.5rem;
+      }
+
+      #project-grid > .project-card > .p-5 {
+        grid-row: 2 / span 3;
+        display: grid;
+        grid-template-rows: subgrid;
+        row-gap: 0;
+      }
+
+      /* Keep each card's title block and button row at the top of their shared
+         track instead of stretching and centring inside it. */
+      #project-grid > .project-card > .p-5 > div {
+        align-self: start;
+      }
+    }
+
     .proj-details {
       overflow: hidden;
       animation: reveal-details .3s cubic-bezier(.2, .7, .2, 1);
@@ -1973,7 +2005,7 @@
           </div>
         </div>
 
-      <div id="project-grid" class="grid md:grid-cols-2 gap-6 items-start">
+      <div id="project-grid" class="grid md:grid-cols-2 gap-6 items-stretch">
 
         <article class="card project-card rounded-2xl overflow-hidden flex flex-col" data-cat="llm ai live research">
           <div class="proj-media" data-video="self-healing-rag">
